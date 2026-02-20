@@ -1,0 +1,158 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Brand colors */
+  --color-teal-blue: #067bc2;
+  --color-sky-reflection: #84bcda;
+  --color-bright-amber: #ecc30b;
+  --color-coral-glow: #f37748;
+  --color-jet-black: #162521;
+
+  /* Neutrals */
+  --color-neutral-950: #0c1512;
+  --color-neutral-900: #162521;
+  --color-neutral-800: #1e332d;
+  --color-neutral-700: #2d4a42;
+  --color-neutral-600: #3d6358;
+  --color-neutral-400: #7a9e94;
+  --color-neutral-200: #c8dbd6;
+  --color-neutral-100: #e8f0ed;
+  --color-neutral-50: #f4f8f6;
+
+  /* Semantic */
+  --color-primary: #067bc2;
+  --color-primary-hover: #0568a3;
+  --color-success: #2a9d6e;
+  --color-warning: #ecc30b;
+  --color-error: #d93636;
+
+  /* Fonts */
+  --font-serif: var(--font-lora), Georgia, serif;
+  --font-sans-header: var(--font-rubik), sans-serif;
+  --font-sans-body: var(--font-manrope), sans-serif;
+
+  /* Border radius */
+  --radius-card: 16px;
+  --radius-button: 8px;
+  --radius-pill: 9999px;
+}
+
+:root {
+  /* Type scale */
+  --text-hero: 3.5rem;
+  --text-h1: 2.5rem;
+  --text-h2: 2rem;
+  --text-h3: 1.5rem;
+  --text-h4: 1.25rem;
+  --text-body-lg: 1.125rem;
+  --text-body: 1rem;
+  --text-small: 0.875rem;
+  --text-xs: 0.75rem;
+  --text-quote: 1.75rem;
+  --text-stat: 3rem;
+  --text-logo-splash: 5rem;
+
+  /* Brand color CSS custom properties */
+  --bright-teal-blue: #067bc2;
+  --sky-reflection: #84bcda;
+  --bright-amber: #ecc30b;
+  --coral-glow: #f37748;
+  --jet-black: #162521;
+
+  /* Font stacks (CSS custom properties for inline styles) */
+  --font-serif-stack: var(--font-lora), Georgia, serif;
+  --font-sans-header-stack: var(--font-rubik), sans-serif;
+  --font-sans-body-stack: var(--font-manrope), sans-serif;
+
+  /* Animation tokens */
+  --entrance-duration: 600ms;
+  --entrance-easing: cubic-bezier(0.16, 1, 0.3, 1);
+  --hover-duration: 200ms;
+  --logo-transition-ms: 600ms;
+
+  /* Containers */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --text-hero: 2.25rem;
+    --text-h1: 1.75rem;
+    --text-h2: 1.5rem;
+    --text-h3: 1.25rem;
+    --text-h4: 1.125rem;
+    --text-stat: 2.25rem;
+    --text-logo-splash: 3rem;
+  }
+}
+
+/* Glass card utility classes */
+@layer components {
+  .glass-card {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-card);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  }
+
+  .glass-card-dark {
+    background: rgba(22, 37, 33, 0.55);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(132, 188, 218, 0.2);
+    border-radius: var(--radius-card);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  }
+}
+
+body {
+  background: var(--color-neutral-950);
+  color: var(--color-neutral-50);
+  font-family: var(--font-sans-body);
+}
+
+/* Hero animated background blobs */
+@keyframes blob-drift-1 {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(15%, 20%) scale(1.12); }
+}
+
+@keyframes blob-drift-2 {
+  from { transform: translate(0, 0) scale(1.05); }
+  to   { transform: translate(-12%, -15%) scale(0.90); }
+}
+
+/* Scroll indicator bounce */
+@keyframes scroll-bounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(7px); }
+}
+
+@layer utilities {
+  .animate-blob-1 {
+    animation: blob-drift-1 25s ease-in-out infinite alternate;
+  }
+  .animate-blob-2 {
+    animation: blob-drift-2 32s ease-in-out infinite alternate-reverse;
+  }
+  .animate-scroll-bounce {
+    animation: scroll-bounce 1.8s ease-in-out infinite;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
