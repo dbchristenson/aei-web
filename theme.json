@@ -1,0 +1,108 @@
+{
+  "_comment": "Master design token file. Edit here; changes propagate to Next.js (via theme.config.ts) and Plotly (via aei_theme.py).",
+
+  "colors": {
+    "brightTealBlue": "#067bc2",
+    "skyReflection":  "#84bcda",
+    "brightAmber":    "#ecc30b",
+    "coralGlow":      "#f37748",
+    "jetBlack":       "#162521",
+    "white":          "#ffffff"
+  },
+
+  "neutrals": {
+    "950": "#0c1512",
+    "900": "#162521",
+    "800": "#1e332d",
+    "700": "#2d4a42",
+    "600": "#3d6358",
+    "400": "#7a9e94",
+    "200": "#c8dbd6",
+    "100": "#e8f0ed",
+    "50":  "#f4f8f6"
+  },
+
+  "semantic": {
+    "primary":       "#067bc2",
+    "primaryHover":  "#0568a3",
+    "success":       "#2a9d6e",
+    "warning":       "#ecc30b",
+    "error":         "#d93636"
+  },
+
+  "fonts": {
+    "serif":      "Lora",
+    "sansHeader": "Rubik",
+    "sansBody":   "Manrope"
+  },
+
+  "fontWeights": {
+    "regular": 400,
+    "medium":  500,
+    "semibold": 600,
+    "bold":    700
+  },
+
+  "typeScale": {
+    "hero":       { "size": "3.5rem",  "lineHeight": 1.1,  "weight": 700, "font": "sansHeader" },
+    "h1":         { "size": "2.5rem",  "lineHeight": 1.2,  "weight": 700, "font": "sansHeader" },
+    "h2":         { "size": "2rem",    "lineHeight": 1.25, "weight": 600, "font": "sansHeader" },
+    "h3":         { "size": "1.5rem",  "lineHeight": 1.3,  "weight": 600, "font": "sansHeader" },
+    "h4":         { "size": "1.25rem", "lineHeight": 1.4,  "weight": 600, "font": "sansHeader" },
+    "bodyLg":     { "size": "1.125rem","lineHeight": 1.6,  "weight": 400, "font": "sansBody" },
+    "body":       { "size": "1rem",    "lineHeight": 1.6,  "weight": 400, "font": "sansBody" },
+    "small":      { "size": "0.875rem","lineHeight": 1.5,  "weight": 400, "font": "sansBody" },
+    "xs":         { "size": "0.75rem", "lineHeight": 1.4,  "weight": 500, "font": "sansBody" },
+    "quote":      { "size": "1.75rem", "lineHeight": 1.4,  "weight": 400, "font": "serif", "style": "italic" },
+    "stat":       { "size": "3rem",    "lineHeight": 1.0,  "weight": 700, "font": "sansHeader" },
+    "logoSplash": { "size": "5rem",    "lineHeight": 1.0,  "weight": 700, "font": "serif" }
+  },
+
+  "spacing": {
+    "1":  "4px",
+    "2":  "8px",
+    "3":  "12px",
+    "4":  "16px",
+    "6":  "24px",
+    "8":  "32px",
+    "12": "48px",
+    "16": "64px",
+    "24": "96px",
+    "32": "128px"
+  },
+
+  "containers": {
+    "sm":  "640px",
+    "md":  "768px",
+    "lg":  "1024px",
+    "xl":  "1280px"
+  },
+
+  "borderRadius": {
+    "card":   "16px",
+    "button": "8px",
+    "pill":   "9999px"
+  },
+
+  "glass": {
+    "light": {
+      "background":   "rgba(255, 255, 255, 0.12)",
+      "blur":         "14px",
+      "border":       "rgba(255, 255, 255, 0.20)",
+      "shadow":       "0 8px 32px rgba(0, 0, 0, 0.25)"
+    },
+    "dark": {
+      "background":   "rgba(22, 37, 33, 0.55)",
+      "blur":         "14px",
+      "border":       "rgba(132, 188, 218, 0.20)",
+      "shadow":       "0 8px 32px rgba(0, 0, 0, 0.40)"
+    }
+  },
+
+  "animation": {
+    "entranceDuration":   "600ms",
+    "entranceEasing":     "cubic-bezier(0.16, 1, 0.3, 1)",
+    "hoverDuration":      "200ms",
+    "logoTransitionMs":   600
+  }
+}

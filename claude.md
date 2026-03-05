@@ -11,6 +11,7 @@ B2B investor-facing website for PT Agra Energi Indonesia, an Indonesian oil & ga
 - **Content:** MDX for Insights articles
 - **Animation:** GSAP (ScrollTrigger) for scroll-driven animations
 - **Backend:** FastAPI (Python), PostgreSQL + PostGIS
+- **Python Packages:** uv
 - **Fonts:** Google Fonts via next/font — Lora, Rubik, Manrope
 
 ## Key Directories
