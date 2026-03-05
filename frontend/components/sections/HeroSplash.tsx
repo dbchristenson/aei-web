@@ -4,6 +4,8 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import VideoBackground from "@/components/ui/VideoBackground";
+import { HERO_SPLASH_VIDEO } from "@/lib/media";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -58,46 +60,10 @@ export default function HeroSplash() {
   return (
     <section
       ref={sectionRef}
-      className="relative flex items-center justify-center min-h-screen overflow-hidden"
+      className="relative flex items-center justify-center min-h-screen overflow-hidden bg-neutral-950"
       aria-label="Hero splash"
     >
-      {/* Animated ocean gradient background */}
-      <div className="absolute inset-0 bg-neutral-950" aria-hidden="true" />
-
-      {/* Teal-blue glow blob — upper-left */}
-      <div
-        className="absolute rounded-full animate-blob-1 pointer-events-none"
-        style={{
-          width: "65%",
-          height: "60%",
-          left: "-15%",
-          top: "-15%",
-          background: "radial-gradient(ellipse, rgba(6,123,194,0.14) 0%, transparent 70%)",
-          filter: "blur(72px)",
-        }}
-        aria-hidden="true"
-      />
-
-      {/* Sky-reflection glow blob — lower-right */}
-      <div
-        className="absolute rounded-full animate-blob-2 pointer-events-none"
-        style={{
-          width: "55%",
-          height: "55%",
-          right: "-10%",
-          bottom: "-10%",
-          background:
-            "radial-gradient(ellipse, rgba(132,188,218,0.09) 0%, transparent 70%)",
-          filter: "blur(90px)",
-        }}
-        aria-hidden="true"
-      />
-
-      {/* Vignette: dark gradient overlay from bottom */}
-      <div
-        className="absolute inset-0 bg-gradient-to-b from-neutral-950/10 via-transparent to-neutral-950/90 pointer-events-none"
-        aria-hidden="true"
-      />
+      <VideoBackground videoKey={HERO_SPLASH_VIDEO} overlay="vignette" />
 
       {/* Centered logo — animated to dock in nav on scroll */}
       <div ref={logoRef} className="relative z-10 flex flex-col items-center text-center px-4">

@@ -2,9 +2,8 @@ import HeroSplash from "@/components/sections/HeroSplash";
 import HeroBanner from "@/components/sections/HeroBanner";
 import SectionDivider from "@/components/ui/SectionDivider";
 
-// Heavy components — lazy-loaded when their section enters the viewport
-// import dynamic from "next/dynamic";
-// const ExplorationMap = dynamic(() => import("@/components/map/ExplorationMap"), { ssr: false });
+// Heavy components — lazy-loaded client-side only
+import ExplorationMapLoader from "@/components/map/ExplorationMapLoader";
 
 export default function Home() {
   return (
@@ -16,10 +15,12 @@ export default function Home() {
       <HeroBanner />
 
       {/* Section 3 — Partner Logos */}
-      <SectionDivider
-        fromColor="var(--color-neutral-950)"
-        toColor="var(--color-neutral-900)"
-      />
+      <div className="relative -mt-[6vw] z-10">
+        <SectionDivider
+          fromColor="transparent"
+          toColor="var(--color-neutral-900)"
+        />
+      </div>
       <section className="py-24 px-4 bg-neutral-900" aria-label="Partners and stakeholders">
         <div
           className="mx-auto text-center"
@@ -76,36 +77,14 @@ export default function Home() {
       {/* Section 5 — Interactive Exploration Map */}
       <SectionDivider
         fromColor="var(--color-neutral-950)"
-        toColor="var(--color-neutral-900)"
+        toColor="var(--color-neutral-950)"
       />
       <section
         id="exploration-map"
-        className="py-24 px-4 bg-neutral-900"
+        className="bg-neutral-950 overflow-hidden"
         aria-label="Exploration blocks map"
       >
-        <div className="mx-auto" style={{ maxWidth: "var(--container-xl)" }}>
-          <h2
-            className="text-center font-sans-header font-semibold text-neutral-50 mb-3"
-            style={{ fontSize: "var(--text-h2)" }}
-          >
-            Exploration Blocks
-          </h2>
-          <p
-            className="text-center text-neutral-400 font-sans-body mb-12"
-            style={{ fontSize: "var(--text-body)" }}
-          >
-            Active exploration across Southeast Asia.
-          </p>
-          <div
-            className="bg-neutral-950 rounded-[var(--radius-card)] flex items-center justify-center"
-            style={{ minHeight: "520px" }}
-          >
-            {/* TODO: Replace with <ExplorationMap blocksEndpoint="/api/blocks" /> */}
-            <p className="text-neutral-600 font-sans-body italic" style={{ fontSize: "var(--text-small)" }}>
-              Interactive map coming soon.
-            </p>
-          </div>
-        </div>
+        <ExplorationMapLoader blocksEndpoint="/data/blocks.geojson" />
       </section>
 
       {/* Section 6 — Footer (in layout) */}

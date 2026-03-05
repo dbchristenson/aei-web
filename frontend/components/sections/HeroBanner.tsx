@@ -1,6 +1,8 @@
 "use client";
 
 import GlassCard from "@/components/ui/GlassCard";
+import VideoBackground from "@/components/ui/VideoBackground";
+import { HERO_BANNER_VIDEO } from "@/lib/media";
 
 export default function HeroBanner() {
   const handleViewProjects = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -13,18 +15,10 @@ export default function HeroBanner() {
 
   return (
     <section
-      className="relative py-24 px-4 bg-neutral-950"
+      className="relative py-24 px-4 bg-neutral-950 overflow-hidden"
       aria-label="Company overview"
     >
-      {/* Subtle continuation of the ocean gradient */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(ellipse 50% 80% at 70% 50%, rgba(6,123,194,0.07) 0%, transparent 70%)",
-        }}
-        aria-hidden="true"
-      />
+      <VideoBackground videoKey={HERO_BANNER_VIDEO} overlay="darken" />
 
       <div
         className="relative mx-auto"

@@ -118,35 +118,72 @@ body {
 
 /* Hero animated background blobs */
 @keyframes blob-drift-1 {
-  from { transform: translate(0, 0) scale(1); }
-  to   { transform: translate(15%, 20%) scale(1.12); }
+  from {
+    transform: translate(0, 0) scale(1);
+  }
+
+  to {
+    transform: translate(15%, 20%) scale(1.12);
+  }
 }
 
 @keyframes blob-drift-2 {
-  from { transform: translate(0, 0) scale(1.05); }
-  to   { transform: translate(-12%, -15%) scale(0.90); }
+  from {
+    transform: translate(0, 0) scale(1.05);
+  }
+
+  to {
+    transform: translate(-12%, -15%) scale(0.90);
+  }
+}
+
+/* Map loading skeleton pulse */
+@keyframes grid-pulse {
+
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+
+  50% {
+    opacity: 0.40;
+  }
 }
 
 /* Scroll indicator bounce */
 @keyframes scroll-bounce {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(7px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(7px);
+  }
 }
 
 @layer utilities {
   .animate-blob-1 {
     animation: blob-drift-1 25s ease-in-out infinite alternate;
   }
+
   .animate-blob-2 {
     animation: blob-drift-2 32s ease-in-out infinite alternate-reverse;
   }
+
   .animate-scroll-bounce {
     animation: scroll-bounce 1.8s ease-in-out infinite;
+  }
+
+  .animate-grid-pulse {
+    animation: grid-pulse 2s ease-in-out infinite;
   }
 }
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
