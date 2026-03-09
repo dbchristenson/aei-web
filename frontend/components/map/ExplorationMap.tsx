@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 import * as d3 from "d3";
 import * as topojson from "topojson-client";
+import gsap from "gsap";
 import BlockInfoPanel from "./BlockInfoPanel";
 import type { BlockProperties } from "./BlockInfoPanel";
 import type { Topology, GeometryCollection } from "topojson-specification";
@@ -48,9 +49,74 @@ interface BlocksGeoJSON {
   features: BlockFeature[];
 }
 
+// ─── Regional view constants ───
+const INITIAL_ROTATION: [number, number, number] = [-115, -1.4, 0];
+const LAMBDA_BOUNDS: [number, number] = [-140, -90];
+const PHI_BOUNDS: [number, number] = [-15, 20];
+const RUBBER_BAND_DIM = 18;
+const MAX_OVERSHOOT = 30;
+
+// ─── Zoom-to-block constants ───
+const ZOOM_DURATION = 1.0;
+const ZOOM_EASE = "power2.inOut";
+const REGIONAL_GRATICULE_STEP: [number, number] = [10, 10];
+const ZOOMED_GRATICULE_STEP: [number, number] = [2, 2];
+const ZOOMED_RUBBER_BAND_DIM = 8;
+const ZOOMED_DRAG_PADDING = 5;
+
+/** iOS-style rubber-band clamping */
+function rubberBand(value: number, min: number, max: number, dim: number): number {
+  if (value > max) {
+    const overshoot = Math.min(value - max, MAX_OVERSHOOT);
+    return max + dim * (1 - 1 / (overshoot / dim + 1));
+  }
+  if (value < min) {
+    const overshoot = Math.min(min - value, MAX_OVERSHOOT);
+    return min - dim * (1 - 1 / (overshoot / dim + 1));
+  }
+  return value;
+}
+
 /** Compute the centroid of a GeoJSON feature in [lon, lat] */
 function geoCentroid(feature: GeoJSON.Feature): [number, number] {
   return d3.geoCentroid(feature);
+}
+
+/** Compute per-block zoom parameters: rotation, scale multiplier, and tightened drag bounds */
+function getBlockZoomParams(
+  feature: BlockFeature,
+  baseScale: number
+): {
+  rotation: [number, number, number];
+  scaleMultiplier: number;
+  lambdaBounds: [number, number];
+  phiBounds: [number, number];
+} {
+  const [clon, clat] = geoCentroid(feature);
+  const rotation: [number, number, number] = [-clon, -clat, 0];
+
+  const bbox = d3.geoBounds(feature);
+  const lonSpan = bbox[1][0] - bbox[0][0];
+  const latSpan = bbox[1][1] - bbox[0][1];
+  const maxSpan = Math.max(lonSpan, latSpan);
+
+  // Target: block polygon ~200px across in viewport
+  const targetPixels = 200;
+  const angularRad = maxSpan * (Math.PI / 180);
+  const idealScale = targetPixels / angularRad;
+  const multiplier = Math.min(Math.max(idealScale / baseScale, 3), 8);
+
+  // Tighten drag bounds around block center (in rotation-space)
+  const pad = ZOOMED_DRAG_PADDING;
+  const lb: [number, number] = [-(clon + pad), -(clon - pad)];
+  const pb: [number, number] = [-(clat + pad), -(clat - pad)];
+
+  return {
+    rotation,
+    scaleMultiplier: multiplier,
+    lambdaBounds: [Math.min(lb[0], lb[1]), Math.max(lb[0], lb[1])],
+    phiBounds: [Math.min(pb[0], pb[1]), Math.max(pb[0], pb[1])],
+  };
 }
 
 export default function ExplorationMap({
@@ -59,9 +125,21 @@ export default function ExplorationMap({
   const containerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
-  const rotationRef = useRef<[number, number, number]>([-117, 5, -15]);
-  const autoRotateRef = useRef<number | null>(null);
-  const isDraggingRef = useRef(false);
+  const rotationRef = useRef<[number, number, number]>(INITIAL_ROTATION);
+  const rawRotationRef = useRef<[number, number]>([INITIAL_ROTATION[0], INITIAL_ROTATION[1]]);
+  const bounceAnimRef = useRef<gsap.core.Tween | null>(null);
+  const zoomAnimRef = useRef<gsap.core.Tween | null>(null);
+  const scaleMultiplierRef = useRef<number>(1.0);
+  const dragBoundsRef = useRef<{
+    lambda: [number, number];
+    phi: [number, number];
+    rubberBandDim: number;
+  }>({
+    lambda: LAMBDA_BOUNDS,
+    phi: PHI_BOUNDS,
+    rubberBandDim: RUBBER_BAND_DIM,
+  });
+  const renderRef = useRef<(() => void) | null>(null);
 
   const [mapState, setMapState] = useState<MapState>("loading");
   const [uiState, setUiState] = useState<UIState>({ blockId: null, mode: "idle" });
@@ -148,7 +226,7 @@ export default function ExplorationMap({
     setUiState({ blockId: null, mode: "idle" });
   }, []);
 
-  // ─── D3 rendering — oversized draggable globe ───
+  // ─── D3 rendering — zoomed draggable globe ───
   useEffect(() => {
     if (mapState !== "active" || !geoData || !worldData || !svgRef.current) return;
 
@@ -158,7 +236,6 @@ export default function ExplorationMap({
 
     const tc = getThemeColors();
 
-    // Projection — oversized globe, centered to bleed off right edge
     const projection = d3
       .geoOrthographic()
       .clipAngle(90);
@@ -167,16 +244,15 @@ export default function ExplorationMap({
       const width = container!.clientWidth;
       const height = container!.clientHeight;
 
-      // Globe is 120% of the container height — it bleeds off the edges
-      const globeRadius = Math.max(height * 0.6, 280);
+      const baseRadius = Math.max(height * 1.5, 800);
+      const globeRadius = baseRadius * scaleMultiplierRef.current;
 
       projection
         .scale(globeRadius)
         .rotate(rotationRef.current)
-        // Center the globe toward the right — 66% from left edge
-        .translate([width * 0.66, height * 0.5]);
+        .translate([width * 0.52, height * 0.5]);
 
-      return { width, height, globeRadius };
+      return { width, height, globeRadius, baseRadius };
     }
 
     function render() {
@@ -188,7 +264,7 @@ export default function ExplorationMap({
 
       const defs = svg.append("defs");
 
-      // Atmosphere glow — multi-stop radial gradient
+      // Atmosphere glow
       const [cx, cy] = projection.translate();
       const atmosGradient = defs
         .append("radialGradient")
@@ -206,24 +282,28 @@ export default function ExplorationMap({
       dotGlow.append("feGaussianBlur").attr("in", "SourceGraphic").attr("stdDeviation", "3").attr("result", "blur");
       dotGlow.append("feMerge").selectAll("feMergeNode").data(["blur", "SourceGraphic"]).join("feMergeNode").attr("in", (d) => d);
 
-      // Layer 1: Atmosphere halo
-      svg.append("circle")
-        .attr("cx", cx).attr("cy", cy)
-        .attr("r", globeRadius + 40)
-        .attr("fill", "url(#atmos-glow)")
-        .attr("pointer-events", "none");
+      // Layer 1: Atmosphere halo — skip when globe overflows viewport
+      if (globeRadius + 40 < Math.max(width, height)) {
+        svg.append("circle")
+          .attr("cx", cx).attr("cy", cy)
+          .attr("r", globeRadius + 40)
+          .attr("fill", "url(#atmos-glow)")
+          .attr("pointer-events", "none");
+      }
 
       // Layer 2: Globe disc (ocean)
       svg.append("circle")
         .attr("cx", cx).attr("cy", cy)
         .attr("r", globeRadius)
-        .attr("fill", tc.n950)
-        .attr("stroke", tc.n700)
-        .attr("stroke-width", 0.5)
-        .attr("stroke-opacity", 0.6);
+        .attr("fill", tc.n950);
 
-      // Layer 3: Graticule — subtle curved grid
-      const graticule = d3.geoGraticule().step([20, 20]);
+      // Layer 3: Graticule — interpolate density with zoom level
+      const zoomT = Math.min((scaleMultiplierRef.current - 1) / 4, 1);
+      const gratStep: [number, number] = [
+        REGIONAL_GRATICULE_STEP[0] + zoomT * (ZOOMED_GRATICULE_STEP[0] - REGIONAL_GRATICULE_STEP[0]),
+        REGIONAL_GRATICULE_STEP[1] + zoomT * (ZOOMED_GRATICULE_STEP[1] - REGIONAL_GRATICULE_STEP[1]),
+      ];
+      const graticule = d3.geoGraticule().step(gratStep);
       svg.append("path")
         .datum(graticule())
         .attr("d", path)
@@ -232,7 +312,7 @@ export default function ExplorationMap({
         .attr("stroke-width", 0.3)
         .attr("stroke-opacity", 0.35);
 
-      // Layer 4: Land masses — ghostly outlines (like the reference)
+      // Layer 4: Land masses
       const land = topojson.feature(
         worldData!,
         worldData!.objects.land as GeometryCollection
@@ -244,7 +324,7 @@ export default function ExplorationMap({
         .attr("stroke", tc.n600)
         .attr("stroke-width", 0.6);
 
-      // Layer 5: Country borders — very subtle
+      // Layer 5: Country borders
       const countries = topojson.feature(
         worldData!,
         worldData!.objects.countries as GeometryCollection
@@ -259,7 +339,7 @@ export default function ExplorationMap({
         .attr("stroke-width", 0.25)
         .attr("stroke-opacity", 0.5);
 
-      // Layer 6: Block polygons — very subtle fill
+      // Layer 6: Block polygons
       const blocksGroup = svg.append("g").attr("class", "blocks-layer");
       blocksGroup.selectAll<SVGPathElement, BlockFeature>(".block-area")
         .data(geoData!.features, (d) => d.id)
@@ -269,10 +349,10 @@ export default function ExplorationMap({
         .attr("fill", tc.amber)
         .attr("fill-opacity", 0.08)
         .attr("stroke", tc.amber)
-        .attr("stroke-width", 0.8)
-        .attr("stroke-opacity", 0.3);
+        .attr("stroke-width", 1.0)
+        .attr("stroke-opacity", 0.4);
 
-      // Layer 7: Centroid dots — the main interactive elements (like reference)
+      // Layer 7: Centroid dots
       const dotsGroup = svg.append("g").attr("class", "dots-layer");
 
       geoData!.features.forEach((feature) => {
@@ -280,7 +360,6 @@ export default function ExplorationMap({
         const projected = projection(center);
         if (!projected) return;
 
-        // Check if point is on visible side of globe
         const dist = d3.geoDistance(center, [
           -rotationRef.current[0],
           -rotationRef.current[1],
@@ -289,7 +368,6 @@ export default function ExplorationMap({
 
         const [px, py] = projected;
 
-        // Outer glow ring
         dotsGroup.append("circle")
           .attr("class", `dot-glow-${feature.id}`)
           .attr("cx", px).attr("cy", py)
@@ -299,7 +377,6 @@ export default function ExplorationMap({
           .attr("filter", "url(#dot-glow)")
           .attr("pointer-events", "none");
 
-        // Main dot
         dotsGroup.append("circle")
           .attr("class", `dot dot-${feature.id}`)
           .attr("cx", px).attr("cy", py)
@@ -313,7 +390,6 @@ export default function ExplorationMap({
           .on("mouseenter", function (event: MouseEvent) {
             handleBlockHover(feature.id);
             showTooltip(event, feature.properties.name);
-            // Enlarge on hover
             d3.select(this)
               .transition().duration(prefersReducedMotion ? 0 : 150)
               .attr("r", 9)
@@ -344,6 +420,9 @@ export default function ExplorationMap({
       });
     }
 
+    // Expose render to other effects via ref
+    renderRef.current = render;
+
     // ─── Tooltip helpers ───
     function showTooltip(event: MouseEvent, text: string) {
       const tip = tooltipRef.current;
@@ -367,62 +446,77 @@ export default function ExplorationMap({
       tip.style.opacity = "0";
     }
 
-    // ─── Drag-to-rotate (applied to container div, not SVG) ───
+    // ─── Drag-to-rotate with elastic bounded drag ───
     const containerSel = d3.select(container);
     const dragBehavior = d3.drag<HTMLDivElement, unknown>()
       .on("start", () => {
-        isDraggingRef.current = true;
-        if (autoRotateRef.current !== null) {
-          cancelAnimationFrame(autoRotateRef.current);
-          autoRotateRef.current = null;
+        // Don't drag during zoom animation
+        if (zoomAnimRef.current) return;
+        // Kill any in-flight bounce animation
+        if (bounceAnimRef.current) {
+          bounceAnimRef.current.kill();
+          bounceAnimRef.current = null;
         }
+        rawRotationRef.current = [rotationRef.current[0], rotationRef.current[1]];
         containerSel.style("cursor", "grabbing");
       })
       .on("drag", (event: d3.D3DragEvent<HTMLDivElement, unknown, unknown>) => {
-        const sensitivity = 0.4;
-        const [lambda, phi, gamma] = rotationRef.current;
+        if (zoomAnimRef.current) return;
+        const sensitivity = 0.25;
+        const bounds = dragBoundsRef.current;
+        rawRotationRef.current = [
+          rawRotationRef.current[0] + event.dx * sensitivity,
+          rawRotationRef.current[1] - event.dy * sensitivity,
+        ];
         rotationRef.current = [
-          lambda + event.dx * sensitivity,
-          Math.max(-60, Math.min(60, phi - event.dy * sensitivity)),
-          gamma,
+          rubberBand(rawRotationRef.current[0], bounds.lambda[0], bounds.lambda[1], bounds.rubberBandDim),
+          rubberBand(rawRotationRef.current[1], bounds.phi[0], bounds.phi[1], bounds.rubberBandDim),
+          0,
         ];
         render();
       })
       .on("end", () => {
-        isDraggingRef.current = false;
+        if (zoomAnimRef.current) return;
         containerSel.style("cursor", "grab");
-        if (!prefersReducedMotion) startAutoRotate();
+
+        const bounds = dragBoundsRef.current;
+        const clampedLambda = Math.max(bounds.lambda[0], Math.min(bounds.lambda[1], rawRotationRef.current[0]));
+        const clampedPhi = Math.max(bounds.phi[0], Math.min(bounds.phi[1], rawRotationRef.current[1]));
+
+        const isOutOfBounds =
+          rawRotationRef.current[0] !== clampedLambda ||
+          rawRotationRef.current[1] !== clampedPhi;
+
+        if (isOutOfBounds) {
+          if (prefersReducedMotion) {
+            rotationRef.current = [clampedLambda, clampedPhi, 0];
+            rawRotationRef.current = [clampedLambda, clampedPhi];
+            render();
+          } else {
+            const animTarget = { lambda: rotationRef.current[0], phi: rotationRef.current[1] };
+            bounceAnimRef.current = gsap.to(animTarget, {
+              lambda: clampedLambda,
+              phi: clampedPhi,
+              duration: 0.4,
+              ease: "back.out(1.7)",
+              onUpdate: () => {
+                rotationRef.current = [animTarget.lambda, animTarget.phi, 0];
+                render();
+              },
+              onComplete: () => {
+                rawRotationRef.current = [clampedLambda, clampedPhi];
+                bounceAnimRef.current = null;
+              },
+            });
+          }
+        }
       });
 
     containerSel.call(dragBehavior);
     containerSel.style("cursor", "grab");
 
-    // ─── Slow auto-rotation ───
-    function startAutoRotate() {
-      if (prefersReducedMotion) return;
-      let lastTime = performance.now();
-
-      function tick(now: number) {
-        if (isDraggingRef.current) return;
-        const delta = now - lastTime;
-        lastTime = now;
-        const [lambda, phi, gamma] = rotationRef.current;
-        // Very slow rotation — ~3 degrees per second
-        rotationRef.current = [lambda + delta * 0.003, phi, gamma];
-        render();
-        autoRotateRef.current = requestAnimationFrame(tick);
-      }
-
-      autoRotateRef.current = requestAnimationFrame(tick);
-    }
-
     // Initial render
     render();
-
-    // Start auto-rotation
-    if (!prefersReducedMotion) {
-      startAutoRotate();
-    }
 
     // Responsive
     const resizeObserver = new ResizeObserver(() => {
@@ -432,11 +526,150 @@ export default function ExplorationMap({
 
     return () => {
       resizeObserver.disconnect();
-      if (autoRotateRef.current !== null) {
-        cancelAnimationFrame(autoRotateRef.current);
+      renderRef.current = null;
+      if (bounceAnimRef.current) {
+        bounceAnimRef.current.kill();
+        bounceAnimRef.current = null;
+      }
+      if (zoomAnimRef.current) {
+        zoomAnimRef.current.kill();
+        zoomAnimRef.current = null;
       }
     };
   }, [mapState, geoData, worldData, handleBlockHover, handleBlockClick, prefersReducedMotion]);
+
+  // ─── Zoom on select / deselect ───
+  useEffect(() => {
+    if (mapState !== "active" || !geoData || !containerRef.current) return;
+
+    const doRender = () => renderRef.current?.();
+
+    function killAnimations() {
+      if (zoomAnimRef.current) {
+        zoomAnimRef.current.kill();
+        zoomAnimRef.current = null;
+      }
+      if (bounceAnimRef.current) {
+        bounceAnimRef.current.kill();
+        bounceAnimRef.current = null;
+      }
+    }
+
+    if (uiState.mode === "selected" && uiState.blockId) {
+      const feature = geoData.features.find((f) => f.id === uiState.blockId);
+      if (!feature) return;
+
+      killAnimations();
+
+      const height = containerRef.current.clientHeight;
+      const baseRadius = Math.max(height * 1.5, 800);
+      const params = getBlockZoomParams(feature, baseRadius);
+
+      if (prefersReducedMotion) {
+        rotationRef.current = params.rotation;
+        rawRotationRef.current = [params.rotation[0], params.rotation[1]];
+        scaleMultiplierRef.current = params.scaleMultiplier;
+        dragBoundsRef.current = {
+          lambda: params.lambdaBounds,
+          phi: params.phiBounds,
+          rubberBandDim: ZOOMED_RUBBER_BAND_DIM,
+        };
+        doRender();
+        return;
+      }
+
+      const animState = {
+        lambda: rotationRef.current[0],
+        phi: rotationRef.current[1],
+        scale: scaleMultiplierRef.current,
+        lbMin: dragBoundsRef.current.lambda[0],
+        lbMax: dragBoundsRef.current.lambda[1],
+        pbMin: dragBoundsRef.current.phi[0],
+        pbMax: dragBoundsRef.current.phi[1],
+        rbDim: dragBoundsRef.current.rubberBandDim,
+      };
+
+      zoomAnimRef.current = gsap.to(animState, {
+        lambda: params.rotation[0],
+        phi: params.rotation[1],
+        scale: params.scaleMultiplier,
+        lbMin: params.lambdaBounds[0],
+        lbMax: params.lambdaBounds[1],
+        pbMin: params.phiBounds[0],
+        pbMax: params.phiBounds[1],
+        rbDim: ZOOMED_RUBBER_BAND_DIM,
+        duration: ZOOM_DURATION,
+        ease: ZOOM_EASE,
+        onUpdate: () => {
+          rotationRef.current = [animState.lambda, animState.phi, 0];
+          scaleMultiplierRef.current = animState.scale;
+          dragBoundsRef.current = {
+            lambda: [animState.lbMin, animState.lbMax],
+            phi: [animState.pbMin, animState.pbMax],
+            rubberBandDim: animState.rbDim,
+          };
+          doRender();
+        },
+        onComplete: () => {
+          rawRotationRef.current = [params.rotation[0], params.rotation[1]];
+          zoomAnimRef.current = null;
+        },
+      });
+    } else if (uiState.mode === "idle" && scaleMultiplierRef.current > 1.05) {
+      killAnimations();
+
+      if (prefersReducedMotion) {
+        rotationRef.current = INITIAL_ROTATION;
+        rawRotationRef.current = [INITIAL_ROTATION[0], INITIAL_ROTATION[1]];
+        scaleMultiplierRef.current = 1.0;
+        dragBoundsRef.current = {
+          lambda: LAMBDA_BOUNDS,
+          phi: PHI_BOUNDS,
+          rubberBandDim: RUBBER_BAND_DIM,
+        };
+        doRender();
+        return;
+      }
+
+      const animState = {
+        lambda: rotationRef.current[0],
+        phi: rotationRef.current[1],
+        scale: scaleMultiplierRef.current,
+        lbMin: dragBoundsRef.current.lambda[0],
+        lbMax: dragBoundsRef.current.lambda[1],
+        pbMin: dragBoundsRef.current.phi[0],
+        pbMax: dragBoundsRef.current.phi[1],
+        rbDim: dragBoundsRef.current.rubberBandDim,
+      };
+
+      zoomAnimRef.current = gsap.to(animState, {
+        lambda: INITIAL_ROTATION[0],
+        phi: INITIAL_ROTATION[1],
+        scale: 1.0,
+        lbMin: LAMBDA_BOUNDS[0],
+        lbMax: LAMBDA_BOUNDS[1],
+        pbMin: PHI_BOUNDS[0],
+        pbMax: PHI_BOUNDS[1],
+        rbDim: RUBBER_BAND_DIM,
+        duration: ZOOM_DURATION,
+        ease: ZOOM_EASE,
+        onUpdate: () => {
+          rotationRef.current = [animState.lambda, animState.phi, 0];
+          scaleMultiplierRef.current = animState.scale;
+          dragBoundsRef.current = {
+            lambda: [animState.lbMin, animState.lbMax],
+            phi: [animState.pbMin, animState.pbMax],
+            rubberBandDim: animState.rbDim,
+          };
+          doRender();
+        },
+        onComplete: () => {
+          rawRotationRef.current = [INITIAL_ROTATION[0], INITIAL_ROTATION[1]];
+          zoomAnimRef.current = null;
+        },
+      });
+    }
+  }, [uiState.mode, uiState.blockId, mapState, geoData, prefersReducedMotion]);
 
   // ─── Sync selected dot visual state ───
   useEffect(() => {
@@ -449,7 +682,6 @@ export default function ExplorationMap({
       const isActive = feature.id === uiState.blockId;
       const isSelected = isActive && uiState.mode === "selected";
 
-      // Block polygon highlight
       svg.selectAll<SVGPathElement, BlockFeature>(".block-area")
         .filter((d) => d.id === feature.id)
         .transition().duration(dur)
@@ -457,7 +689,6 @@ export default function ExplorationMap({
         .attr("stroke-opacity", isActive ? 0.7 : 0.3)
         .attr("stroke-width", isActive ? 1.5 : 0.8);
 
-      // Dot highlight
       svg.select(`.dot-${feature.id}`)
         .transition().duration(dur)
         .attr("r", isSelected ? 10 : isActive ? 8 : 6)
@@ -556,7 +787,7 @@ export default function ExplorationMap({
           aria-hidden="true"
         />
 
-        {/* Keyboard-accessible buttons — pointer-events pass through to SVG */}
+        {/* Keyboard-accessible buttons */}
         <div
           className={`absolute inset-0 pointer-events-none ${mapState !== "active" ? "hidden" : ""}`}
           aria-label="Block selection controls"
@@ -571,7 +802,6 @@ export default function ExplorationMap({
                 aria-pressed={uiState.blockId === feature.id && uiState.mode === "selected"}
                 className="absolute w-10 h-10 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-0 pointer-events-auto focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-teal-blue focus-visible:bg-teal-blue/20"
                 style={{
-                  // Position will be updated by effect below
                   left: "-999px",
                   top: "-999px",
                 }}
