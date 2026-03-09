@@ -8,7 +8,6 @@ interface TeamMember {
   title: string;
   bio: string;
   photo?: string;
-  linkedIn?: string;
 }
 
 interface TeamCarouselProps {
@@ -133,17 +132,7 @@ export default function TeamCarousel({ members }: TeamCarouselProps) {
                     {member.bio}
                   </p>
 
-                  {member.linkedIn && (
-                    <a
-                      href={member.linkedIn}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block text-center mt-4 text-teal-blue hover:text-sky-reflection transition-colors font-sans-body"
-                      style={{ fontSize: "var(--text-small)" }}
-                    >
-                      LinkedIn &rarr;
-                    </a>
-                  )}
+
                 </GlassCard>
               </div>
             ))}
