@@ -127,6 +127,7 @@ export default function ExplorationMap({
   const tooltipRef = useRef<HTMLDivElement>(null);
   const rotationRef = useRef<[number, number, number]>(INITIAL_ROTATION);
   const rawRotationRef = useRef<[number, number]>([INITIAL_ROTATION[0], INITIAL_ROTATION[1]]);
+  const tooltipBlockRef = useRef<BlockFeature | null>(null);
   const bounceAnimRef = useRef<gsap.core.Tween | null>(null);
   const zoomAnimRef = useRef<gsap.core.Tween | null>(null);
   const scaleMultiplierRef = useRef<number>(1.0);
@@ -140,9 +141,13 @@ export default function ExplorationMap({
     rubberBandDim: RUBBER_BAND_DIM,
   });
   const renderRef = useRef<(() => void) | null>(null);
+  const showTooltipRef = useRef<((feature: BlockFeature) => void) | null>(null);
+  const hideTooltipRef = useRef<(() => void) | null>(null);
 
   const [mapState, setMapState] = useState<MapState>("loading");
   const [uiState, setUiState] = useState<UIState>({ blockId: null, mode: "idle" });
+  const uiStateRef = useRef<UIState>(uiState);
+  uiStateRef.current = uiState;
   const [geoData, setGeoData] = useState<BlocksGeoJSON | null>(null);
   const [worldData, setWorldData] = useState<Topology | null>(null);
 
@@ -151,7 +156,7 @@ export default function ExplorationMap({
       ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
       : false;
 
-  const activeBlock = geoData?.features.find((f) => f.id === uiState.blockId)?.properties ?? null;
+  const allBlocks = geoData?.features.map((f) => f.properties) ?? [];
 
   // ─── Data fetching via IntersectionObserver ───
   useEffect(() => {
@@ -224,6 +229,11 @@ export default function ExplorationMap({
 
   const handleDeselect = useCallback(() => {
     setUiState({ blockId: null, mode: "idle" });
+    // Clear tooltip immediately
+    tooltipBlockRef.current = null;
+    if (tooltipRef.current) {
+      tooltipRef.current.style.opacity = "0";
+    }
   }, []);
 
   // ─── D3 rendering — zoomed draggable globe ───
@@ -281,6 +291,11 @@ export default function ExplorationMap({
       const dotGlow = defs.append("filter").attr("id", "dot-glow").attr("x", "-50%").attr("y", "-50%").attr("width", "200%").attr("height", "200%");
       dotGlow.append("feGaussianBlur").attr("in", "SourceGraphic").attr("stdDeviation", "3").attr("result", "blur");
       dotGlow.append("feMerge").selectAll("feMergeNode").data(["blur", "SourceGraphic"]).join("feMergeNode").attr("in", (d) => d);
+
+      // Block outline glow filter
+      const blockGlow = defs.append("filter").attr("id", "block-glow").attr("x", "-30%").attr("y", "-30%").attr("width", "160%").attr("height", "160%");
+      blockGlow.append("feGaussianBlur").attr("in", "SourceGraphic").attr("stdDeviation", "6").attr("result", "blur");
+      blockGlow.append("feMerge").selectAll("feMergeNode").data(["blur", "SourceGraphic"]).join("feMergeNode").attr("in", (d) => d);
 
       // Layer 1: Atmosphere halo — skip when globe overflows viewport
       if (globeRadius + 40 < Math.max(width, height)) {
@@ -340,17 +355,28 @@ export default function ExplorationMap({
         .attr("stroke-opacity", 0.5);
 
       // Layer 6: Block polygons
+      const currentUi = uiStateRef.current;
       const blocksGroup = svg.append("g").attr("class", "blocks-layer");
       blocksGroup.selectAll<SVGPathElement, BlockFeature>(".block-area")
         .data(geoData!.features, (d) => d.id)
         .join("path")
         .attr("class", "block-area")
         .attr("d", path)
-        .attr("fill", tc.amber)
-        .attr("fill-opacity", 0.08)
-        .attr("stroke", tc.amber)
-        .attr("stroke-width", 1.0)
-        .attr("stroke-opacity", 0.4);
+        .each(function (d) {
+          const el = d3.select(this);
+          const isActive = d.id === currentUi.blockId;
+          const isSelected = isActive && currentUi.mode === "selected";
+
+          el.attr("fill", tc.amber)
+            .attr("fill-opacity", isSelected ? 0.25 : isActive ? 0.2 : 0.08)
+            .attr("stroke", isSelected ? tc.tealBlue : tc.amber)
+            .attr("stroke-width", isSelected ? 2 : isActive ? 1.5 : 1.0)
+            .attr("stroke-opacity", isSelected ? 0.9 : isActive ? 0.7 : 0.4)
+            .attr("filter", isSelected ? "url(#block-glow)" : "none");
+        });
+
+      // Update tooltip to track block's projected position
+      updateTooltipPosition();
 
       // Layer 7: Centroid dots
       const dotsGroup = svg.append("g").attr("class", "dots-layer");
@@ -387,9 +413,9 @@ export default function ExplorationMap({
           .attr("stroke-width", 1)
           .attr("stroke-opacity", 0.5)
           .attr("cursor", "pointer")
-          .on("mouseenter", function (event: MouseEvent) {
+          .on("mouseenter", function () {
             handleBlockHover(feature.id);
-            showTooltip(event, feature.properties.name);
+            showTooltip(feature);
             d3.select(this)
               .transition().duration(prefersReducedMotion ? 0 : 150)
               .attr("r", 9)
@@ -411,9 +437,6 @@ export default function ExplorationMap({
               .attr("r", 12)
               .attr("fill-opacity", 0.15);
           })
-          .on("mousemove", function (event: MouseEvent) {
-            moveTooltip(event);
-          })
           .on("click", function () {
             handleBlockClick(feature.id);
           });
@@ -424,27 +447,51 @@ export default function ExplorationMap({
     renderRef.current = render;
 
     // ─── Tooltip helpers ───
-    function showTooltip(event: MouseEvent, text: string) {
+    function updateTooltipPosition() {
       const tip = tooltipRef.current;
-      if (!tip) return;
-      tip.textContent = text;
+      const feature = tooltipBlockRef.current;
+      if (!tip || !feature) return;
+
+      const center = geoCentroid(feature);
+      const projected = projection(center);
+      if (!projected) {
+        tip.style.opacity = "0";
+        return;
+      }
+
+      // Check if centroid is on the visible hemisphere
+      const dist = d3.geoDistance(center, [
+        -rotationRef.current[0],
+        -rotationRef.current[1],
+      ]);
+      if (dist > Math.PI / 2) {
+        tip.style.opacity = "0";
+        return;
+      }
+
       tip.style.opacity = "1";
-      moveTooltip(event);
+      tip.style.left = `${projected[0] + 14}px`;
+      tip.style.top = `${projected[1] - 10}px`;
     }
 
-    function moveTooltip(event: MouseEvent) {
+    function showTooltip(feature: BlockFeature) {
       const tip = tooltipRef.current;
-      if (!tip || !container) return;
-      const rect = container.getBoundingClientRect();
-      tip.style.left = `${event.clientX - rect.left + 14}px`;
-      tip.style.top = `${event.clientY - rect.top - 10}px`;
+      if (!tip) return;
+      tooltipBlockRef.current = feature;
+      tip.textContent = feature.properties.name;
+      updateTooltipPosition();
     }
 
     function hideTooltip() {
       const tip = tooltipRef.current;
       if (!tip) return;
+      tooltipBlockRef.current = null;
       tip.style.opacity = "0";
     }
+
+    // Expose tooltip helpers to other effects
+    showTooltipRef.current = showTooltip;
+    hideTooltipRef.current = hideTooltip;
 
     // ─── Drag-to-rotate with elastic bounded drag ───
     const containerSel = d3.select(container);
@@ -462,7 +509,7 @@ export default function ExplorationMap({
       })
       .on("drag", (event: d3.D3DragEvent<HTMLDivElement, unknown, unknown>) => {
         if (zoomAnimRef.current) return;
-        const sensitivity = 0.25;
+        const sensitivity = 0.08 / scaleMultiplierRef.current;
         const bounds = dragBoundsRef.current;
         rawRotationRef.current = [
           rawRotationRef.current[0] + event.dx * sensitivity,
@@ -515,6 +562,11 @@ export default function ExplorationMap({
     containerSel.call(dragBehavior);
     containerSel.style("cursor", "grab");
 
+    // Double-click anywhere on the map to deselect
+    containerSel.on("dblclick", () => {
+      handleDeselect();
+    });
+
     // Initial render
     render();
 
@@ -526,6 +578,7 @@ export default function ExplorationMap({
 
     return () => {
       resizeObserver.disconnect();
+      containerSel.on("dblclick", null);
       renderRef.current = null;
       if (bounceAnimRef.current) {
         bounceAnimRef.current.kill();
@@ -536,7 +589,7 @@ export default function ExplorationMap({
         zoomAnimRef.current = null;
       }
     };
-  }, [mapState, geoData, worldData, handleBlockHover, handleBlockClick, prefersReducedMotion]);
+  }, [mapState, geoData, worldData, handleBlockHover, handleBlockClick, handleDeselect, prefersReducedMotion]);
 
   // ─── Zoom on select / deselect ───
   useEffect(() => {
@@ -671,12 +724,22 @@ export default function ExplorationMap({
     }
   }, [uiState.mode, uiState.blockId, mapState, geoData, prefersReducedMotion]);
 
-  // ─── Sync selected dot visual state ───
+  // ─── Sync selected dot visual state + tooltip ───
   useEffect(() => {
     if (!svgRef.current || mapState !== "active" || !geoData) return;
     const svg = d3.select(svgRef.current);
     const tc = getThemeColors();
     const dur = prefersReducedMotion ? 0 : 200;
+
+    // Show tooltip for selected block, hide if nothing selected
+    if (uiState.mode === "selected" && uiState.blockId) {
+      const feature = geoData.features.find((f) => f.id === uiState.blockId);
+      if (feature) {
+        showTooltipRef.current?.(feature);
+      }
+    } else if (uiState.mode === "idle") {
+      hideTooltipRef.current?.();
+    }
 
     geoData.features.forEach((feature) => {
       const isActive = feature.id === uiState.blockId;
@@ -685,9 +748,11 @@ export default function ExplorationMap({
       svg.selectAll<SVGPathElement, BlockFeature>(".block-area")
         .filter((d) => d.id === feature.id)
         .transition().duration(dur)
-        .attr("fill-opacity", isActive ? 0.2 : 0.08)
-        .attr("stroke-opacity", isActive ? 0.7 : 0.3)
-        .attr("stroke-width", isActive ? 1.5 : 0.8);
+        .attr("fill-opacity", isSelected ? 0.25 : isActive ? 0.2 : 0.08)
+        .attr("stroke", isSelected ? tc.tealBlue : tc.amber)
+        .attr("stroke-opacity", isSelected ? 0.9 : isActive ? 0.7 : 0.3)
+        .attr("stroke-width", isSelected ? 2 : isActive ? 1.5 : 0.8)
+        .attr("filter", isSelected ? "url(#block-glow)" : "none");
 
       svg.select(`.dot-${feature.id}`)
         .transition().duration(dur)
@@ -716,9 +781,14 @@ export default function ExplorationMap({
   return (
     <div className="relative overflow-hidden" style={{ minHeight: "600px" }}>
       {/* Content overlay — left side, pointer-events pass through to globe */}
-      <div className="relative z-10 flex items-start py-8 md:py-16 px-4 md:px-8 pointer-events-none" style={{ minHeight: "600px" }}>
+      <div className="relative z-10 flex items-start py-4 md:py-6 px-4 md:px-8 pointer-events-none" style={{ minHeight: "600px" }}>
         <div className="w-full md:max-w-[420px] pointer-events-auto">
-          <BlockInfoPanel block={activeBlock} isLocked={uiState.mode === "selected"} />
+          <BlockInfoPanel
+            blocks={allBlocks}
+            selectedBlockId={uiState.blockId}
+            isLocked={uiState.mode === "selected"}
+            onBlockClick={handleBlockClick}
+          />
         </div>
       </div>
 
