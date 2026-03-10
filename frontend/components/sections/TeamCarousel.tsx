@@ -80,10 +80,10 @@ export default function TeamCarousel({ members }: TeamCarouselProps) {
           {/* Card container */}
           <div
             ref={scrollRef}
-            className={`flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-none ${
+            className={`flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-none py-4 -my-4 ${
               !showControls ? "justify-center" : ""
             }`}
-            style={{ scrollbarWidth: "none" }}
+            style={{ scrollbarWidth: "none", overscrollBehaviorX: "contain" }}
           >
             {members.map((member) => (
               <div
@@ -131,8 +131,6 @@ export default function TeamCarousel({ members }: TeamCarouselProps) {
                   >
                     {member.bio}
                   </p>
-
-
                 </GlassCard>
               </div>
             ))}
