@@ -1,5 +1,6 @@
 import HeroSplash from "@/components/sections/HeroSplash";
 import HeroBanner from "@/components/sections/HeroBanner";
+import PartnerLogoGrid from "@/components/sections/PartnerLogoGrid";
 import SectionDivider from "@/components/ui/SectionDivider";
 import TeamCarousel from "@/components/sections/TeamCarousel";
 
@@ -55,23 +56,7 @@ export default function Home() {
           toColor="var(--color-bg-subtle)"
         />
       </div>
-      <section className="py-24 px-4 bg-bg-subtle" aria-label="Partners and stakeholders">
-        <div
-          className="mx-auto text-center"
-          style={{ maxWidth: "var(--container-xl)" }}
-        >
-          <h2 className="font-sans-header font-semibold text-fg mb-3 text-h2">
-            Our Partners &amp; Stakeholders
-          </h2>
-          <p className="text-fg-muted font-sans-body mb-12 text-body">
-            Working alongside world-class operators and institutional partners.
-          </p>
-          {/* TODO: Replace with <PartnerLogoGrid logos={partnersData} /> */}
-          <p className="text-fg-muted font-sans-body italic text-small">
-            Partner logos coming soon.
-          </p>
-        </div>
-      </section>
+      <PartnerLogoGrid />
 
       {/* Section 4 — Leadership Team */}
       <SectionDivider
