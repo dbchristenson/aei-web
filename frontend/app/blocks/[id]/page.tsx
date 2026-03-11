@@ -25,28 +25,26 @@ export async function generateMetadata({ params }: BlockPageProps): Promise<Meta
 
 function NewsCard({ item }: { item: NewsItem }) {
   const content = (
-    <div className="glass-card-dark p-5 transition-all duration-200 hover:border-teal-blue/30">
+    <div className="glass-card-dark p-5 transition-all duration-200 hover:border-primary/30">
       <div className="flex items-center gap-2 mb-2">
         <span
-          className="inline-block px-2 py-0.5 rounded-[var(--radius-button)] font-sans-body text-neutral-300"
-          style={{
-            fontSize: "var(--text-xs)",
-            background: item.type === "memo" ? "rgba(132, 188, 218, 0.12)" : "rgba(230, 166, 47, 0.12)",
-            border: item.type === "memo"
-              ? "1px solid rgba(132, 188, 218, 0.2)"
-              : "1px solid rgba(230, 166, 47, 0.2)",
-          }}
+          className={`inline-block px-2 py-0.5 rounded-[var(--radius-button)] font-sans-body ${
+            item.type === "memo"
+              ? "bg-secondary/12 border border-secondary/20"
+              : "bg-accent/12 border border-accent/20"
+          }`}
+          style={{ fontSize: "var(--text-xs)" }}
         >
           {item.type === "memo" ? "Internal Memo" : "External"}
         </span>
-        <span className="text-neutral-500 font-sans-body" style={{ fontSize: "var(--text-xs)" }}>
+        <span className="text-fg-muted font-sans-body" style={{ fontSize: "var(--text-xs)" }}>
           {item.date}
         </span>
       </div>
-      <h3 className="font-sans-header font-medium text-neutral-100" style={{ fontSize: "var(--text-body)" }}>
+      <h3 className="font-sans-header font-medium text-fg-secondary" style={{ fontSize: "var(--text-body)" }}>
         {item.title}
       </h3>
-      <p className="text-neutral-400 font-sans-body mt-1" style={{ fontSize: "var(--text-small)" }}>
+      <p className="text-fg-muted font-sans-body mt-1" style={{ fontSize: "var(--text-small)" }}>
         {item.source}
       </p>
     </div>
@@ -69,12 +67,12 @@ export default async function BlockPage({ params }: BlockPageProps) {
   if (!block) notFound();
 
   return (
-    <main className="bg-neutral-950 min-h-screen pt-24 pb-16">
+    <main className="bg-bg min-h-screen pt-24 pb-16">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         {/* Back link */}
         <Link
           href="/#exploration"
-          className="inline-flex items-center gap-1.5 text-neutral-400 hover:text-teal-blue font-sans-body transition-colors mb-8"
+          className="inline-flex items-center gap-1.5 text-fg-muted hover:text-primary font-sans-body transition-colors mb-8"
           style={{ fontSize: "var(--text-small)" }}
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -88,19 +86,19 @@ export default async function BlockPage({ params }: BlockPageProps) {
           {/* Left: Block info */}
           <div className="flex flex-col justify-center">
             <p
-              className="text-teal-blue font-sans-body uppercase tracking-wider mb-3"
+              className="text-primary font-sans-body uppercase tracking-wider mb-3"
               style={{ fontSize: "var(--text-small)" }}
             >
               {block.basin}
             </p>
             <h1
-              className="font-sans-header font-bold text-neutral-50 mb-6"
+              className="font-sans-header font-bold text-fg mb-6"
               style={{ fontSize: "var(--text-display)" }}
             >
               {block.name}
             </h1>
             <p
-              className="text-neutral-300 font-sans-body leading-relaxed"
+              className="text-fg-secondary font-sans-body leading-relaxed"
               style={{ fontSize: "var(--text-body)" }}
             >
               {block.summary}
@@ -108,7 +106,7 @@ export default async function BlockPage({ params }: BlockPageProps) {
           </div>
 
           {/* Right: Zoomed map */}
-          <div className="aspect-square lg:aspect-auto lg:min-h-[480px] rounded-[var(--radius-card)] overflow-hidden border border-neutral-800/50">
+          <div className="aspect-square lg:aspect-auto lg:min-h-[480px] rounded-[var(--radius-card)] overflow-hidden border border-border-subtle/50">
             <BlockDetailMapLoader blockId={id} />
           </div>
         </div>
@@ -116,7 +114,7 @@ export default async function BlockPage({ params }: BlockPageProps) {
         {/* News Feed */}
         <section>
           <h2
-            className="font-sans-header font-bold text-neutral-50 mb-6"
+            className="font-sans-header font-bold text-fg mb-6"
             style={{ fontSize: "var(--text-h2)" }}
           >
             News &amp; Updates
@@ -133,13 +131,13 @@ export default async function BlockPage({ params }: BlockPageProps) {
               className="glass-card-dark p-8 text-center"
             >
               <p
-                className="text-neutral-400 font-sans-body"
+                className="text-fg-muted font-sans-body"
                 style={{ fontSize: "var(--text-body)" }}
               >
                 No news or updates for this block yet.
               </p>
               <p
-                className="text-neutral-500 font-sans-body mt-2"
+                className="text-fg-muted font-sans-body mt-2"
                 style={{ fontSize: "var(--text-small)" }}
               >
                 Check back for internal memos and external publications.

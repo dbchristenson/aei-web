@@ -16,7 +16,7 @@ const legalLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-neutral-900 border-t border-neutral-800">
+    <footer className="bg-bg-subtle border-t border-border-subtle">
       <div
         className="mx-auto px-4 py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12"
         style={{ maxWidth: "var(--container-xl)" }}
@@ -24,19 +24,19 @@ export default function Footer() {
         {/* Brand */}
         <div>
           <p
-            className="font-serif font-bold text-neutral-50"
+            className="font-serif font-bold text-fg"
             style={{ fontSize: "var(--text-h3)" }}
           >
             AEI
           </p>
           <p
-            className="mt-2 text-neutral-400 font-sans-body"
+            className="mt-2 text-fg-muted font-sans-body"
             style={{ fontSize: "var(--text-small)" }}
           >
             PT Agra Energi Indonesia
           </p>
           <p
-            className="mt-1 text-neutral-400 font-sans-body"
+            className="mt-1 text-fg-muted font-sans-body"
             style={{ fontSize: "var(--text-small)" }}
           >
             High-impact oil &amp; gas exploration and geothermal development in
@@ -47,7 +47,7 @@ export default function Footer() {
         {/* Navigation */}
         <div>
           <h3
-            className="font-sans-header font-semibold text-neutral-50 mb-4"
+            className="font-sans-header font-semibold text-fg mb-4"
             style={{ fontSize: "var(--text-body)" }}
           >
             Company
@@ -57,7 +57,7 @@ export default function Footer() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="text-neutral-400 hover:text-neutral-100 transition-colors font-sans-body"
+                  className="text-fg-muted hover:text-fg-secondary transition-colors font-sans-body"
                   style={{ fontSize: "var(--text-small)" }}
                 >
                   {link.label}
@@ -70,7 +70,7 @@ export default function Footer() {
         {/* Legal & Governance */}
         <div>
           <h3
-            className="font-sans-header font-semibold text-neutral-50 mb-4"
+            className="font-sans-header font-semibold text-fg mb-4"
             style={{ fontSize: "var(--text-body)" }}
           >
             Legal &amp; Governance
@@ -80,7 +80,7 @@ export default function Footer() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="text-neutral-400 hover:text-neutral-100 transition-colors font-sans-body"
+                  className="text-fg-muted hover:text-fg-secondary transition-colors font-sans-body"
                   style={{ fontSize: "var(--text-small)" }}
                 >
                   {link.label}
@@ -93,14 +93,14 @@ export default function Footer() {
         {/* Contact */}
         <div>
           <h3
-            className="font-sans-header font-semibold text-neutral-50 mb-4"
+            className="font-sans-header font-semibold text-fg mb-4"
             style={{ fontSize: "var(--text-body)" }}
           >
             Contact
           </h3>
           {/* TODO: Replace with actual contact details from client */}
           <address
-            className="not-italic text-neutral-400 font-sans-body space-y-2"
+            className="not-italic text-fg-muted font-sans-body space-y-2"
             style={{ fontSize: "var(--text-small)" }}
           >
             <p>Jakarta, Indonesia</p>
@@ -109,9 +109,9 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-neutral-800 py-6 px-4 text-center">
+      <div className="border-t border-border-subtle py-6 px-4 text-center">
         <p
-          className="text-neutral-600 font-sans-body"
+          className="text-fg-muted font-sans-body"
           style={{ fontSize: "var(--text-xs)" }}
         >
           &copy; {new Date().getFullYear()} PT Agra Energi Indonesia. All rights

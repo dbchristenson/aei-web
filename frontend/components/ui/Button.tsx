@@ -20,11 +20,11 @@ const sizeClasses: Record<string, string> = {
 
 const variantClasses: Record<string, string> = {
   primary:
-    "bg-teal-blue text-white hover:bg-primary-hover hover:-translate-y-0.5 transition-all",
+    "bg-primary text-white hover:bg-primary-hover hover:-translate-y-0.5 transition-all",
   secondary:
-    "bg-transparent text-teal-blue border border-teal-blue hover:bg-teal-blue/10 transition-all",
+    "bg-transparent text-primary border border-primary hover:bg-primary/10 transition-all",
   ghost:
-    "bg-transparent text-neutral-400 hover:text-neutral-50 transition-colors",
+    "bg-transparent text-fg-muted hover:text-fg transition-colors",
 };
 
 export default function Button({
@@ -41,7 +41,7 @@ export default function Button({
   const classes = `inline-flex items-center justify-center font-sans-body font-medium
     ${variantClasses[variant]} ${sizeClasses[size]}
     ${disabled || loading ? "opacity-50 cursor-not-allowed pointer-events-none" : ""}
-    focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-blue
+    focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary
     ${className}`.trim();
 
   const content = loading ? (

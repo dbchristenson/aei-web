@@ -1,33 +1,104 @@
 {
   "_comment": "Master design token file. Edit here; changes propagate to Next.js (via theme.config.ts) and Plotly (via aei_theme.py).",
 
-  "colors": {
-    "brightTealBlue": "#067bc2",
-    "skyReflection":  "#84bcda",
-    "brightAmber":    "#ecc30b",
-    "coralGlow":      "#f37748",
-    "jetBlack":       "#162521",
-    "white":          "#ffffff"
-  },
-
-  "neutrals": {
-    "950": "#0c1512",
-    "900": "#162521",
-    "800": "#1e332d",
-    "700": "#2d4a42",
-    "600": "#3d6358",
-    "400": "#7a9e94",
-    "200": "#c8dbd6",
-    "100": "#e8f0ed",
-    "50":  "#f4f8f6"
-  },
-
-  "semantic": {
-    "primary":       "#067bc2",
-    "primaryHover":  "#0568a3",
+  "palette": {
+    "tealBlue":      "#067bc2",
+    "tealBlueHover": "#0568a3",
+    "skyReflection": "#84bcda",
+    "brightAmber":   "#ecc30b",
+    "coralGlow":     "#f37748",
+    "jetBlack":      "#162521",
+    "white":         "#ffffff",
     "success":       "#2a9d6e",
-    "warning":       "#ecc30b",
-    "error":         "#d93636"
+    "error":         "#d93636",
+    "neutrals": {
+      "950": "#0c1512",
+      "900": "#162521",
+      "800": "#1e332d",
+      "700": "#2d4a42",
+      "600": "#3d6358",
+      "400": "#7a9e94",
+      "200": "#c8dbd6",
+      "100": "#e8f0ed",
+      "50":  "#f4f8f6"
+    }
+  },
+
+  "themes": {
+    "dark": {
+      "primary":      "#067bc2",
+      "primaryHover": "#0568a3",
+      "secondary":    "#84bcda",
+      "accent":       "#ecc30b",
+      "accentAlt":    "#f37748",
+
+      "bg":           "#0c1512",
+      "bgSubtle":     "#162521",
+      "surface":      "#1e332d",
+      "surfaceHover": "#2d4a42",
+
+      "border":       "#2d4a42",
+      "borderSubtle": "#1e332d",
+
+      "fg":           "#f4f8f6",
+      "fgSecondary":  "#c8dbd6",
+      "fgMuted":      "#7a9e94",
+      "fgInverse":    "#0c1512",
+
+      "success":      "#2a9d6e",
+      "warning":      "#ecc30b",
+      "error":        "#d93636",
+
+      "glass": {
+        "background": "rgba(22, 37, 33, 0.55)",
+        "blur":       "14px",
+        "border":     "rgba(132, 188, 218, 0.20)",
+        "shadow":     "0 8px 32px rgba(0, 0, 0, 0.40)"
+      },
+      "glassLight": {
+        "background": "rgba(255, 255, 255, 0.12)",
+        "blur":       "14px",
+        "border":     "rgba(255, 255, 255, 0.20)",
+        "shadow":     "0 8px 32px rgba(0, 0, 0, 0.25)"
+      }
+    },
+    "light": {
+      "primary":      "#067bc2",
+      "primaryHover": "#0568a3",
+      "secondary":    "#84bcda",
+      "accent":       "#ecc30b",
+      "accentAlt":    "#f37748",
+
+      "bg":           "#f4f8f6",
+      "bgSubtle":     "#e8f0ed",
+      "surface":      "#ffffff",
+      "surfaceHover": "#e8f0ed",
+
+      "border":       "#c8dbd6",
+      "borderSubtle": "#e8f0ed",
+
+      "fg":           "#0c1512",
+      "fgSecondary":  "#162521",
+      "fgMuted":      "#3d6358",
+      "fgInverse":    "#f4f8f6",
+
+      "success":      "#2a9d6e",
+      "warning":      "#ecc30b",
+      "error":        "#d93636",
+
+      "glass": {
+        "background": "rgba(255, 255, 255, 0.75)",
+        "blur":       "14px",
+        "border":     "rgba(0, 0, 0, 0.08)",
+        "shadow":     "0 8px 32px rgba(0, 0, 0, 0.08)"
+      },
+      "glassLight": {
+        "background": "rgba(255, 255, 255, 0.90)",
+        "blur":       "14px",
+        "border":     "rgba(0, 0, 0, 0.06)",
+        "shadow":     "0 4px 16px rgba(0, 0, 0, 0.06)"
+      }
+    }
   },
 
   "fonts": {
@@ -82,21 +153,6 @@
     "card":   "16px",
     "button": "8px",
     "pill":   "9999px"
-  },
-
-  "glass": {
-    "light": {
-      "background":   "rgba(255, 255, 255, 0.12)",
-      "blur":         "14px",
-      "border":       "rgba(255, 255, 255, 0.20)",
-      "shadow":       "0 8px 32px rgba(0, 0, 0, 0.25)"
-    },
-    "dark": {
-      "background":   "rgba(22, 37, 33, 0.55)",
-      "blur":         "14px",
-      "border":       "rgba(132, 188, 218, 0.20)",
-      "shadow":       "0 8px 32px rgba(0, 0, 0, 0.40)"
-    }
   },
 
   "animation": {

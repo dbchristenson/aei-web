@@ -31,21 +31,21 @@ const BlockCard = forwardRef<HTMLButtonElement, {
       <div
         className="glass-card-dark p-5 py-6 transition-all duration-200"
         style={{
-          borderColor: isSelected ? "var(--color-teal-blue)" : undefined,
+          borderColor: isSelected ? "var(--color-primary)" : undefined,
           borderWidth: isSelected ? "1px" : undefined,
-          boxShadow: isSelected ? "0 0 16px rgba(132, 188, 218, 0.15)" : undefined,
+          boxShadow: isSelected ? "0 0 16px color-mix(in srgb, var(--color-secondary) 15%, transparent)" : undefined,
         }}
       >
         <div className="flex items-center justify-between gap-2">
           <h3
-            className="font-sans-header font-semibold text-neutral-50 truncate"
+            className="font-sans-header font-semibold text-fg truncate"
             style={{ fontSize: "var(--text-h4)" }}
           >
             {block.name}
           </h3>
         </div>
         <p
-          className="text-sky-reflection font-sans-body mt-1.5"
+          className="text-secondary font-sans-body mt-1.5"
           style={{ fontSize: "var(--text-small)" }}
         >
           {block.basin}
@@ -61,14 +61,14 @@ const BlockCard = forwardRef<HTMLButtonElement, {
           }}
         >
           <p
-            className="text-neutral-200 font-sans-body leading-relaxed"
+            className="text-fg-secondary font-sans-body leading-relaxed"
             style={{ fontSize: "var(--text-small)" }}
           >
             {block.description}
           </p>
           <Link
             href={`/blocks/${block.id}`}
-            className="inline-flex items-center gap-1.5 mt-3 px-4 py-2 rounded-[var(--radius-button)] font-sans-body font-medium text-teal-blue border border-teal-blue hover:bg-teal-blue/10 transition-all"
+            className="inline-flex items-center gap-1.5 mt-3 px-4 py-2 rounded-[var(--radius-button)] font-sans-body font-medium text-primary border border-primary hover:bg-primary/10 transition-all"
             style={{ fontSize: "var(--text-small)" }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -110,13 +110,13 @@ export default function BlockInfoPanel({
       {/* Section heading */}
       <div>
         <h2
-          className="font-sans-header font-bold text-neutral-50 mb-2 uppercase tracking-wider"
+          className="font-sans-header font-bold text-fg mb-2 uppercase tracking-wider"
           style={{ fontSize: "var(--text-h1)" }}
         >
           Exploration Blocks
         </h2>
         <p
-          className="text-neutral-400 font-sans-body"
+          className="text-fg-muted font-sans-body"
           style={{ fontSize: "var(--text-body)" }}
         >
           Active exploration across Indonesia.
@@ -154,7 +154,7 @@ export default function BlockInfoPanel({
       {/* Hint when nothing selected */}
       {!isLocked && (
         <p
-          className="text-neutral-400 font-sans-body italic"
+          className="text-fg-muted font-sans-body italic"
           style={{ fontSize: "var(--text-small)" }}
         >
           Select a block to explore.

@@ -46,7 +46,7 @@ export default function InsightChart({
     <div className="glass-card-dark p-6">
       {title && (
         <h3
-          className="font-sans-header font-semibold text-neutral-50 mb-4"
+          className="font-sans-header font-semibold text-fg mb-4"
           style={{ fontSize: "var(--text-h4)" }}
         >
           {title}
@@ -55,17 +55,17 @@ export default function InsightChart({
 
       {state === "loading" && (
         <div
-          className="bg-neutral-800 rounded-[var(--radius-card)] animate-pulse"
+          className="bg-surface rounded-[var(--radius-card)] animate-pulse"
           style={{ aspectRatio: "16/9" }}
         />
       )}
 
       {state === "error" && (
         <div
-          className="flex items-center justify-center bg-neutral-800 rounded-[var(--radius-card)]"
+          className="flex items-center justify-center bg-surface rounded-[var(--radius-card)]"
           style={{ aspectRatio: "16/9" }}
         >
-          <p className="text-neutral-400 font-sans-body">
+          <p className="text-fg-muted font-sans-body">
             Chart data unavailable
           </p>
         </div>
@@ -75,10 +75,10 @@ export default function InsightChart({
         // TODO: Replace with <Plot data={chartData.data} layout={chartData.layout}
         //   config={{ displayModeBar: false, responsive: true }} />
         <div
-          className="bg-neutral-800 rounded-[var(--radius-card)] flex items-center justify-center"
+          className="bg-surface rounded-[var(--radius-card)] flex items-center justify-center"
           style={{ aspectRatio: "16/9" }}
         >
-          <p className="text-neutral-400 font-sans-body">
+          <p className="text-fg-muted font-sans-body">
             Chart loaded (Plotly render pending)
           </p>
         </div>
@@ -86,7 +86,7 @@ export default function InsightChart({
 
       {caption && (
         <p
-          className="mt-3 text-neutral-400 font-sans-body"
+          className="mt-3 text-fg-muted font-sans-body"
           style={{ fontSize: "var(--text-xs)" }}
         >
           {caption}

@@ -15,15 +15,15 @@ function getCssVar(name: string): string {
 
 function getThemeColors() {
   return {
-    tealBlue: getCssVar("--color-teal-blue"),
-    amber: getCssVar("--color-bright-amber"),
-    coralGlow: getCssVar("--color-coral-glow"),
-    n950: getCssVar("--color-neutral-950"),
-    n900: getCssVar("--color-neutral-900"),
-    n800: getCssVar("--color-neutral-800"),
-    n700: getCssVar("--color-neutral-700"),
-    n600: getCssVar("--color-neutral-600"),
-    n400: getCssVar("--color-neutral-400"),
+    tealBlue: getCssVar("--color-primary"),
+    amber: getCssVar("--color-accent"),
+    coralGlow: getCssVar("--color-accent-alt"),
+    n950: getCssVar("--color-bg"),
+    n900: getCssVar("--color-bg-subtle"),
+    n800: getCssVar("--color-surface"),
+    n700: getCssVar("--color-surface-hover"),
+    n600: getCssVar("--color-border"),
+    n400: getCssVar("--color-fg-muted"),
   };
 }
 
@@ -244,7 +244,7 @@ export default function ExplorationMap({
     const container = containerRef.current;
     if (!container) return;
 
-    const tc = getThemeColors();
+    let tc = getThemeColors();
 
     const projection = d3
       .geoOrthographic()
@@ -266,6 +266,7 @@ export default function ExplorationMap({
     }
 
     function render() {
+      tc = getThemeColors();
       const { width, height, globeRadius } = updateProjection();
       const path = d3.geoPath(projection);
 
@@ -562,8 +563,23 @@ export default function ExplorationMap({
     });
     resizeObserver.observe(container);
 
+    // Re-render when theme changes
+    const themeObserver = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (mutation.attributeName === "data-theme") {
+          render();
+          break;
+        }
+      }
+    });
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+
     return () => {
       resizeObserver.disconnect();
+      themeObserver.disconnect();
       containerSel.on("dblclick", null);
       renderRef.current = null;
       if (bounceAnimRef.current) {
@@ -792,14 +808,14 @@ export default function ExplorationMap({
             >
               <g className="animate-grid-pulse">
                 {Array.from({ length: 14 }, (_, i) => (
-                  <line key={`h-${i}`} x1={0} x2={800} y1={i * 45} y2={i * 45} stroke="var(--color-neutral-600)" strokeWidth={0.5} />
+                  <line key={`h-${i}`} x1={0} x2={800} y1={i * 45} y2={i * 45} stroke="var(--color-border)" strokeWidth={0.5} />
                 ))}
                 {Array.from({ length: 18 }, (_, i) => (
-                  <line key={`v-${i}`} x1={i * 50} x2={i * 50} y1={0} y2={600} stroke="var(--color-neutral-600)" strokeWidth={0.5} />
+                  <line key={`v-${i}`} x1={i * 50} x2={i * 50} y1={0} y2={600} stroke="var(--color-border)" strokeWidth={0.5} />
                 ))}
               </g>
             </svg>
-            <p className="absolute text-neutral-400 font-sans-body animate-pulse" style={{ fontSize: "var(--text-small)" }}>
+            <p className="absolute text-fg-muted font-sans-body animate-pulse" style={{ fontSize: "var(--text-small)" }}>
               Loading exploration data&hellip;
             </p>
           </div>
@@ -807,7 +823,7 @@ export default function ExplorationMap({
 
         {mapState === "error" && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <p className="text-neutral-400 font-sans-body" style={{ fontSize: "var(--text-body)" }}>
+            <p className="text-fg-muted font-sans-body" style={{ fontSize: "var(--text-body)" }}>
               Unable to load map data. Please try again later.
             </p>
           </div>
@@ -815,7 +831,7 @@ export default function ExplorationMap({
 
         {mapState === "empty" && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <p className="text-neutral-400 font-sans-body" style={{ fontSize: "var(--text-body)" }}>
+            <p className="text-fg-muted font-sans-body" style={{ fontSize: "var(--text-body)" }}>
               Exploration block data coming soon.
             </p>
           </div>
@@ -832,13 +848,13 @@ export default function ExplorationMap({
         {/* Hover tooltip */}
         <div
           ref={tooltipRef}
-          className="absolute pointer-events-none z-20 px-3 py-1.5 rounded-[var(--radius-button)] font-sans-body text-neutral-50 whitespace-nowrap transition-opacity duration-150"
+          className="absolute pointer-events-none z-20 px-3 py-1.5 rounded-[var(--radius-button)] font-sans-body text-fg whitespace-nowrap transition-opacity duration-150"
           style={{
             fontSize: "var(--text-small)",
             opacity: 0,
-            background: "rgba(22, 37, 33, 0.85)",
+            background: "color-mix(in srgb, var(--color-bg-subtle) 85%, transparent)",
             backdropFilter: "blur(8px)",
-            border: "1px solid rgba(132, 188, 218, 0.2)",
+            border: "1px solid var(--glass-border)",
           }}
           aria-hidden="true"
         />
@@ -856,7 +872,7 @@ export default function ExplorationMap({
                 key={feature.id}
                 aria-label={`${feature.properties.name} — ${feature.properties.basin}`}
                 aria-pressed={uiState.blockId === feature.id && uiState.mode === "selected"}
-                className="absolute w-10 h-10 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-0 pointer-events-auto focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-teal-blue focus-visible:bg-teal-blue/20"
+                className="absolute w-10 h-10 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-0 pointer-events-auto focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-primary focus-visible:bg-primary/20"
                 style={{
                   left: "-999px",
                   top: "-999px",

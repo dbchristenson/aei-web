@@ -18,10 +18,10 @@ const teamMembers = [
 export default function TeamPage() {
   return (
     <main className="pt-20">
-      <section className="py-24 px-4 bg-neutral-950">
+      <section className="py-24 px-4 bg-bg">
         <div className="mx-auto" style={{ maxWidth: "var(--container-xl)" }}>
           <h1
-            className="text-center font-sans-header font-bold text-neutral-50 mb-16"
+            className="text-center font-sans-header font-bold text-fg mb-16"
             style={{ fontSize: "var(--text-h1)", lineHeight: 1.2 }}
           >
             Our Team
@@ -35,9 +35,9 @@ export default function TeamPage() {
                 className="glass-card p-6 text-center"
               >
                 {/* Photo placeholder */}
-                <div className="mx-auto mb-4 w-24 h-24 rounded-full bg-neutral-200 flex items-center justify-center">
+                <div className="mx-auto mb-4 w-24 h-24 rounded-full bg-palette-neutral-200 flex items-center justify-center">
                   <span
-                    className="font-sans-header font-semibold text-neutral-600"
+                    className="font-sans-header font-semibold text-palette-neutral-600"
                     style={{ fontSize: "var(--text-h3)" }}
                   >
                     {member.name
@@ -48,19 +48,19 @@ export default function TeamPage() {
                 </div>
 
                 <h2
-                  className="font-sans-header font-bold text-neutral-50"
+                  className="font-sans-header font-bold text-fg"
                   style={{ fontSize: "var(--text-h4)" }}
                 >
                   {member.name}
                 </h2>
                 <p
-                  className="text-neutral-400 font-sans-body mt-1"
+                  className="text-fg-muted font-sans-body mt-1"
                   style={{ fontSize: "var(--text-small)" }}
                 >
                   {member.title}
                 </p>
                 <p
-                  className="text-neutral-200 font-sans-body mt-4"
+                  className="text-fg-secondary font-sans-body mt-4"
                   style={{ fontSize: "var(--text-body)" }}
                 >
                   {member.bio}

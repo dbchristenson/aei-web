@@ -70,7 +70,7 @@ export default function StatCounter({
   return (
     <div ref={ref} className="text-center">
       <p
-        className="font-sans-header font-bold text-teal-blue"
+        className="font-sans-header font-bold text-primary"
         style={{ fontSize: "var(--text-stat)", lineHeight: 1.0 }}
       >
         {prefix}
@@ -78,7 +78,7 @@ export default function StatCounter({
         {suffix}
       </p>
       <p
-        className="mt-2 text-neutral-400 font-sans-body"
+        className="mt-2 text-fg-muted font-sans-body"
         style={{ fontSize: "var(--text-small)" }}
       >
         {label}

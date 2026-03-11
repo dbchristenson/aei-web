@@ -12,10 +12,10 @@ interface InsightCardProps {
 }
 
 const categoryStyles: Record<InsightCategory, { bg: string; text: string }> = {
-  "O&G": { bg: "bg-teal-blue/15", text: "text-teal-blue" },
-  Geothermal: { bg: "bg-coral-glow/15", text: "text-coral-glow" },
-  Policy: { bg: "bg-sky-reflection/15", text: "text-sky-reflection" },
-  Market: { bg: "bg-bright-amber/15", text: "text-bright-amber" },
+  "O&G": { bg: "bg-palette-teal-blue/15", text: "text-palette-teal-blue" },
+  Geothermal: { bg: "bg-palette-coral-glow/15", text: "text-palette-coral-glow" },
+  Policy: { bg: "bg-palette-sky-reflection/15", text: "text-palette-sky-reflection" },
+  Market: { bg: "bg-palette-bright-amber/15", text: "text-palette-bright-amber" },
 };
 
 export default function InsightCard({
@@ -35,7 +35,7 @@ export default function InsightCard({
     >
       {/* Cover image */}
       <div
-        className="w-full bg-neutral-800"
+        className="w-full bg-surface"
         style={{ aspectRatio: "16/9" }}
       >
         {coverImage ? (
@@ -47,7 +47,7 @@ export default function InsightCard({
             className="w-full h-full object-cover"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-neutral-800 to-neutral-900" />
+          <div className="w-full h-full bg-gradient-to-br from-surface to-bg-subtle" />
         )}
       </div>
 
@@ -61,21 +61,21 @@ export default function InsightCard({
         </span>
 
         <h3
-          className="mt-3 font-sans-header font-semibold text-neutral-50 group-hover:text-teal-blue transition-colors"
+          className="mt-3 font-sans-header font-semibold text-fg group-hover:text-primary transition-colors"
           style={{ fontSize: "var(--text-h4)", lineHeight: 1.4 }}
         >
           {title}
         </h3>
 
         <p
-          className="mt-2 text-neutral-400 font-sans-body line-clamp-2"
+          className="mt-2 text-fg-muted font-sans-body line-clamp-2"
           style={{ fontSize: "var(--text-small)" }}
         >
           {excerpt}
         </p>
 
         <time
-          className="mt-4 block text-neutral-600 font-sans-body"
+          className="mt-4 block text-fg-muted font-sans-body"
           style={{ fontSize: "var(--text-xs)" }}
           dateTime={date}
         >

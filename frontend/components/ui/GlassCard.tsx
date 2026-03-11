@@ -20,7 +20,7 @@ export default function GlassCard({
 
   return (
     <Tag
-      className={`${baseClass} ${hoverClass} focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-blue ${className}`}
+      className={`${baseClass} ${hoverClass} focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${className}`}
     >
       {children}
     </Tag>

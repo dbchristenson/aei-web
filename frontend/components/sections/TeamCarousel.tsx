@@ -42,12 +42,12 @@ export default function TeamCarousel({ members }: TeamCarouselProps) {
 
   return (
     <section
-      className="py-24 px-4 bg-neutral-950"
+      className="py-24 px-4 bg-bg"
       aria-label="Leadership team"
     >
       <div className="mx-auto" style={{ maxWidth: "var(--container-xl)" }}>
         <h2
-          className="text-center font-sans-header font-semibold text-neutral-50 mb-16"
+          className="text-center font-sans-header font-semibold text-fg mb-16"
           style={{ fontSize: "var(--text-h2)" }}
         >
           Leadership
@@ -103,9 +103,9 @@ export default function TeamCarousel({ members }: TeamCarouselProps) {
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full bg-neutral-200 flex items-center justify-center">
+                      <div className="w-full h-full bg-palette-neutral-200 flex items-center justify-center">
                         <span
-                          className="font-sans-header font-semibold text-neutral-600"
+                          className="font-sans-header font-semibold text-palette-neutral-600"
                           style={{ fontSize: "var(--text-h3)" }}
                         >
                           {getInitials(member.name)}
@@ -115,19 +115,19 @@ export default function TeamCarousel({ members }: TeamCarouselProps) {
                   </div>
 
                   <h3
-                    className="text-center font-sans-header font-bold text-neutral-50"
+                    className="text-center font-sans-header font-bold text-fg"
                     style={{ fontSize: "var(--text-h4)" }}
                   >
                     {member.name}
                   </h3>
                   <p
-                    className="text-center text-neutral-400 font-sans-body mt-1"
+                    className="text-center text-fg-muted font-sans-body mt-1"
                     style={{ fontSize: "var(--text-small)" }}
                   >
                     {member.title}
                   </p>
                   <p
-                    className="text-center text-neutral-200 font-sans-body mt-3"
+                    className="text-center text-fg-secondary font-sans-body mt-3"
                     style={{ fontSize: "var(--text-small)" }}
                   >
                     {member.bio}
@@ -138,7 +138,7 @@ export default function TeamCarousel({ members }: TeamCarouselProps) {
                       href={member.linkedIn}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block text-center mt-4 text-teal-blue hover:text-sky-reflection transition-colors font-sans-body"
+                      className="block text-center mt-4 text-primary hover:text-secondary transition-colors font-sans-body"
                       style={{ fontSize: "var(--text-small)" }}
                     >
                       LinkedIn &rarr;

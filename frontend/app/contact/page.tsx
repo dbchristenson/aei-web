@@ -11,16 +11,16 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <main className="pt-20">
-      <section className="py-24 px-4 bg-neutral-950">
+      <section className="py-24 px-4 bg-bg">
         <div className="mx-auto" style={{ maxWidth: "var(--container-lg)" }}>
           <h1
-            className="text-center font-sans-header font-bold text-neutral-50 mb-4"
+            className="text-center font-sans-header font-bold text-fg mb-4"
             style={{ fontSize: "var(--text-h1)", lineHeight: 1.2 }}
           >
             Get in Touch
           </h1>
           <p
-            className="text-center text-neutral-400 font-sans-body mb-16 max-w-xl mx-auto"
+            className="text-center text-fg-muted font-sans-body mb-16 max-w-xl mx-auto"
             style={{ fontSize: "var(--text-body-lg)" }}
           >
             Interested in exploring investment opportunities or partnerships?
@@ -35,7 +35,7 @@ export default function ContactPage() {
                 <div>
                   <label
                     htmlFor="name"
-                    className="block font-sans-body text-neutral-200 mb-2"
+                    className="block font-sans-body text-fg-secondary mb-2"
                     style={{ fontSize: "var(--text-small)" }}
                   >
                     Full Name *
@@ -45,14 +45,14 @@ export default function ContactPage() {
                     id="name"
                     name="name"
                     required
-                    className="w-full bg-neutral-800 border border-neutral-700 rounded-[var(--radius-button)] px-4 py-3 text-neutral-50 font-sans-body focus:outline-none focus:border-teal-blue transition-colors"
+                    className="w-full bg-surface border border-border rounded-[var(--radius-button)] px-4 py-3 text-fg font-sans-body focus:outline-none focus:border-primary transition-colors"
                     style={{ fontSize: "var(--text-body)" }}
                   />
                 </div>
                 <div>
                   <label
                     htmlFor="organization"
-                    className="block font-sans-body text-neutral-200 mb-2"
+                    className="block font-sans-body text-fg-secondary mb-2"
                     style={{ fontSize: "var(--text-small)" }}
                   >
                     Organization
@@ -61,7 +61,7 @@ export default function ContactPage() {
                     type="text"
                     id="organization"
                     name="organization"
-                    className="w-full bg-neutral-800 border border-neutral-700 rounded-[var(--radius-button)] px-4 py-3 text-neutral-50 font-sans-body focus:outline-none focus:border-teal-blue transition-colors"
+                    className="w-full bg-surface border border-border rounded-[var(--radius-button)] px-4 py-3 text-fg font-sans-body focus:outline-none focus:border-primary transition-colors"
                     style={{ fontSize: "var(--text-body)" }}
                   />
                 </div>
@@ -71,7 +71,7 @@ export default function ContactPage() {
                 <div>
                   <label
                     htmlFor="email"
-                    className="block font-sans-body text-neutral-200 mb-2"
+                    className="block font-sans-body text-fg-secondary mb-2"
                     style={{ fontSize: "var(--text-small)" }}
                   >
                     Email *
@@ -81,14 +81,14 @@ export default function ContactPage() {
                     id="email"
                     name="email"
                     required
-                    className="w-full bg-neutral-800 border border-neutral-700 rounded-[var(--radius-button)] px-4 py-3 text-neutral-50 font-sans-body focus:outline-none focus:border-teal-blue transition-colors"
+                    className="w-full bg-surface border border-border rounded-[var(--radius-button)] px-4 py-3 text-fg font-sans-body focus:outline-none focus:border-primary transition-colors"
                     style={{ fontSize: "var(--text-body)" }}
                   />
                 </div>
                 <div>
                   <label
                     htmlFor="phone"
-                    className="block font-sans-body text-neutral-200 mb-2"
+                    className="block font-sans-body text-fg-secondary mb-2"
                     style={{ fontSize: "var(--text-small)" }}
                   >
                     Phone
@@ -97,7 +97,7 @@ export default function ContactPage() {
                     type="tel"
                     id="phone"
                     name="phone"
-                    className="w-full bg-neutral-800 border border-neutral-700 rounded-[var(--radius-button)] px-4 py-3 text-neutral-50 font-sans-body focus:outline-none focus:border-teal-blue transition-colors"
+                    className="w-full bg-surface border border-border rounded-[var(--radius-button)] px-4 py-3 text-fg font-sans-body focus:outline-none focus:border-primary transition-colors"
                     style={{ fontSize: "var(--text-body)" }}
                   />
                 </div>
@@ -106,7 +106,7 @@ export default function ContactPage() {
               <div>
                 <label
                   htmlFor="message"
-                  className="block font-sans-body text-neutral-200 mb-2"
+                  className="block font-sans-body text-fg-secondary mb-2"
                   style={{ fontSize: "var(--text-small)" }}
                 >
                   Message *
@@ -116,7 +116,7 @@ export default function ContactPage() {
                   name="message"
                   required
                   rows={5}
-                  className="w-full bg-neutral-800 border border-neutral-700 rounded-[var(--radius-button)] px-4 py-3 text-neutral-50 font-sans-body focus:outline-none focus:border-teal-blue transition-colors resize-y"
+                  className="w-full bg-surface border border-border rounded-[var(--radius-button)] px-4 py-3 text-fg font-sans-body focus:outline-none focus:border-primary transition-colors resize-y"
                   style={{ fontSize: "var(--text-body)" }}
                 />
               </div>

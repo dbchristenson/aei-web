@@ -38,16 +38,15 @@ export default function BlockDetailMap({ blockId }: BlockDetailMapProps) {
 
       setLoaded(true);
 
-      const tc = {
-        tealBlue: getCssVar("--color-teal-blue"),
-        amber: getCssVar("--color-bright-amber"),
-        n950: getCssVar("--color-neutral-950"),
-        n900: getCssVar("--color-neutral-900"),
-        n700: getCssVar("--color-neutral-700"),
-        n600: getCssVar("--color-neutral-600"),
-      };
-
       function render() {
+        const tc = {
+          tealBlue: getCssVar("--color-primary"),
+          amber: getCssVar("--color-accent"),
+          n950: getCssVar("--color-bg"),
+          n900: getCssVar("--color-bg-subtle"),
+          n700: getCssVar("--color-surface-hover"),
+          n600: getCssVar("--color-border"),
+        };
         const width = container!.clientWidth;
         const height = container!.clientHeight;
         const svg = d3.select(svgEl!);
@@ -145,7 +144,23 @@ export default function BlockDetailMap({ blockId }: BlockDetailMapProps) {
       const resizeObserver = new ResizeObserver(() => render());
       resizeObserver.observe(container!);
 
-      return () => resizeObserver.disconnect();
+      const themeObserver = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+          if (mutation.attributeName === "data-theme") {
+            render();
+            break;
+          }
+        }
+      });
+      themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["data-theme"],
+      });
+
+      return () => {
+        resizeObserver.disconnect();
+        themeObserver.disconnect();
+      };
     });
 
     return () => {
@@ -158,7 +173,7 @@ export default function BlockDetailMap({ blockId }: BlockDetailMapProps) {
       {!loaded && (
         <div className="absolute inset-0 flex items-center justify-center">
           <p
-            className="text-neutral-400 font-sans-body animate-pulse"
+            className="text-fg-muted font-sans-body animate-pulse"
             style={{ fontSize: "var(--text-small)" }}
           >
             Loading map&hellip;

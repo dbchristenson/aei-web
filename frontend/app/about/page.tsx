@@ -12,16 +12,16 @@ export default function AboutPage() {
   return (
     <main className="pt-20">
       {/* Hero */}
-      <section className="py-24 px-4 bg-neutral-950">
+      <section className="py-24 px-4 bg-bg">
         <div className="mx-auto" style={{ maxWidth: "var(--container-lg)" }}>
           <h1
-            className="font-sans-header font-bold text-neutral-50"
+            className="font-sans-header font-bold text-fg"
             style={{ fontSize: "var(--text-h1)", lineHeight: 1.2 }}
           >
             About AEI
           </h1>
           <p
-            className="mt-6 text-neutral-200 font-sans-body max-w-2xl"
+            className="mt-6 text-fg-secondary font-sans-body max-w-2xl"
             style={{ fontSize: "var(--text-body-lg)", lineHeight: 1.6 }}
           >
             {/* TODO: Replace with actual company history from client */}
@@ -34,17 +34,17 @@ export default function AboutPage() {
       </section>
 
       {/* History / Mission */}
-      <section className="py-24 px-4 bg-neutral-900">
+      <section className="py-24 px-4 bg-bg-subtle">
         <div className="mx-auto" style={{ maxWidth: "var(--container-lg)" }}>
           <GlassCard variant="dark" className="p-8 md:p-12">
             <h2
-              className="font-sans-header font-semibold text-neutral-50 mb-6"
+              className="font-sans-header font-semibold text-fg mb-6"
               style={{ fontSize: "var(--text-h2)" }}
             >
               Our Mission
             </h2>
             <p
-              className="text-neutral-200 font-sans-body"
+              className="text-fg-secondary font-sans-body"
               style={{ fontSize: "var(--text-body)", lineHeight: 1.6 }}
             >
               {/* TODO: Replace with actual mission statement */}

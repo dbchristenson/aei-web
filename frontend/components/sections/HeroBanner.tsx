@@ -15,7 +15,7 @@ export default function HeroBanner() {
 
   return (
     <section
-      className="relative py-24 px-4 bg-neutral-950 overflow-hidden"
+      className="relative py-24 px-4 bg-bg overflow-hidden"
       aria-label="Company overview"
     >
       <VideoBackground videoKey={HERO_BANNER_VIDEO} overlay="darken" />
@@ -27,7 +27,7 @@ export default function HeroBanner() {
         <GlassCard className="p-8 md:p-12 lg:p-16">
           {/* Section label */}
           <p
-            className="font-sans-body text-sky-reflection tracking-[0.18em] uppercase mb-6"
+            className="font-sans-body text-secondary tracking-[0.18em] uppercase mb-6"
             style={{ fontSize: "var(--text-xs)" }}
           >
             About AEI
@@ -35,7 +35,7 @@ export default function HeroBanner() {
 
           {/* Headline — exact spec */}
           <h2
-            className="font-sans-header font-bold text-neutral-50 leading-tight"
+            className="font-sans-header font-bold text-fg leading-tight"
             style={{ fontSize: "var(--text-hero)", lineHeight: 1.1 }}
           >
             High Impact Energy Projects.
@@ -43,7 +43,7 @@ export default function HeroBanner() {
 
           {/* Subheadline — exact spec */}
           <p
-            className="mt-6 text-neutral-200 font-sans-body leading-relaxed max-w-2xl"
+            className="mt-6 text-fg-secondary font-sans-body leading-relaxed max-w-2xl"
             style={{ fontSize: "var(--text-body-lg)", lineHeight: 1.6 }}
           >
             PT Agra Energi Indonesia — privately held, providing security and reliability to Indonesia's grid.
@@ -54,7 +54,7 @@ export default function HeroBanner() {
             <a
               href="#exploration-map"
               onClick={handleViewProjects}
-              className="inline-flex items-center gap-2 font-sans-body font-medium text-white bg-teal-blue hover:bg-primary-hover hover:-translate-y-0.5 transition-all rounded-[var(--radius-button)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-blue"
+              className="inline-flex items-center gap-2 font-sans-body font-medium text-white bg-primary hover:bg-primary-hover hover:-translate-y-0.5 transition-all rounded-[var(--radius-button)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
               style={{
                 fontSize: "var(--text-body-lg)",
                 padding: "1rem 2rem",

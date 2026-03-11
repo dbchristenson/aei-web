@@ -17,15 +17,15 @@ _root = Path(__file__).resolve().parents[1]
 with open(_root / "theme.json") as f:
     _t = json.load(f)
 
-c = _t["colors"]
+c = _t["palette"]
 f = _t["fonts"]
-g = _t["glass"]["dark"]
+g = _t["themes"]["dark"]["glass"]
 
 AEI_THEME = {
     "font": {"family": f"{f['sansBody']}, sans-serif", "color": c["skyReflection"]},
     "paper_bgcolor": "rgba(0,0,0,0)",
     "plot_bgcolor": "rgba(0,0,0,0)",
-    "colorway": [c["brightTealBlue"], c["skyReflection"], c["brightAmber"], c["coralGlow"]],
+    "colorway": [c["tealBlue"], c["skyReflection"], c["brightAmber"], c["coralGlow"]],
     "xaxis": {
         "gridcolor": "rgba(132, 188, 218, 0.15)",
         "linecolor": "rgba(132, 188, 218, 0.30)",

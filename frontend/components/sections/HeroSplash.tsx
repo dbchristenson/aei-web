@@ -58,7 +58,7 @@ export default function HeroSplash() {
   return (
     <section
       ref={sectionRef}
-      className="relative flex items-center justify-center min-h-screen overflow-hidden bg-neutral-950"
+      className="relative flex items-center justify-center min-h-screen overflow-hidden bg-bg"
       aria-label="Hero splash"
     >
       <VideoBackground videoKey={HERO_SPLASH_VIDEO} overlay="vignette" />
@@ -74,14 +74,15 @@ export default function HeroSplash() {
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <circle cx="36" cy="36" r="34" stroke="rgba(6,123,194,0.55)" strokeWidth="1.5" />
-            <circle cx="36" cy="36" r="24" stroke="rgba(132,188,218,0.35)" strokeWidth="1" />
+            <circle cx="36" cy="36" r="34" stroke="var(--color-primary)" strokeOpacity="0.55" strokeWidth="1.5" />
+            <circle cx="36" cy="36" r="24" stroke="var(--color-secondary)" strokeOpacity="0.35" strokeWidth="1" />
             <line
               x1="36"
               y1="4"
               x2="36"
               y2="68"
-              stroke="rgba(132,188,218,0.25)"
+              stroke="var(--color-secondary)"
+              strokeOpacity="0.25"
               strokeWidth="0.75"
             />
             <line
@@ -89,7 +90,8 @@ export default function HeroSplash() {
               y1="36"
               x2="68"
               y2="36"
-              stroke="rgba(132,188,218,0.25)"
+              stroke="var(--color-secondary)"
+              strokeOpacity="0.25"
               strokeWidth="0.75"
             />
           </svg>
@@ -97,7 +99,7 @@ export default function HeroSplash() {
 
         {/* AEI wordmark — Lora serif, logo-splash size */}
         <h1
-          className="font-serif font-bold text-neutral-50 leading-none tracking-tight"
+          className="font-serif font-bold text-fg leading-none tracking-tight"
           style={{ fontSize: "var(--text-logo-splash)" }}
         >
           AEI
@@ -105,7 +107,7 @@ export default function HeroSplash() {
 
         {/* Company name */}
         <p
-          className="mt-5 text-sky-reflection font-sans-body tracking-[0.22em] uppercase"
+          className="mt-5 text-secondary font-sans-body tracking-[0.22em] uppercase"
           style={{ fontSize: "var(--text-xs)" }}
         >
           PT Agra Energi Indonesia
@@ -118,7 +120,7 @@ export default function HeroSplash() {
         aria-hidden="true"
       >
         <span
-          className="text-neutral-400 font-sans-body tracking-widest uppercase"
+          className="text-fg-muted font-sans-body tracking-widest uppercase"
           style={{ fontSize: "var(--text-xs)" }}
         >
           Scroll
@@ -133,7 +135,8 @@ export default function HeroSplash() {
           >
             <path
               d="M5 8l5 5 5-5"
-              stroke="rgba(132,188,218,0.6)"
+              stroke="var(--color-secondary)"
+              strokeOpacity="0.6"
               strokeWidth="1.5"
               strokeLinecap="round"
               strokeLinejoin="round"

@@ -13,8 +13,8 @@ interface VideoBackgroundProps {
 
 const OVERLAY_CLASSES: Record<string, string> = {
   vignette:
-    "bg-gradient-to-b from-neutral-950/10 via-transparent to-neutral-950/90",
-  darken: "bg-neutral-950/50",
+    "bg-gradient-to-b from-bg/10 via-transparent to-bg/90",
+  darken: "bg-bg/50",
 };
 
 export default function VideoBackground({

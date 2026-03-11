@@ -41,7 +41,7 @@ export default async function InsightArticlePage({
         <div className="mx-auto" style={{ maxWidth: "var(--container-md)" }}>
           <header className="mb-12">
             <h1
-              className="font-sans-header font-bold text-neutral-50"
+              className="font-sans-header font-bold text-fg"
               style={{ fontSize: "var(--text-h1)", lineHeight: 1.2 }}
             >
               {slug
@@ -52,7 +52,7 @@ export default async function InsightArticlePage({
             {/* TODO: Date, category tag, reading time */}
           </header>
 
-          <div className="prose prose-invert max-w-none font-sans-body text-neutral-200">
+          <div className="prose prose-invert max-w-none font-sans-body text-fg-secondary">
             <p>
               Article content for &ldquo;{slug.replace(/-/g, " ")}&rdquo; will
               be rendered here from MDX.

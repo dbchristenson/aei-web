@@ -7,8 +7,8 @@ interface SectionDividerProps {
 
 export default function SectionDivider({
   variant = "wave",
-  fromColor = "var(--color-neutral-950)",
-  toColor = "var(--color-neutral-900)",
+  fromColor = "var(--color-bg)",
+  toColor = "var(--color-bg-subtle)",
   flip = false,
 }: SectionDividerProps) {
   const path =
