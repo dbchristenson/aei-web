@@ -1,4 +1,5 @@
 import { forwardRef, useEffect, useRef } from "react";
+import Link from "next/link";
 
 export interface BlockProperties {
   id: string;
@@ -13,19 +14,6 @@ interface BlockInfoPanelProps {
   selectedBlockId: string | null;
   isLocked: boolean;
   onBlockClick: (blockId: string) => void;
-}
-
-function StatusBadge({ status }: { status: string }) {
-  const isActive = status.toLowerCase().includes("active");
-  return (
-    <span className="inline-flex items-center gap-1.5 font-sans-body text-neutral-400" style={{ fontSize: "var(--text-xs)" }}>
-      <span
-        className={`inline-block w-1.5 h-1.5 rounded-full ${isActive ? "bg-teal-blue" : "bg-bright-amber"}`}
-        aria-hidden="true"
-      />
-      {status}
-    </span>
-  );
 }
 
 const BlockCard = forwardRef<HTMLButtonElement, {
@@ -55,7 +43,6 @@ const BlockCard = forwardRef<HTMLButtonElement, {
           >
             {block.name}
           </h3>
-          <StatusBadge status={block.status} />
         </div>
         <p
           className="text-sky-reflection font-sans-body mt-1.5"
@@ -79,12 +66,17 @@ const BlockCard = forwardRef<HTMLButtonElement, {
           >
             {block.description}
           </p>
-          <p
-            className="text-neutral-400 font-sans-body italic mt-2"
-            style={{ fontSize: "var(--text-xs)" }}
+          <Link
+            href={`/blocks/${block.id}`}
+            className="inline-flex items-center gap-1.5 mt-3 px-4 py-2 rounded-[var(--radius-button)] font-sans-body font-medium text-teal-blue border border-teal-blue hover:bg-teal-blue/10 transition-all"
+            style={{ fontSize: "var(--text-small)" }}
+            onClick={(e) => e.stopPropagation()}
           >
-            Click again or press Escape to deselect.
-          </p>
+            Learn More
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </Link>
         </div>
       </div>
     </button>

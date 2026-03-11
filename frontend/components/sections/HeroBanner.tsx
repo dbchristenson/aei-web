@@ -38,7 +38,7 @@ export default function HeroBanner() {
             className="font-sans-header font-bold text-neutral-50 leading-tight"
             style={{ fontSize: "var(--text-hero)", lineHeight: 1.1 }}
           >
-            High Impact Deep Water Oil &amp; Gas Exploration.
+            High Impact Energy Projects.
           </h2>
 
           {/* Subheadline — exact spec */}
@@ -46,8 +46,7 @@ export default function HeroBanner() {
             className="mt-6 text-neutral-200 font-sans-body leading-relaxed max-w-2xl"
             style={{ fontSize: "var(--text-body-lg)", lineHeight: 1.6 }}
           >
-            PT Agra Energi Indonesia — privately held, operating at the frontier
-            of Indonesian energy.
+            PT Agra Energi Indonesia — privately held, providing security and reliability to Indonesia's grid.
           </p>
 
           {/* CTA — "View Projects" scrolls to the exploration map */}

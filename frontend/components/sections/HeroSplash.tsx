@@ -34,7 +34,6 @@ export default function HeroSplash() {
             scrub: true,
           },
         });
-        return () => mm.revert();
       });
 
       // Mobile: animate from 40vh → 55vh scroll
@@ -51,7 +50,6 @@ export default function HeroSplash() {
             scrub: true,
           },
         });
-        return () => mm.revert();
       });
     },
     { scope: sectionRef },
