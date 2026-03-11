@@ -1,9 +1,43 @@
 import HeroSplash from "@/components/sections/HeroSplash";
 import HeroBanner from "@/components/sections/HeroBanner";
 import SectionDivider from "@/components/ui/SectionDivider";
+import TeamCarousel from "@/components/sections/TeamCarousel";
 
 // Heavy components — lazy-loaded client-side only
 import ExplorationMapLoader from "@/components/map/ExplorationMapLoader";
+
+const teamMembers = [
+  {
+    name: "Gary Christenson",
+    title: "CEO",
+    bio: "Gary is a seasoned Indonesian O&G explorationist who has held leadership roles at Chevron, Unocal, Niko, and Black Gold Energy.",
+    photo: "/images/headshots/blank_headshot.png",
+  },
+  {
+    name: "Sujud Sunawan",
+    title: "CTO",
+    bio: "Sujud is an IT savant that manages AEI\u2019s immense intelligence data sets.",
+    photo: "/images/headshots/blank_headshot.png",
+  },
+  {
+    name: "Yusak",
+    title: "Senior Project Developer",
+    bio: "Yusak\u2019s primary ideal is to enjoy the moment\u2014especially when it involves drilling for gas.",
+    photo: "/images/headshots/blank_headshot.png",
+  },
+  {
+    name: "Agung",
+    title: "Senior Project Developer",
+    bio: "Agung is a very personable individual who has extensive offshore operations experience in drilling and well development.",
+    photo: "/images/headshots/blank_headshot.png",
+  },
+  {
+    name: "DB Christenson",
+    title: "Development Intern",
+    bio: "DB received his MS in Energy from Northwestern University and is eager to hone his energy project development skills.",
+    photo: "/images/headshots/blank_headshot.png",
+  },
+];
 
 export default function Home() {
   return (
@@ -50,29 +84,7 @@ export default function Home() {
         fromColor="var(--color-bg-subtle)"
         toColor="var(--color-bg)"
       />
-      <section className="py-24 px-4 bg-bg" aria-label="Leadership team">
-        <div
-          className="mx-auto text-center"
-          style={{ maxWidth: "var(--container-xl)" }}
-        >
-          <h2
-            className="font-sans-header font-semibold text-fg mb-3"
-            style={{ fontSize: "var(--text-h2)" }}
-          >
-            Meet the Team
-          </h2>
-          <p
-            className="text-fg-muted font-sans-body mb-12"
-            style={{ fontSize: "var(--text-body)" }}
-          >
-            Over 100 years of combined experience in Indonesian energy.
-          </p>
-          {/* TODO: Replace with <TeamCarousel members={teamData} /> */}
-          <p className="text-fg-muted font-sans-body italic" style={{ fontSize: "var(--text-small)" }}>
-            Team profiles coming soon.
-          </p>
-        </div>
-      </section>
+      <TeamCarousel members={teamMembers} />
 
       {/* Section 5 — Interactive Exploration Map */}
       <SectionDivider
