@@ -98,18 +98,12 @@ export default function HeroSplash() {
         </div>
 
         {/* AEI wordmark — Lora serif, logo-splash size */}
-        <h1
-          className="font-serif font-bold text-fg leading-none tracking-tight"
-          style={{ fontSize: "var(--text-logo-splash)" }}
-        >
+        <h1 className="font-serif font-bold text-fg leading-none tracking-tight text-logo-splash">
           AEI
         </h1>
 
         {/* Company name */}
-        <p
-          className="mt-5 text-secondary font-sans-body tracking-[0.22em] uppercase"
-          style={{ fontSize: "var(--text-xs)" }}
-        >
+        <p className="mt-5 text-secondary font-sans-body tracking-[0.22em] uppercase text-xs">
           PT Agra Energi Indonesia
         </p>
       </div>
@@ -119,10 +113,7 @@ export default function HeroSplash() {
         className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
         aria-hidden="true"
       >
-        <span
-          className="text-fg-muted font-sans-body tracking-widest uppercase"
-          style={{ fontSize: "var(--text-xs)" }}
-        >
+        <span className="text-fg-muted font-sans-body tracking-widest uppercase text-xs">
           Scroll
         </span>
         <div className="animate-scroll-bounce">

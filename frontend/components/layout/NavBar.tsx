@@ -74,8 +74,7 @@ export default function NavBar() {
         {/* Logo — docked position (small Lora serif) */}
         <Link
           href="/"
-          className="font-serif font-bold text-fg hover:text-secondary transition-colors"
-          style={{ fontSize: "var(--text-h4)" }}
+          className="font-serif font-bold text-fg hover:text-secondary transition-colors text-h4"
         >
           AEI
         </Link>
@@ -86,8 +85,7 @@ export default function NavBar() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-fg-secondary hover:text-fg transition-colors font-sans-body"
-              style={{ fontSize: "var(--text-small)" }}
+              className="text-fg-secondary hover:text-fg transition-colors font-sans-body text-small"
             >
               {link.label}
             </Link>
@@ -158,8 +156,7 @@ export default function NavBar() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-fg hover:text-secondary transition-colors font-sans-header font-semibold"
-              style={{ fontSize: "var(--text-h3)" }}
+              className="text-fg hover:text-secondary transition-colors font-sans-header font-semibold text-h3"
               onClick={() => setMobileOpen(false)}
             >
               {link.label}

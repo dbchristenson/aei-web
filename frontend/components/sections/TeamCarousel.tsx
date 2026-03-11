@@ -45,10 +45,7 @@ export default function TeamCarousel({ members }: TeamCarouselProps) {
       aria-label="Leadership team"
     >
       <div className="mx-auto" style={{ maxWidth: "var(--container-xl)" }}>
-        <h2
-          className="text-center font-sans-header font-semibold text-fg mb-16"
-          style={{ fontSize: "var(--text-h2)" }}
-        >
+        <h2 className="text-center font-sans-header font-semibold text-fg mb-16 text-h2">
           Leadership
         </h2>
 
@@ -103,32 +100,20 @@ export default function TeamCarousel({ members }: TeamCarouselProps) {
                       />
                     ) : (
                       <div className="w-full h-full bg-palette-neutral-200 flex items-center justify-center">
-                        <span
-                          className="font-sans-header font-semibold text-palette-neutral-600"
-                          style={{ fontSize: "var(--text-h3)" }}
-                        >
+                        <span className="font-sans-header font-semibold text-palette-neutral-600 text-h3">
                           {getInitials(member.name)}
                         </span>
                       </div>
                     )}
                   </div>
 
-                  <h3
-                    className="text-center font-sans-header font-bold text-fg"
-                    style={{ fontSize: "var(--text-h4)" }}
-                  >
+                  <h3 className="text-center font-sans-header font-bold text-fg text-h4">
                     {member.name}
                   </h3>
-                  <p
-                    className="text-center text-fg-muted font-sans-body mt-1"
-                    style={{ fontSize: "var(--text-small)" }}
-                  >
+                  <p className="text-center text-fg-muted font-sans-body mt-1 text-small">
                     {member.title}
                   </p>
-                  <p
-                    className="text-center text-fg-secondary font-sans-body mt-3"
-                    style={{ fontSize: "var(--text-small)" }}
-                  >
+                  <p className="text-center text-fg-secondary font-sans-body mt-3 text-small">
                     {member.bio}
                   </p>
                 </GlassCard>

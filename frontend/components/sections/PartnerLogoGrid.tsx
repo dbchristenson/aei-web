@@ -18,8 +18,7 @@ export default function PartnerLogoGrid({ logos }: PartnerLogoGridProps) {
     >
       <div className="mx-auto" style={{ maxWidth: "var(--container-xl)" }}>
         <h2
-          className="text-center font-sans-header font-semibold text-fg mb-16"
-          style={{ fontSize: "var(--text-h2)" }}
+          className="text-center font-sans-header font-semibold text-fg mb-16 text-h2"
         >
           Our Partners &amp; Stakeholders
         </h2>

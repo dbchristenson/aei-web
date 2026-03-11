@@ -37,17 +37,11 @@ const BlockCard = forwardRef<HTMLButtonElement, {
         }}
       >
         <div className="flex items-center justify-between gap-2">
-          <h3
-            className="font-sans-header font-semibold text-fg truncate"
-            style={{ fontSize: "var(--text-h4)" }}
-          >
+          <h3 className="font-sans-header font-semibold text-fg truncate text-h4">
             {block.name}
           </h3>
         </div>
-        <p
-          className="text-secondary font-sans-body mt-1.5"
-          style={{ fontSize: "var(--text-small)" }}
-        >
+        <p className="text-secondary font-sans-body mt-1.5 text-small">
           {block.basin}
         </p>
 
@@ -60,16 +54,12 @@ const BlockCard = forwardRef<HTMLButtonElement, {
             marginTop: isSelected ? "8px" : "0",
           }}
         >
-          <p
-            className="text-fg-secondary font-sans-body leading-relaxed"
-            style={{ fontSize: "var(--text-small)" }}
-          >
+          <p className="text-fg-secondary font-sans-body leading-relaxed text-small">
             {block.description}
           </p>
           <Link
             href={`/blocks/${block.id}`}
-            className="inline-flex items-center gap-1.5 mt-3 px-4 py-2 rounded-[var(--radius-button)] font-sans-body font-medium text-primary border border-primary hover:bg-primary/10 transition-all"
-            style={{ fontSize: "var(--text-small)" }}
+            className="inline-flex items-center gap-1.5 mt-3 px-4 py-2 rounded-[var(--radius-button)] font-sans-body font-medium text-primary border border-primary hover:bg-primary/10 transition-all text-small"
             onClick={(e) => e.stopPropagation()}
           >
             Learn More
@@ -109,16 +99,10 @@ export default function BlockInfoPanel({
     <div className="flex flex-col gap-6">
       {/* Section heading */}
       <div>
-        <h2
-          className="font-sans-header font-bold text-fg mb-2 uppercase tracking-wider"
-          style={{ fontSize: "var(--text-h1)" }}
-        >
+        <h2 className="font-sans-header font-bold text-fg mb-2 uppercase tracking-wider text-h1">
           Exploration Blocks
         </h2>
-        <p
-          className="text-fg-muted font-sans-body"
-          style={{ fontSize: "var(--text-body)" }}
-        >
+        <p className="text-fg-muted font-sans-body text-body">
           Active exploration across Indonesia.
         </p>
       </div>
@@ -153,10 +137,7 @@ export default function BlockInfoPanel({
 
       {/* Hint when nothing selected */}
       {!isLocked && (
-        <p
-          className="text-fg-muted font-sans-body italic"
-          style={{ fontSize: "var(--text-small)" }}
-        >
+        <p className="text-fg-muted font-sans-body italic text-small">
           Select a block to explore.
         </p>
       )}

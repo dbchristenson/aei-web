@@ -45,10 +45,7 @@ export default function InsightChart({
   return (
     <div className="glass-card-dark p-6">
       {title && (
-        <h3
-          className="font-sans-header font-semibold text-fg mb-4"
-          style={{ fontSize: "var(--text-h4)" }}
-        >
+        <h3 className="font-sans-header font-semibold text-fg mb-4 text-h4">
           {title}
         </h3>
       )}
@@ -85,10 +82,7 @@ export default function InsightChart({
       )}
 
       {caption && (
-        <p
-          className="mt-3 text-fg-muted font-sans-body"
-          style={{ fontSize: "var(--text-xs)" }}
-        >
+        <p className="mt-3 text-fg-muted font-sans-body text-xs">
           {caption}
         </p>
       )}

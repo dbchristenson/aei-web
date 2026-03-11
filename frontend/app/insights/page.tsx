@@ -26,10 +26,7 @@ export default function InsightsPage() {
       {/* Article grid */}
       <section className="py-24 px-4 bg-bg-subtle">
         <div className="mx-auto" style={{ maxWidth: "var(--container-xl)" }}>
-          <h1
-            className="font-sans-header font-bold text-fg mb-16"
-            style={{ fontSize: "var(--text-h1)", lineHeight: 1.2 }}
-          >
+          <h1 className="font-sans-header font-bold text-fg mb-16 text-h1">
             Insights
           </h1>
 

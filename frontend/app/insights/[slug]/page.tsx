@@ -40,10 +40,7 @@ export default async function InsightArticlePage({
       <article className="py-24 px-4">
         <div className="mx-auto" style={{ maxWidth: "var(--container-md)" }}>
           <header className="mb-12">
-            <h1
-              className="font-sans-header font-bold text-fg"
-              style={{ fontSize: "var(--text-h1)", lineHeight: 1.2 }}
-            >
+            <h1 className="font-sans-header font-bold text-fg text-h1">
               {slug
                 .split("-")
                 .map((w) => w.charAt(0).toUpperCase() + w.slice(1))

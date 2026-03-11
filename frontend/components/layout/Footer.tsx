@@ -23,22 +23,13 @@ export default function Footer() {
       >
         {/* Brand */}
         <div>
-          <p
-            className="font-serif font-bold text-fg"
-            style={{ fontSize: "var(--text-h3)" }}
-          >
+          <p className="font-serif font-bold text-fg text-h3">
             AEI
           </p>
-          <p
-            className="mt-2 text-fg-muted font-sans-body"
-            style={{ fontSize: "var(--text-small)" }}
-          >
+          <p className="mt-2 text-fg-muted font-sans-body text-small">
             PT Agra Energi Indonesia
           </p>
-          <p
-            className="mt-1 text-fg-muted font-sans-body"
-            style={{ fontSize: "var(--text-small)" }}
-          >
+          <p className="mt-1 text-fg-muted font-sans-body text-small">
             High-impact oil &amp; gas exploration and geothermal development in
             Indonesia.
           </p>
@@ -46,10 +37,7 @@ export default function Footer() {
 
         {/* Navigation */}
         <div>
-          <h3
-            className="font-sans-header font-semibold text-fg mb-4"
-            style={{ fontSize: "var(--text-body)" }}
-          >
+          <h3 className="font-sans-header font-semibold text-fg mb-4 text-body">
             Company
           </h3>
           <ul className="space-y-2">
@@ -57,8 +45,7 @@ export default function Footer() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="text-fg-muted hover:text-fg-secondary transition-colors font-sans-body"
-                  style={{ fontSize: "var(--text-small)" }}
+                  className="text-fg-muted hover:text-fg-secondary transition-colors font-sans-body text-small"
                 >
                   {link.label}
                 </Link>
@@ -69,10 +56,7 @@ export default function Footer() {
 
         {/* Legal & Governance */}
         <div>
-          <h3
-            className="font-sans-header font-semibold text-fg mb-4"
-            style={{ fontSize: "var(--text-body)" }}
-          >
+          <h3 className="font-sans-header font-semibold text-fg mb-4 text-body">
             Legal &amp; Governance
           </h3>
           <ul className="space-y-2">
@@ -80,8 +64,7 @@ export default function Footer() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="text-fg-muted hover:text-fg-secondary transition-colors font-sans-body"
-                  style={{ fontSize: "var(--text-small)" }}
+                  className="text-fg-muted hover:text-fg-secondary transition-colors font-sans-body text-small"
                 >
                   {link.label}
                 </Link>
@@ -92,17 +75,11 @@ export default function Footer() {
 
         {/* Contact */}
         <div>
-          <h3
-            className="font-sans-header font-semibold text-fg mb-4"
-            style={{ fontSize: "var(--text-body)" }}
-          >
+          <h3 className="font-sans-header font-semibold text-fg mb-4 text-body">
             Contact
           </h3>
           {/* TODO: Replace with actual contact details from client */}
-          <address
-            className="not-italic text-fg-muted font-sans-body space-y-2"
-            style={{ fontSize: "var(--text-small)" }}
-          >
+          <address className="not-italic text-fg-muted font-sans-body space-y-2 text-small">
             <p>Jakarta, Indonesia</p>
             <p>info@agraenergi.com</p>
           </address>
@@ -110,10 +87,7 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-border-subtle py-6 px-4 text-center">
-        <p
-          className="text-fg-muted font-sans-body"
-          style={{ fontSize: "var(--text-xs)" }}
-        >
+        <p className="text-fg-muted font-sans-body text-xs">
           &copy; {new Date().getFullYear()} PT Agra Energi Indonesia. All rights
           reserved.
         </p>

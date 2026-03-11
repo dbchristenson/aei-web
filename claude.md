@@ -24,7 +24,7 @@ B2B investor-facing website for PT Agra Energi Indonesia, an Indonesian oil & ga
 - `theme.json` — Master design tokens (colors, fonts, spacing, glass styles, animation)
 
 ## Design Tokens
-ALL colors, fonts, spacing, border radii, and glass styles come from `theme.json` at the repo root. Never hardcode these values. The frontend reads them via `frontend/theme.config.ts` → Tailwind config → CSS variables. The analysis scripts read them via `analysis/aei_theme.py`.
+ALL colors, fonts, spacing, border radii, and glass styles come from `theme.json` at the repo root. Never hardcode these values. The frontend reads them via `globals.css` (`@theme inline` block + CSS custom properties) → Tailwind tokens. The analysis scripts read them via `analysis/aei_theme.py`.
 
 ## Commands
 - `cd frontend && npm run dev` — Start Next.js dev server

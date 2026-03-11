@@ -4,10 +4,7 @@ import { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
 import * as topojson from "topojson-client";
 import type { Topology, GeometryCollection } from "topojson-specification";
-
-function getCssVar(name: string): string {
-  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-}
+import { getCssVar } from "@/lib/theme-utils";
 
 interface BlockDetailMapProps {
   blockId: string;
@@ -173,8 +170,7 @@ export default function BlockDetailMap({ blockId }: BlockDetailMapProps) {
       {!loaded && (
         <div className="absolute inset-0 flex items-center justify-center">
           <p
-            className="text-fg-muted font-sans-body animate-pulse"
-            style={{ fontSize: "var(--text-small)" }}
+            className="text-fg-muted font-sans-body animate-pulse text-small"
           >
             Loading map&hellip;
           </p>

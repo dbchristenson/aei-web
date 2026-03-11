@@ -60,20 +60,14 @@ export default function Home() {
           className="mx-auto text-center"
           style={{ maxWidth: "var(--container-xl)" }}
         >
-          <h2
-            className="font-sans-header font-semibold text-fg mb-3"
-            style={{ fontSize: "var(--text-h2)" }}
-          >
+          <h2 className="font-sans-header font-semibold text-fg mb-3 text-h2">
             Our Partners &amp; Stakeholders
           </h2>
-          <p
-            className="text-fg-muted font-sans-body mb-12"
-            style={{ fontSize: "var(--text-body)" }}
-          >
+          <p className="text-fg-muted font-sans-body mb-12 text-body">
             Working alongside world-class operators and institutional partners.
           </p>
           {/* TODO: Replace with <PartnerLogoGrid logos={partnersData} /> */}
-          <p className="text-fg-muted font-sans-body italic" style={{ fontSize: "var(--text-small)" }}>
+          <p className="text-fg-muted font-sans-body italic text-small">
             Partner logos coming soon.
           </p>
         </div>

@@ -26,27 +26,18 @@ export default function HeroBanner() {
       >
         <GlassCard className="p-8 md:p-12 lg:p-16">
           {/* Section label */}
-          <p
-            className="font-sans-body text-secondary tracking-[0.18em] uppercase mb-6"
-            style={{ fontSize: "var(--text-xs)" }}
-          >
+          <p className="font-sans-body text-secondary tracking-[0.18em] uppercase mb-6 text-xs">
             About AEI
           </p>
 
           {/* Headline — exact spec */}
-          <h2
-            className="font-sans-header font-bold text-fg leading-tight"
-            style={{ fontSize: "var(--text-hero)", lineHeight: 1.1 }}
-          >
+          <h2 className="font-sans-header font-bold text-fg text-hero">
             High Impact Energy Projects.
           </h2>
 
           {/* Subheadline — exact spec */}
-          <p
-            className="mt-6 text-fg-secondary font-sans-body leading-relaxed max-w-2xl"
-            style={{ fontSize: "var(--text-body-lg)", lineHeight: 1.6 }}
-          >
-            PT Agra Energi Indonesia — privately held, providing security and reliability to Indonesia's grid.
+          <p className="mt-6 text-fg-secondary font-sans-body max-w-2xl text-body-lg">
+            PT Agra Energi Indonesia — privately held, providing security and reliability to Indonesia&apos;s grid.
           </p>
 
           {/* CTA — "View Projects" scrolls to the exploration map */}
@@ -54,11 +45,8 @@ export default function HeroBanner() {
             <a
               href="#exploration-map"
               onClick={handleViewProjects}
-              className="inline-flex items-center gap-2 font-sans-body font-medium text-white bg-primary hover:bg-primary-hover hover:-translate-y-0.5 transition-all rounded-[var(--radius-button)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-              style={{
-                fontSize: "var(--text-body-lg)",
-                padding: "1rem 2rem",
-              }}
+              className="inline-flex items-center gap-2 font-sans-body font-medium text-white bg-primary hover:bg-primary-hover hover:-translate-y-0.5 transition-all rounded-[var(--radius-button)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary text-body-lg"
+              style={{ padding: "1rem 2rem" }}
             >
               View Projects
               <svg

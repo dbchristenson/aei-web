@@ -12,17 +12,11 @@ export default function PullQuote({ quote, attribution }: PullQuoteProps) {
       >
         &ldquo;
       </span>
-      <p
-        className="font-serif italic text-fg-secondary"
-        style={{ fontSize: "var(--text-quote)", lineHeight: 1.4 }}
-      >
+      <p className="font-serif italic text-fg-secondary text-quote">
         {quote}
       </p>
       {attribution && (
-        <footer
-          className="mt-4 text-fg-muted"
-          style={{ fontSize: "var(--text-small)" }}
-        >
+        <footer className="mt-4 text-fg-muted text-small">
           &mdash; {attribution}
         </footer>
       )}
