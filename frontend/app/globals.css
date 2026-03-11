@@ -125,12 +125,12 @@
   --theme-fg-inverse: #f4f8f6;
 
   /* Glass tokens for light theme */
-  --glass-bg: rgba(255, 255, 255, 0.75);
-  --glass-border: rgba(0, 0, 0, 0.08);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-  --glass-light-bg: rgba(255, 255, 255, 0.90);
-  --glass-light-border: rgba(0, 0, 0, 0.06);
-  --glass-light-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  --glass-bg: rgba(255, 255, 255, 0.45);
+  --glass-border: rgba(0, 0, 0, 0.10);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
+  --glass-light-bg: rgba(255, 255, 255, 0.55);
+  --glass-light-border: rgba(0, 0, 0, 0.08);
+  --glass-light-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 /* System preference fallback when no data-theme is set */
@@ -147,12 +147,17 @@
     --theme-fg-muted: #3d6358;
     --theme-fg-inverse: #f4f8f6;
 
-    --glass-bg: rgba(255, 255, 255, 0.75);
-    --glass-border: rgba(0, 0, 0, 0.08);
-    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-    --glass-light-bg: rgba(255, 255, 255, 0.90);
-    --glass-light-border: rgba(0, 0, 0, 0.06);
-    --glass-light-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    --glass-bg: rgba(255, 255, 255, 0.45);
+    --glass-border: rgba(0, 0, 0, 0.10);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
+    --glass-light-bg: rgba(255, 255, 255, 0.55);
+    --glass-light-border: rgba(0, 0, 0, 0.08);
+    --glass-light-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  :root:not([data-theme]) .video-overlay-vignette,
+  :root:not([data-theme]) .video-overlay-darken {
+    background: none;
   }
 }
 
@@ -188,6 +193,24 @@
     box-shadow: var(--glass-shadow);
   }
 
+  .video-overlay-vignette {
+    background: linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--color-bg) 10%, transparent),
+      transparent 40%,
+      color-mix(in srgb, var(--color-bg) 90%, transparent)
+    );
+  }
+
+  .video-overlay-darken {
+    background: color-mix(in srgb, var(--color-bg) 50%, transparent);
+  }
+
+  [data-theme="light"] .video-overlay-vignette,
+  [data-theme="light"] .video-overlay-darken {
+    background: none;
+  }
+
   .custom-scrollbar::-webkit-scrollbar {
     width: 4px;
   }
@@ -211,27 +234,6 @@ body {
   background: var(--color-bg);
   color: var(--color-fg);
   font-family: var(--font-sans-body);
-}
-
-/* Hero animated background blobs */
-@keyframes blob-drift-1 {
-  from {
-    transform: translate(0, 0) scale(1);
-  }
-
-  to {
-    transform: translate(15%, 20%) scale(1.12);
-  }
-}
-
-@keyframes blob-drift-2 {
-  from {
-    transform: translate(0, 0) scale(1.05);
-  }
-
-  to {
-    transform: translate(-12%, -15%) scale(0.90);
-  }
 }
 
 /* Map loading skeleton pulse */
@@ -261,14 +263,6 @@ body {
 }
 
 @layer utilities {
-  .animate-blob-1 {
-    animation: blob-drift-1 25s ease-in-out infinite alternate;
-  }
-
-  .animate-blob-2 {
-    animation: blob-drift-2 32s ease-in-out infinite alternate-reverse;
-  }
-
   .animate-scroll-bounce {
     animation: scroll-bounce 1.8s ease-in-out infinite;
   }
