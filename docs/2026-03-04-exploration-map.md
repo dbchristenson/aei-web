@@ -16,7 +16,7 @@ Three components work together:
 
 Data files served as static assets from `public/data/`:
 - `blocks.geojson` — 5 exploration blocks (MultiPolygon geometries + properties)
-- `land-110m.json` — Natural Earth 110m TopoJSON (countries + land objects)
+- `indonesia-10m.json` — Natural Earth 10m TopoJSON (Indonesia only, land object)
 
 ## Design Choices
 

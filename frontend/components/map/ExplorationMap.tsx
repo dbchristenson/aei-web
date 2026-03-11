@@ -50,11 +50,11 @@ interface BlocksGeoJSON {
 }
 
 // ─── Regional view constants ───
-const INITIAL_ROTATION: [number, number, number] = [-115, -1.4, 0];
-const LAMBDA_BOUNDS: [number, number] = [-140, -90];
-const PHI_BOUNDS: [number, number] = [-15, 20];
+const INITIAL_ROTATION: [number, number, number] = [-118, -2, 0];
+const LAMBDA_BOUNDS: [number, number] = [-128, -108];
+const PHI_BOUNDS: [number, number] = [-6, 4];
 const RUBBER_BAND_DIM = 18;
-const MAX_OVERSHOOT = 30;
+const MAX_OVERSHOOT = 15;
 
 // ─── Zoom-to-block constants ───
 const ZOOM_DURATION = 1.0;
@@ -174,7 +174,7 @@ export default function ExplorationMap({
               if (!r.ok) throw new Error(`Blocks fetch failed: ${r.status}`);
               return r.json() as Promise<BlocksGeoJSON>;
             }),
-            fetch("/data/land-110m.json").then((r) => {
+            fetch("/data/indonesia-10m.json").then((r) => {
               if (!r.ok) throw new Error(`Land fetch failed: ${r.status}`);
               return r.json() as Promise<Topology>;
             }),
@@ -254,13 +254,13 @@ export default function ExplorationMap({
       const width = container!.clientWidth;
       const height = container!.clientHeight;
 
-      const baseRadius = Math.max(height * 1.5, 800);
+      const baseRadius = Math.max(height * 2.5, 1200);
       const globeRadius = baseRadius * scaleMultiplierRef.current;
 
       projection
         .scale(globeRadius)
         .rotate(rotationRef.current)
-        .translate([width * 0.52, height * 0.5]);
+        .translate([width * 0.55, height * 0.5]);
 
       return { width, height, globeRadius, baseRadius };
     }
@@ -339,22 +339,7 @@ export default function ExplorationMap({
         .attr("stroke", tc.n600)
         .attr("stroke-width", 0.6);
 
-      // Layer 5: Country borders
-      const countries = topojson.feature(
-        worldData!,
-        worldData!.objects.countries as GeometryCollection
-      );
-      svg.selectAll(".country-border")
-        .data((countries as GeoJSON.FeatureCollection).features)
-        .join("path")
-        .attr("class", "country-border")
-        .attr("d", path)
-        .attr("fill", "none")
-        .attr("stroke", tc.n600)
-        .attr("stroke-width", 0.25)
-        .attr("stroke-opacity", 0.5);
-
-      // Layer 6: Block polygons
+      // Layer 5: Block polygons
       const currentUi = uiStateRef.current;
       const blocksGroup = svg.append("g").attr("class", "blocks-layer");
       blocksGroup.selectAll<SVGPathElement, BlockFeature>(".block-area")
@@ -362,6 +347,7 @@ export default function ExplorationMap({
         .join("path")
         .attr("class", "block-area")
         .attr("d", path)
+        .attr("fill-rule", "evenodd")
         .each(function (d) {
           const el = d3.select(this);
           const isActive = d.id === currentUi.blockId;
@@ -615,7 +601,7 @@ export default function ExplorationMap({
       killAnimations();
 
       const height = containerRef.current.clientHeight;
-      const baseRadius = Math.max(height * 1.5, 800);
+      const baseRadius = Math.max(height * 2.5, 1200);
       const params = getBlockZoomParams(feature, baseRadius);
 
       if (prefersReducedMotion) {
