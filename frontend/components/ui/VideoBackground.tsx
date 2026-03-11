@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { getVideo } from "@/lib/media";
 import type { VideoKey } from "@/lib/media";
+import usePrefersReducedMotion from "@/hooks/usePrefersReducedMotion";
 
 interface VideoBackgroundProps {
   videoKey: VideoKey;
@@ -13,8 +13,9 @@ interface VideoBackgroundProps {
 
 const OVERLAY_CLASSES: Record<string, string> = {
   vignette:
-    "bg-gradient-to-b from-neutral-950/10 via-transparent to-neutral-950/90",
-  darken: "bg-neutral-950/50",
+    "video-overlay-vignette",
+  darken:
+    "video-overlay-darken",
 };
 
 export default function VideoBackground({
@@ -23,16 +24,8 @@ export default function VideoBackground({
   overlayClassName,
   className = "",
 }: VideoBackgroundProps) {
-  const [prefersReduced, setPrefersReduced] = useState(false);
+  const prefersReduced = usePrefersReducedMotion();
   const { videoUrl, posterUrl } = getVideo(videoKey);
-
-  useEffect(() => {
-    const mql = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setPrefersReduced(mql.matches);
-    const handler = (e: MediaQueryListEvent) => setPrefersReduced(e.matches);
-    mql.addEventListener("change", handler);
-    return () => mql.removeEventListener("change", handler);
-  }, []);
 
   return (
     <div
@@ -40,6 +33,7 @@ export default function VideoBackground({
       aria-hidden="true"
     >
       {prefersReduced ? (
+        // eslint-disable-next-line @next/next/no-img-element
         <img
           src={posterUrl}
           alt=""

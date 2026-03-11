@@ -13,13 +13,12 @@ export default function PartnerLogoGrid({ logos }: PartnerLogoGridProps) {
 
   return (
     <section
-      className="py-24 px-4 bg-neutral-900"
+      className="py-24 px-4 bg-bg-subtle"
       aria-label="Partners and stakeholders"
     >
       <div className="mx-auto" style={{ maxWidth: "var(--container-xl)" }}>
         <h2
-          className="text-center font-sans-header font-semibold text-neutral-50 mb-16"
-          style={{ fontSize: "var(--text-h2)" }}
+          className="text-center font-sans-header font-semibold text-fg mb-16 text-h2"
         >
           Our Partners &amp; Stakeholders
         </h2>

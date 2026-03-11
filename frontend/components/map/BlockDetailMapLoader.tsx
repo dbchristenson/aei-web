@@ -7,8 +7,7 @@ const BlockDetailMap = dynamic(() => import("./BlockDetailMap"), {
   loading: () => (
     <div className="w-full h-full flex items-center justify-center">
       <p
-        className="text-neutral-400 font-sans-body animate-pulse"
-        style={{ fontSize: "var(--text-small)" }}
+        className="text-fg-muted font-sans-body animate-pulse text-small"
       >
         Loading map&hellip;
       </p>

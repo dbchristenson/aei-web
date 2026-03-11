@@ -4,11 +4,11 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Button from "@/components/ui/Button";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 
 const navLinks = [
   { label: "About", href: "/about" },
-  { label: "Insights", href: "/insights" },
-  { label: "Contact", href: "/contact" },
+  { label: "Projects", href: "/projects" },
 ];
 
 export default function NavBar() {
@@ -63,7 +63,7 @@ export default function NavBar() {
   return (
     <nav
       ref={navRef}
-      className="fixed top-0 left-0 right-0 z-50 bg-jet-black/85 backdrop-blur-[12px] border-b border-neutral-800/40"
+      className="fixed top-0 left-0 right-0 z-50 bg-bg-subtle/85 backdrop-blur-[12px] border-b border-border-subtle/40"
       role="navigation"
       aria-label="Main navigation"
     >
@@ -74,8 +74,7 @@ export default function NavBar() {
         {/* Logo — docked position (small Lora serif) */}
         <Link
           href="/"
-          className="font-serif font-bold text-neutral-50 hover:text-sky-reflection transition-colors"
-          style={{ fontSize: "var(--text-h4)" }}
+          className="font-serif font-bold text-fg hover:text-secondary transition-colors text-h4"
         >
           AEI
         </Link>
@@ -86,12 +85,12 @@ export default function NavBar() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-neutral-200 hover:text-white transition-colors font-sans-body"
-              style={{ fontSize: "var(--text-small)" }}
+              className="text-fg-secondary hover:text-fg transition-colors font-sans-body text-small"
             >
               {link.label}
             </Link>
           ))}
+          <ThemeToggle />
           <Button href="/contact" size="sm">
             Contact Us
           </Button>
@@ -99,7 +98,7 @@ export default function NavBar() {
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden text-neutral-50 p-2 rounded focus-visible:outline-2 focus-visible:outline-teal-blue"
+          className="md:hidden text-fg p-2 rounded focus-visible:outline-2 focus-visible:outline-primary"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-expanded={mobileOpen}
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
@@ -134,9 +133,9 @@ export default function NavBar() {
 
       {/* Mobile full-screen overlay */}
       {mobileOpen && (
-        <div className="md:hidden fixed inset-0 bg-jet-black/95 flex flex-col items-center justify-center gap-10 z-40">
+        <div className="md:hidden fixed inset-0 bg-bg-subtle/95 flex flex-col items-center justify-center gap-10 z-40">
           <button
-            className="absolute top-4 right-4 text-neutral-50 p-2 rounded focus-visible:outline-2 focus-visible:outline-teal-blue"
+            className="absolute top-4 right-4 text-fg p-2 rounded focus-visible:outline-2 focus-visible:outline-primary"
             onClick={() => setMobileOpen(false)}
             aria-label="Close menu"
           >
@@ -157,13 +156,13 @@ export default function NavBar() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-neutral-50 hover:text-sky-reflection transition-colors font-sans-header font-semibold"
-              style={{ fontSize: "var(--text-h3)" }}
+              className="text-fg hover:text-secondary transition-colors font-sans-header font-semibold text-h3"
               onClick={() => setMobileOpen(false)}
             >
               {link.label}
             </Link>
           ))}
+          <ThemeToggle />
           <Button href="/contact" size="lg" onClick={() => setMobileOpen(false)}>
             Contact Us
           </Button>

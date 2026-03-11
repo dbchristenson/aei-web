@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Lora, Rubik, Manrope } from "next/font/google";
 import NavBar from "@/components/layout/NavBar";
 import Footer from "@/components/layout/Footer";
+import ThemeProvider from "@/components/providers/ThemeProvider";
 import "./globals.css";
 
 const lora = Lora({
@@ -37,13 +38,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" data-theme="dark" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){var t=localStorage.getItem("aei-theme");if(!t)t=window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";document.documentElement.setAttribute("data-theme",t)})();`,
+          }}
+        />
+      </head>
       <body
         className={`${lora.variable} ${rubik.variable} ${manrope.variable} antialiased`}
       >
-        <NavBar />
-        {children}
-        <Footer />
+        <ThemeProvider>
+          <NavBar />
+          {children}
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

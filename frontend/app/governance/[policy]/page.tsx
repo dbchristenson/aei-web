@@ -33,14 +33,11 @@ export default async function GovernancePolicyPage({
     <main className="pt-20">
       <article className="py-24 px-4">
         <div className="mx-auto" style={{ maxWidth: "var(--container-sm)" }}>
-          <h1
-            className="font-sans-header font-bold text-neutral-50 mb-8"
-            style={{ fontSize: "var(--text-h1)", lineHeight: 1.2 }}
-          >
+          <h1 className="font-sans-header font-bold text-fg mb-8 text-h1">
             {title}
           </h1>
 
-          <div className="font-sans-body text-neutral-200 space-y-4" style={{ fontSize: "var(--text-body)", lineHeight: 1.6 }}>
+          <div className="font-sans-body text-fg-secondary space-y-4 text-body">
             {/* TODO: Replace with actual policy content from client */}
             <p>
               This governance policy document is pending content from the
