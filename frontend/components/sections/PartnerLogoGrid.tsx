@@ -1,10 +1,10 @@
 "use client";
 
-import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
+import { useRef } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -20,7 +20,7 @@ const LOGOS: PartnerLogo[] = [
   { name: "BP", src: "/images/partner_logos/bp.png", href: "https://www.bp.com", aspectRatio: 0.75 },
   { name: "Mitsui", src: "/images/partner_logos/mitsui.svg", href: "https://www.mitsui.com", aspectRatio: 0.82 },
   { name: "CNOOC", src: "/images/partner_logos/cnooc.svg", href: "https://www.cnoocltd.com", aspectRatio: 1.10 },
-  { name: "LNG Japan", src: "/images/partner_logos/lng_japan.png", href: "https://www.lng.co.jp/en", aspectRatio: 1.0 },
+  { name: "LNG Japan", src: "/images/partner_logos/lng_japan.png", href: "https://www.lngjapan.com/en/", aspectRatio: 1.0 },
   // Row 2: Wide + Square
   { name: "EnQuest", src: "/images/partner_logos/enquest.png", href: "https://www.enquest.com", aspectRatio: 1.46 },
   { name: "ENEOS", src: "/images/partner_logos/eneos-2.png", href: "https://www.eneos.co.jp/english", aspectRatio: 1.72 },

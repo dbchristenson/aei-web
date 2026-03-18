@@ -1,24 +1,24 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { getPolicy, getAllPolicySlugs } from "@/data/governance";
 
 interface GovernancePolicyPageProps {
   params: Promise<{ policy: string }>;
 }
 
-const policyTitles: Record<string, string> = {
-  "anti-corruption": "Anti-Corruption Policy",
-  "code-of-conduct": "Code of Conduct",
-  communications: "Communications Policy",
-  "drugs-alcohol": "Drugs & Alcohol Policy",
-};
+export function generateStaticParams() {
+  return getAllPolicySlugs().map((policy) => ({ policy }));
+}
 
 export async function generateMetadata({
   params,
 }: GovernancePolicyPageProps): Promise<Metadata> {
-  const { policy } = await params;
-  const title = policyTitles[policy] ?? "Governance";
+  const { policy: slug } = await params;
+  const policy = getPolicy(slug);
 
   return {
-    title,
+    title: policy?.title ?? "Governance",
     robots: { index: false, follow: false },
   };
 }
@@ -26,25 +26,96 @@ export async function generateMetadata({
 export default async function GovernancePolicyPage({
   params,
 }: GovernancePolicyPageProps) {
-  const { policy } = await params;
-  const title = policyTitles[policy] ?? "Governance Policy";
+  const { policy: slug } = await params;
+  const policy = getPolicy(slug);
+
+  if (!policy) {
+    notFound();
+  }
 
   return (
     <main className="pt-20">
       <article className="py-24 px-4">
         <div className="mx-auto" style={{ maxWidth: "var(--container-sm)" }}>
+          <Link
+            href="/governance"
+            className="inline-flex items-center gap-1.5 text-fg-muted hover:text-primary font-sans-body transition-colors mb-8 text-small"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M10 12L6 8l4-4"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            Back to Governance
+          </Link>
+
           <h1 className="font-sans-header font-bold text-fg mb-8 text-h1">
-            {title}
+            {policy.title}
           </h1>
 
-          <div className="font-sans-body text-fg-secondary space-y-4 text-body">
-            {/* TODO: Replace with actual policy content from client */}
-            <p>
-              This governance policy document is pending content from the
-              client. It will contain the full text of the {title.toLowerCase()}{" "}
-              as required for Indonesian business compliance.
-            </p>
+          <div className="font-sans-body text-fg-secondary space-y-0">
+            {policy.preamble && (
+              <p className="text-body mb-8">{policy.preamble}</p>
+            )}
+
+            {policy.sections.map((section, i) => (
+              <section key={i} className="mb-10">
+                <h2 className="font-sans-header font-semibold text-fg text-h3 mb-4">
+                  {section.heading}
+                </h2>
+                {section.content.map((block, j) => {
+                  switch (block.type) {
+                    case "paragraph":
+                      return (
+                        <p key={j} className="text-body mb-4">
+                          {block.text}
+                        </p>
+                      );
+                    case "bullets":
+                      return (
+                        <ul
+                          key={j}
+                          className="list-disc list-outside ml-6 mb-4 space-y-2"
+                        >
+                          {block.items?.map((item, k) => (
+                            <li key={k} className="text-body">
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      );
+                    case "numbered":
+                      return (
+                        <ol
+                          key={j}
+                          className="list-decimal list-outside ml-6 mb-4 space-y-2"
+                        >
+                          {block.items?.map((item, k) => (
+                            <li key={k} className="text-body">
+                              {item}
+                            </li>
+                          ))}
+                        </ol>
+                      );
+                  }
+                })}
+              </section>
+            ))}
           </div>
+
+          <p className="text-fg-muted font-sans-body text-small mt-12 pt-6 border-t border-border-subtle">
+            Revision: {policy.revision}
+          </p>
         </div>
       </article>
     </main>
