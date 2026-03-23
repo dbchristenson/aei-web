@@ -14,14 +14,69 @@ B2B investor-facing website for PT Agra Energi Indonesia, an Indonesian oil & ga
 - **Python Packages:** uv
 - **Fonts:** Google Fonts via next/font — Lora, Rubik, Manrope
 
-## Key Directories
-- `frontend/` — Next.js app
-- `frontend/app/` — App Router pages
-- `frontend/components/` — Reusable React components (ui/, layout/, map/, sections/, insights/)
-- `frontend/content/insights/` — MDX article files
-- `backend/` — FastAPI app
-- `analysis/` — Python scripts that produce Plotly JSON for the frontend
-- `theme.json` — Master design tokens (colors, fonts, spacing, glass styles, animation)
+## Directory Structure
+```
+aei-web/
+├── theme.json                    # Master design tokens (colors, fonts, spacing, glass)
+├── main.py                       # Root-level Python entry point
+├── pyproject.toml / uv.lock      # Python workspace config (uv)
+│
+├── frontend/                     # Next.js app (all frontend commands run here)
+│   ├── app/                      # App Router pages (see design doc §3 for specs)
+│   │   ├── layout.tsx            # Root layout (fonts, providers, NavBar, Footer)
+│   │   ├── page.tsx              # Home page — 6-section scroll funnel (design doc §3.1)
+│   │   ├── globals.css           # @theme inline tokens + CSS custom properties
+│   │   ├── about/page.tsx        # /about — history, partner logos, quotes (§3.2)
+│   │   ├── blocks/[id]/page.tsx  # /blocks/:id — individual block detail
+│   │   ├── contact/page.tsx      # /contact — form + info (§3.5)
+│   │   ├── governance/           # /governance + /governance/:policy — footer-only nav (§3.6)
+│   │   ├── insights/             # /insights + /insights/:slug — MDX articles (§3.4)
+│   │   └── team/page.tsx         # /team — leadership grid (§3.3)
+│   ├── components/
+│   │   ├── ui/                   # Primitives: Button, GlassCard, PullQuote, StatCounter,
+│   │   │                         #   SectionDivider, ThemeToggle, VideoBackground
+│   │   ├── layout/               # NavBar (sticky + logo scroll anim, §3.1-S1), Footer (4-col, §3.1-S6)
+│   │   ├── sections/             # Home page sections (map to design doc §3.1):
+│   │   │                         #   HeroSplash (S1), HeroBanner (S2), PartnerLogoGrid (S3),
+│   │   │                         #   TeamCarousel (S4) — map is S5, footer is S6
+│   │   ├── map/                  # ExplorationMap (S5), BlockDetailMap, BlockInfoPanel
+│   │   │   └── globe/            # D3 globe internals (constants, geo-utils, hooks)
+│   │   ├── insights/             # InsightCard, InsightChart (used on /insights)
+│   │   └── providers/            # ThemeProvider (dark/light mode switching)
+│   ├── content/insights/         # MDX article files (currently empty)
+│   ├── data/                     # Static data files
+│   │   ├── blocks.ts             # Block/concession data
+│   │   └── governance.ts         # Governance policy content
+│   ├── hooks/                    # Custom React hooks
+│   │   └── usePrefersReducedMotion.ts
+│   ├── lib/                      # Utilities
+│   │   ├── media.ts              # Media helpers
+│   │   └── theme-utils.ts        # Theme/token utilities
+│   └── public/                   # Static assets (data/, images/, videos/)
+│
+├── backend/                      # FastAPI app
+│   ├── main.py                   # App entry point
+│   ├── db/connection.py          # PostgreSQL + PostGIS connection
+│   ├── models/block.py           # Block data model
+│   └── routers/                  # API routes
+│       ├── blocks.py             # /api/blocks endpoints
+│       └── contact.py            # /api/contact endpoint
+│
+├── analysis/                     # Python data processing → Plotly JSON for frontend
+│   ├── main.py                   # Analysis entry point
+│   ├── aei_theme.py              # Reads theme.json for chart styling
+│   ├── process_blocks.py         # GeoJSON/block processing
+│   └── data/                     # Raw + processed geodata
+│       ├── blocks.geojson
+│       ├── block_data/
+│       └── raw/
+│
+└── docs/                         # Project documentation
+    ├── AEI_Website_Design_Document_v2.md  # Full design spec — READ BEFORE building new sections
+    ├── team-profiles.md
+    ├── governance-content.md
+    └── videos.md
+```
 
 ## Design Tokens
 ALL colors, fonts, spacing, border radii, and glass styles come from `theme.json` at the repo root. Never hardcode these values. The frontend reads them via `globals.css` (`@theme inline` block + CSS custom properties) → Tailwind tokens. The analysis scripts read them via `analysis/aei_theme.py`.
@@ -44,20 +99,4 @@ ALL colors, fonts, spacing, border radii, and glass styles come from `theme.json
 - NEVER hardcode color hex values in components — always use Tailwind tokens or CSS variables from theme.json
 - ALWAYS lazy-load heavy components (D3 map, Plotly charts) with `next/dynamic({ ssr: false })`
 - ALWAYS provide loading/error/empty states for data-fetching components
-- The design document is at `docs/DESIGN.md` — read it before building any new section
-```
-
-The key insight from best practices: keep this under ~50 instructions. Claude Code's system prompt already takes up a chunk of the instruction budget. Be specific about what matters, and use progressive disclosure (point Claude to `docs/DESIGN.md` for details rather than pasting the whole design doc here).
-
-## Step 3 — Create the `.claude/` folder structure
-```
-.claude/
-├── settings.json          # Hooks, permissions, environment
-├── settings.local.json    # Your personal overrides (gitignored)
-├── commands/              # Slash commands
-│   ├── build-section.md
-│   ├── new-component.md
-│   └── new-insight.md
-└── skills/
-    └── aei-design/
-        └── SKILL.md       # Design system skill
+- The design document is at `docs/AEI_Website_Design_Document_v2.md` — read it before building any new section

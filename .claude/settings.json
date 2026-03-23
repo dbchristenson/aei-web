@@ -19,5 +19,8 @@
         ]
       }
     ]
+  },
+  "enabledPlugins": {
+    "impeccable@impeccable": true
   }
 }
