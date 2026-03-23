@@ -37,9 +37,9 @@ export default function Footer() {
 
         {/* Navigation */}
         <div>
-          <h3 className="font-sans-header font-semibold text-fg mb-4 text-body">
+          <h2 className="font-sans-header font-semibold text-fg mb-4 text-body">
             Company
-          </h3>
+          </h2>
           <ul className="space-y-2">
             {companyLinks.map((link) => (
               <li key={link.href}>
@@ -56,9 +56,9 @@ export default function Footer() {
 
         {/* Legal & Governance */}
         <div>
-          <h3 className="font-sans-header font-semibold text-fg mb-4 text-body">
+          <h2 className="font-sans-header font-semibold text-fg mb-4 text-body">
             Legal &amp; Governance
-          </h3>
+          </h2>
           <ul className="space-y-2">
             {legalLinks.map((link) => (
               <li key={link.href}>
@@ -75,9 +75,9 @@ export default function Footer() {
 
         {/* Contact */}
         <div>
-          <h3 className="font-sans-header font-semibold text-fg mb-4 text-body">
+          <h2 className="font-sans-header font-semibold text-fg mb-4 text-body">
             Contact
-          </h3>
+          </h2>
           {/* TODO: Replace with actual contact details from client */}
           <address className="not-italic text-fg-muted font-sans-body space-y-2 text-small">
             <p>Jakarta, Indonesia</p>

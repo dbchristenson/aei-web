@@ -15,7 +15,7 @@ export default function GlassCard({
 }: GlassCardProps) {
   const baseClass = variant === "dark" ? "glass-card-dark" : "glass-card";
   const hoverClass = hoverable
-    ? "transition-transform hover:-translate-y-1 hover:shadow-lg"
+    ? "transition-[transform,box-shadow] duration-200 hover:-translate-y-1 hover:shadow-lg"
     : "";
 
   return (

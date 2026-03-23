@@ -20,7 +20,7 @@ const sizeClasses: Record<string, string> = {
 
 const variantClasses: Record<string, string> = {
   primary:
-    "bg-primary text-white hover:bg-primary-hover hover:-translate-y-0.5 transition-all",
+    "bg-primary text-fg-inverse hover:bg-primary-hover hover:-translate-y-0.5 transition-all",
   secondary:
     "bg-transparent text-primary border border-primary hover:bg-primary/10 transition-all",
   ghost:

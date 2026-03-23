@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import GlassCard from "@/components/ui/GlassCard";
 
 interface TeamMember {
@@ -55,19 +56,19 @@ export default function TeamCarousel({ members }: TeamCarouselProps) {
             <>
               <button
                 onClick={() => scroll("left")}
-                className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 glass-card-dark w-10 h-10 items-center justify-center rounded-full"
+                className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 glass-card-dark w-11 h-11 items-center justify-center rounded-full text-fg-muted hover:text-fg transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                 aria-label="Scroll left"
               >
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                   <path d="M10 12L6 8l4-4" />
                 </svg>
               </button>
               <button
                 onClick={() => scroll("right")}
-                className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 glass-card-dark w-10 h-10 items-center justify-center rounded-full"
+                className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 glass-card-dark w-11 h-11 items-center justify-center rounded-full text-fg-muted hover:text-fg transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                 aria-label="Scroll right"
               >
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                   <path d="M6 4l4 4-4 4" />
                 </svg>
               </button>
@@ -91,11 +92,11 @@ export default function TeamCarousel({ members }: TeamCarouselProps) {
                   {/* Photo or initials */}
                   <div className="mx-auto mb-4 w-20 h-20 rounded-full overflow-hidden">
                     {member.photo ? (
-                      // TODO: Replace with Next.js <Image>
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
+                      <Image
                         src={member.photo}
                         alt={member.name}
+                        width={80}
+                        height={80}
                         className="w-full h-full object-cover"
                       />
                     ) : (
