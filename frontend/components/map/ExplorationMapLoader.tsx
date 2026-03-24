@@ -11,7 +11,7 @@ const ExplorationMap = dynamic(
         className="flex items-center justify-center"
         style={{ minHeight: "600px" }}
       >
-        <p className="text-fg-muted font-sans-body animate-pulse text-small">
+        <p className="text-fg-muted font-body animate-pulse text-small">
           Loading exploration data&hellip;
         </p>
       </div>

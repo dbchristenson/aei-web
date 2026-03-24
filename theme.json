@@ -90,9 +90,9 @@
     }
   },
   "fonts": {
+    "sans": "Rubik",
     "serif": "Lora",
-    "sansHeader": "Rubik",
-    "sansBody": "Manrope"
+    "body": "Lora"
   },
   "fontWeights": {
     "regular": 400,

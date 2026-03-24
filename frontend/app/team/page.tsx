@@ -20,7 +20,7 @@ export default function TeamPage() {
     <main className="pt-20">
       <section className="py-24 px-4 bg-bg">
         <div className="mx-auto" style={{ maxWidth: "var(--container-xl)" }}>
-          <h1 className="text-center font-sans-header font-bold text-fg mb-16 text-h1">
+          <h1 className="text-center font-sans font-bold text-fg mb-16 text-h1">
             Our Team
           </h1>
 
@@ -33,7 +33,7 @@ export default function TeamPage() {
               >
                 {/* Photo placeholder */}
                 <div className="mx-auto mb-4 w-24 h-24 rounded-full bg-palette-neutral-200 flex items-center justify-center">
-                  <span className="font-sans-header font-semibold text-palette-neutral-600 text-h3">
+                  <span className="font-sans font-semibold text-palette-neutral-600 text-h3">
                     {member.name
                       .split(" ")
                       .map((n) => n[0])
@@ -41,13 +41,13 @@ export default function TeamPage() {
                   </span>
                 </div>
 
-                <h2 className="font-sans-header font-bold text-fg text-h4">
+                <h2 className="font-sans font-bold text-fg text-h4">
                   {member.name}
                 </h2>
-                <p className="text-fg-muted font-sans-body mt-1 text-small">
+                <p className="text-fg-muted font-body mt-1 text-small">
                   {member.title}
                 </p>
-                <p className="text-fg-secondary font-sans-body mt-4 text-body">
+                <p className="text-fg-secondary font-body mt-4 text-body">
                   {member.bio}
                 </p>
               </div>

@@ -13,10 +13,10 @@ export default function ContactPage() {
     <main className="pt-20">
       <section className="py-24 px-4 bg-bg">
         <div className="mx-auto" style={{ maxWidth: "var(--container-lg)" }}>
-          <h1 className="text-center font-sans-header font-bold text-fg mb-4 text-h1">
+          <h1 className="text-center font-sans font-bold text-fg mb-4 text-h1">
             Get in Touch
           </h1>
-          <p className="text-center text-fg-muted font-sans-body mb-16 max-w-xl mx-auto text-body-lg">
+          <p className="text-center text-fg-muted font-body mb-16 max-w-xl mx-auto text-body-lg">
             Interested in exploring investment opportunities or partnerships?
             We&apos;d love to hear from you.
           </p>
@@ -29,7 +29,7 @@ export default function ContactPage() {
                 <div>
                   <label
                     htmlFor="name"
-                    className="block font-sans-body text-fg-secondary mb-2 text-small"
+                    className="block font-body text-fg-secondary mb-2 text-small"
                   >
                     Full Name *
                   </label>
@@ -38,13 +38,13 @@ export default function ContactPage() {
                     id="name"
                     name="name"
                     required
-                    className="w-full bg-surface border border-border rounded-[var(--radius-button)] px-4 py-3 text-fg font-sans-body focus:outline-none focus:border-primary transition-colors text-body"
+                    className="w-full bg-surface border border-border rounded-[var(--radius-button)] px-4 py-3 text-fg font-body focus:outline-none focus:border-primary transition-colors text-body"
                   />
                 </div>
                 <div>
                   <label
                     htmlFor="organization"
-                    className="block font-sans-body text-fg-secondary mb-2 text-small"
+                    className="block font-body text-fg-secondary mb-2 text-small"
                   >
                     Organization
                   </label>
@@ -52,7 +52,7 @@ export default function ContactPage() {
                     type="text"
                     id="organization"
                     name="organization"
-                    className="w-full bg-surface border border-border rounded-[var(--radius-button)] px-4 py-3 text-fg font-sans-body focus:outline-none focus:border-primary transition-colors text-body"
+                    className="w-full bg-surface border border-border rounded-[var(--radius-button)] px-4 py-3 text-fg font-body focus:outline-none focus:border-primary transition-colors text-body"
                   />
                 </div>
               </div>
@@ -61,7 +61,7 @@ export default function ContactPage() {
                 <div>
                   <label
                     htmlFor="email"
-                    className="block font-sans-body text-fg-secondary mb-2 text-small"
+                    className="block font-body text-fg-secondary mb-2 text-small"
                   >
                     Email *
                   </label>
@@ -70,13 +70,13 @@ export default function ContactPage() {
                     id="email"
                     name="email"
                     required
-                    className="w-full bg-surface border border-border rounded-[var(--radius-button)] px-4 py-3 text-fg font-sans-body focus:outline-none focus:border-primary transition-colors text-body"
+                    className="w-full bg-surface border border-border rounded-[var(--radius-button)] px-4 py-3 text-fg font-body focus:outline-none focus:border-primary transition-colors text-body"
                   />
                 </div>
                 <div>
                   <label
                     htmlFor="phone"
-                    className="block font-sans-body text-fg-secondary mb-2 text-small"
+                    className="block font-body text-fg-secondary mb-2 text-small"
                   >
                     Phone
                   </label>
@@ -84,7 +84,7 @@ export default function ContactPage() {
                     type="tel"
                     id="phone"
                     name="phone"
-                    className="w-full bg-surface border border-border rounded-[var(--radius-button)] px-4 py-3 text-fg font-sans-body focus:outline-none focus:border-primary transition-colors text-body"
+                    className="w-full bg-surface border border-border rounded-[var(--radius-button)] px-4 py-3 text-fg font-body focus:outline-none focus:border-primary transition-colors text-body"
                   />
                 </div>
               </div>
@@ -92,7 +92,7 @@ export default function ContactPage() {
               <div>
                 <label
                   htmlFor="message"
-                  className="block font-sans-body text-fg-secondary mb-2 text-small"
+                  className="block font-body text-fg-secondary mb-2 text-small"
                 >
                   Message *
                 </label>
@@ -101,7 +101,7 @@ export default function ContactPage() {
                   name="message"
                   required
                   rows={5}
-                  className="w-full bg-surface border border-border rounded-[var(--radius-button)] px-4 py-3 text-fg font-sans-body focus:outline-none focus:border-primary transition-colors resize-y text-body"
+                  className="w-full bg-surface border border-border rounded-[var(--radius-button)] px-4 py-3 text-fg font-body focus:outline-none focus:border-primary transition-colors resize-y text-body"
                 />
               </div>
 

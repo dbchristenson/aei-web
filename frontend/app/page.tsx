@@ -46,16 +46,10 @@ export default function Home() {
       {/* Section 1 — Hero / Splash Screen */}
       <HeroSplash />
 
-      {/* Section 2 — Hero Banner (no divider — continuous hero experience) */}
+      {/* Section 2 — Hero Banner (gradient fades into partners) */}
       <HeroBanner />
 
-      {/* Section 3 — Partner Logos */}
-      <div className="relative -mt-[6vw] z-10">
-        <SectionDivider
-          fromColor="transparent"
-          toColor="var(--color-bg-subtle)"
-        />
-      </div>
+      {/* Section 3 — Partner Logos (seamless continuation from banner gradient) */}
       <PartnerLogoGrid />
 
       {/* Section 4 — Leadership Team */}

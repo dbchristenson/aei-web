@@ -39,7 +39,7 @@ export default async function GovernancePolicyPage({
         <div className="mx-auto" style={{ maxWidth: "var(--container-sm)" }}>
           <Link
             href="/governance"
-            className="inline-flex items-center gap-1.5 text-fg-muted hover:text-primary font-sans-body transition-colors mb-8 text-small"
+            className="inline-flex items-center gap-1.5 text-fg-muted hover:text-primary font-body transition-colors mb-8 text-small"
           >
             <svg
               width="16"
@@ -59,18 +59,18 @@ export default async function GovernancePolicyPage({
             Back to Governance
           </Link>
 
-          <h1 className="font-sans-header font-bold text-fg mb-8 text-h1">
+          <h1 className="font-sans font-bold text-fg mb-8 text-h1">
             {policy.title}
           </h1>
 
-          <div className="font-sans-body text-fg-secondary space-y-0">
+          <div className="font-body text-fg-secondary space-y-0">
             {policy.preamble && (
               <p className="text-body mb-8">{policy.preamble}</p>
             )}
 
             {policy.sections.map((section, i) => (
               <section key={i} className="mb-10">
-                <h2 className="font-sans-header font-semibold text-fg text-h3 mb-4">
+                <h2 className="font-sans font-semibold text-fg text-h3 mb-4">
                   {section.heading}
                 </h2>
                 {section.content.map((block, j) => {
@@ -113,7 +113,7 @@ export default async function GovernancePolicyPage({
             ))}
           </div>
 
-          <p className="text-fg-muted font-sans-body text-small mt-12 pt-6 border-t border-border-subtle">
+          <p className="text-fg-muted font-body text-small mt-12 pt-6 border-t border-border-subtle">
             Revision: {policy.revision}
           </p>
         </div>

@@ -26,10 +26,10 @@ export default function Footer() {
           <p className="font-serif font-bold text-fg text-h3">
             AEI
           </p>
-          <p className="mt-2 text-fg-muted font-sans-body text-small">
+          <p className="mt-2 text-fg-muted font-body text-small">
             PT Agra Energi Indonesia
           </p>
-          <p className="mt-1 text-fg-muted font-sans-body text-small">
+          <p className="mt-1 text-fg-muted font-body text-small">
             High-impact oil &amp; gas exploration and geothermal development in
             Indonesia.
           </p>
@@ -37,7 +37,7 @@ export default function Footer() {
 
         {/* Navigation */}
         <div>
-          <h2 className="font-sans-header font-semibold text-fg mb-4 text-body">
+          <h2 className="font-sans font-semibold text-fg mb-4 text-body">
             Company
           </h2>
           <ul className="space-y-2">
@@ -45,7 +45,7 @@ export default function Footer() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="text-fg-muted hover:text-fg-secondary transition-colors font-sans-body text-small"
+                  className="text-fg-muted hover:text-fg-secondary transition-colors font-body text-small"
                 >
                   {link.label}
                 </Link>
@@ -56,7 +56,7 @@ export default function Footer() {
 
         {/* Legal & Governance */}
         <div>
-          <h2 className="font-sans-header font-semibold text-fg mb-4 text-body">
+          <h2 className="font-sans font-semibold text-fg mb-4 text-body">
             Legal &amp; Governance
           </h2>
           <ul className="space-y-2">
@@ -64,7 +64,7 @@ export default function Footer() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="text-fg-muted hover:text-fg-secondary transition-colors font-sans-body text-small"
+                  className="text-fg-muted hover:text-fg-secondary transition-colors font-body text-small"
                 >
                   {link.label}
                 </Link>
@@ -75,11 +75,11 @@ export default function Footer() {
 
         {/* Contact */}
         <div>
-          <h2 className="font-sans-header font-semibold text-fg mb-4 text-body">
+          <h2 className="font-sans font-semibold text-fg mb-4 text-body">
             Contact
           </h2>
           {/* TODO: Replace with actual contact details from client */}
-          <address className="not-italic text-fg-muted font-sans-body space-y-2 text-small">
+          <address className="not-italic text-fg-muted font-body space-y-2 text-small">
             <p>Jakarta, Indonesia</p>
             <p>info@agraenergi.com</p>
           </address>
@@ -87,7 +87,7 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-border-subtle py-6 px-4 text-center">
-        <p className="text-fg-muted font-sans-body text-xs">
+        <p className="text-fg-muted font-body text-xs">
           &copy; {new Date().getFullYear()} PT Agra Energi Indonesia. All rights
           reserved.
         </p>

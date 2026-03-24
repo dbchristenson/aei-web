@@ -45,7 +45,7 @@ export default function InsightChart({
   return (
     <div className="glass-card-dark p-6">
       {title && (
-        <h3 className="font-sans-header font-semibold text-fg mb-4 text-h4">
+        <h3 className="font-sans font-semibold text-fg mb-4 text-h4">
           {title}
         </h3>
       )}
@@ -62,7 +62,7 @@ export default function InsightChart({
           className="flex items-center justify-center bg-surface rounded-[var(--radius-card)]"
           style={{ aspectRatio: "16/9" }}
         >
-          <p className="text-fg-muted font-sans-body">
+          <p className="text-fg-muted font-body">
             Chart data unavailable
           </p>
         </div>
@@ -75,14 +75,14 @@ export default function InsightChart({
           className="bg-surface rounded-[var(--radius-card)] flex items-center justify-center"
           style={{ aspectRatio: "16/9" }}
         >
-          <p className="text-fg-muted font-sans-body">
+          <p className="text-fg-muted font-body">
             Chart loaded (Plotly render pending)
           </p>
         </div>
       )}
 
       {caption && (
-        <p className="mt-3 text-fg-muted font-sans-body text-xs">
+        <p className="mt-3 text-fg-muted font-body text-xs">
           {caption}
         </p>
       )}

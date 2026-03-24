@@ -28,7 +28,7 @@ function NewsCard({ item }: { item: NewsItem }) {
     <div className="glass-card-dark p-5 transition-all duration-200 hover:border-primary/30">
       <div className="flex items-center gap-2 mb-2">
         <span
-          className={`inline-block px-2 py-0.5 rounded-[var(--radius-button)] font-sans-body text-xs ${
+          className={`inline-block px-2 py-0.5 rounded-[var(--radius-button)] font-body text-xs ${
             item.type === "memo"
               ? "bg-secondary/12 border border-secondary/20"
               : "bg-accent/12 border border-accent/20"
@@ -36,14 +36,14 @@ function NewsCard({ item }: { item: NewsItem }) {
         >
           {item.type === "memo" ? "Internal Memo" : "External"}
         </span>
-        <span className="text-fg-muted font-sans-body text-xs">
+        <span className="text-fg-muted font-body text-xs">
           {item.date}
         </span>
       </div>
-      <h3 className="font-sans-header font-medium text-fg-secondary text-body">
+      <h3 className="font-sans font-medium text-fg-secondary text-body">
         {item.title}
       </h3>
-      <p className="text-fg-muted font-sans-body mt-1 text-small">
+      <p className="text-fg-muted font-body mt-1 text-small">
         {item.source}
       </p>
     </div>
@@ -71,7 +71,7 @@ export default async function BlockPage({ params }: BlockPageProps) {
         {/* Back link */}
         <Link
           href="/#exploration"
-          className="inline-flex items-center gap-1.5 text-fg-muted hover:text-primary font-sans-body transition-colors mb-8 text-small"
+          className="inline-flex items-center gap-1.5 text-fg-muted hover:text-primary font-body transition-colors mb-8 text-small"
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
             <path d="M10 12L6 8l4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -83,13 +83,13 @@ export default async function BlockPage({ params }: BlockPageProps) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-16">
           {/* Left: Block info */}
           <div className="flex flex-col justify-center">
-            <p className="text-primary font-sans-body uppercase tracking-wider mb-3 text-small">
+            <p className="text-primary font-body uppercase tracking-wider mb-3 text-small">
               {block.basin}
             </p>
-            <h1 className="font-sans-header font-bold text-fg mb-6 text-h1">
+            <h1 className="font-sans font-bold text-fg mb-6 text-h1">
               {block.name}
             </h1>
-            <p className="text-fg-secondary font-sans-body text-body">
+            <p className="text-fg-secondary font-body text-body">
               {block.summary}
             </p>
           </div>
@@ -102,7 +102,7 @@ export default async function BlockPage({ params }: BlockPageProps) {
 
         {/* News Feed */}
         <section>
-          <h2 className="font-sans-header font-bold text-fg mb-6 text-h2">
+          <h2 className="font-sans font-bold text-fg mb-6 text-h2">
             News &amp; Updates
           </h2>
 
@@ -114,10 +114,10 @@ export default async function BlockPage({ params }: BlockPageProps) {
             </div>
           ) : (
             <div className="glass-card-dark p-8 text-center">
-              <p className="text-fg-muted font-sans-body text-body">
+              <p className="text-fg-muted font-body text-body">
                 No news or updates for this block yet.
               </p>
-              <p className="text-fg-muted font-sans-body mt-2 text-small">
+              <p className="text-fg-muted font-body mt-2 text-small">
                 Check back for internal memos and external publications.
               </p>
             </div>

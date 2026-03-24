@@ -38,7 +38,7 @@ export default function Button({
   type = "button",
   className = "",
 }: ButtonProps) {
-  const classes = `inline-flex items-center justify-center font-sans-body font-medium
+  const classes = `inline-flex items-center justify-center font-sans font-medium
     ${variantClasses[variant]} ${sizeClasses[size]}
     ${disabled || loading ? "opacity-50 cursor-not-allowed pointer-events-none" : ""}
     focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary

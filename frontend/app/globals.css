@@ -38,10 +38,10 @@
   --color-warning: var(--theme-warning);
   --color-error: var(--theme-error);
 
-  /* Fonts */
+  /* Fonts — 3-role system: sans (Rubik), serif (Lora), body (Lora) */
+  --font-sans: var(--font-rubik), sans-serif;
   --font-serif: var(--font-lora), Georgia, serif;
-  --font-sans-header: var(--font-rubik), sans-serif;
-  --font-sans-body: var(--font-manrope), sans-serif;
+  --font-body: var(--font-lora), Georgia, serif;
 
   /* Border radius */
   --radius-card: 16px;
@@ -95,8 +95,8 @@
 
   /* Font stacks (CSS custom properties for inline styles) */
   --font-serif-stack: var(--font-lora), Georgia, serif;
-  --font-sans-header-stack: var(--font-rubik), sans-serif;
-  --font-sans-body-stack: var(--font-manrope), sans-serif;
+  --font-sans-stack: var(--font-rubik), sans-serif;
+  --font-body-stack: var(--font-lora), Georgia, serif;
 
   /* Animation tokens */
   --entrance-duration: 600ms;
@@ -237,7 +237,7 @@ html {
 body {
   background: var(--color-bg);
   color: var(--color-fg);
-  font-family: var(--font-sans-body);
+  font-family: var(--font-body);
 }
 
 /* Map loading skeleton pulse */
