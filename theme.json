@@ -90,9 +90,9 @@
     }
   },
   "fonts": {
-    "sans": "Rubik",
-    "serif": "Lora",
-    "body": "Lora"
+    "sans": "Plus Jakarta Sans",
+    "serif": "Plus Jakarta Sans",
+    "body": "Plus Jakarta Sans"
   },
   "fontWeights": {
     "regular": 400,

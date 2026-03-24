@@ -78,10 +78,23 @@ export default function Footer() {
           <h2 className="font-sans font-semibold text-fg mb-4 text-body">
             Contact
           </h2>
-          {/* TODO: Replace with actual contact details from client */}
           <address className="not-italic text-fg-muted font-body space-y-2 text-small">
-            <p>Jakarta, Indonesia</p>
-            <p>info@agraenergi.com</p>
+            <p>
+              <a href="tel:+622171830231" className="hover:text-fg-secondary transition-colors">
+                +62 21 7183023
+              </a>
+            </p>
+            <p>
+              <a href="mailto:contact@aei-1.com" className="hover:text-fg-secondary transition-colors">
+                contact@aei-1.com
+              </a>
+            </p>
+            <p>
+              Equity Tower – Level 35<br />
+              SCBD Lot 9<br />
+              Jl. Jend Sudirman, Kav. 52-53<br />
+              Jakarta 12190, Indonesia
+            </p>
           </address>
         </div>
       </div>

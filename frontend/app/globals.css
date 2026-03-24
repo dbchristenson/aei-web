@@ -38,10 +38,10 @@
   --color-warning: var(--theme-warning);
   --color-error: var(--theme-error);
 
-  /* Fonts — 3-role system: sans (Rubik), serif (Lora), body (Lora) */
-  --font-sans: var(--font-rubik), sans-serif;
-  --font-serif: var(--font-lora), Georgia, serif;
-  --font-body: var(--font-lora), Georgia, serif;
+  /* Fonts — single font: Plus Jakarta Sans */
+  --font-sans: var(--font-plus-jakarta), sans-serif;
+  --font-serif: var(--font-plus-jakarta), sans-serif;
+  --font-body: var(--font-plus-jakarta), sans-serif;
 
   /* Border radius */
   --radius-card: 16px;
@@ -94,9 +94,9 @@
   --text-logo-splash: 5rem;
 
   /* Font stacks (CSS custom properties for inline styles) */
-  --font-serif-stack: var(--font-lora), Georgia, serif;
-  --font-sans-stack: var(--font-rubik), sans-serif;
-  --font-body-stack: var(--font-lora), Georgia, serif;
+  --font-serif-stack: var(--font-plus-jakarta), sans-serif;
+  --font-sans-stack: var(--font-plus-jakarta), sans-serif;
+  --font-body-stack: var(--font-plus-jakarta), sans-serif;
 
   /* Animation tokens */
   --entrance-duration: 600ms;
