@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useState, useCallback } from "react";
 
 const companyLinks = [
   { label: "About", href: "/about" },
@@ -14,7 +17,31 @@ const legalLinks = [
   { label: "Drugs & Alcohol Policy", href: "/governance/drugs-alcohol" },
 ];
 
+const ADDRESS = `Equity Tower – Level 35\nSCBD Lot 9\nJl. Jend Sudirman, Kav. 52-53\nJakarta 12190, Indonesia`;
+
 export default function Footer() {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyAddress = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(ADDRESS);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Fallback for older browsers
+      const textarea = document.createElement("textarea");
+      textarea.value = ADDRESS;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  }, []);
+
   return (
     <footer className="bg-bg-subtle border-t border-border-subtle">
       <div
@@ -89,12 +116,35 @@ export default function Footer() {
                 contact@aei-1.com
               </a>
             </p>
-            <p>
-              Equity Tower – Level 35<br />
-              SCBD Lot 9<br />
-              Jl. Jend Sudirman, Kav. 52-53<br />
-              Jakarta 12190, Indonesia
-            </p>
+            <div className="relative w-fit">
+              <button
+                type="button"
+                onClick={handleCopyAddress}
+                className="text-left p-3 -ml-3 rounded-[var(--radius-button)]
+                  hover:bg-surface-hover hover:ring-1 hover:ring-border
+                  cursor-pointer group"
+                aria-label="Copy address to clipboard"
+              >
+                <p className="text-fg-muted group-hover:text-fg-secondary">
+                  Equity Tower – Level 35<br />
+                  SCBD Lot 9<br />
+                  Jl. Jend Sudirman, Kav. 52-53<br />
+                  Jakarta 12190, Indonesia
+                </p>
+              </button>
+
+              {copied && (
+                <div
+                  className="absolute -top-2 right-2 flex items-center gap-1 px-2.5 py-1 rounded-[var(--radius-pill)] bg-success text-fg-inverse font-sans font-medium text-xs pointer-events-none"
+                  role="status"
+                >
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                    <path d="M2.5 6.5L5 9l4.5-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  Copied
+                </div>
+              )}
+            </div>
           </address>
         </div>
       </div>
