@@ -68,8 +68,15 @@ export default function useGlobeRenderer({
     if (!container) return;
 
     let tc = getThemeColors();
+    let initialized = false;
 
     const projection = d3.geoOrthographic().clipAngle(90);
+
+    // Pre-compute land topology once
+    const landFeature = topojson.feature(
+      worldData,
+      worldData.objects.land as GeometryCollection
+    );
 
     function updateProjection() {
       const width = container!.clientWidth;
@@ -85,173 +92,6 @@ export default function useGlobeRenderer({
 
       return { width, height, globeRadius, baseRadius };
     }
-
-    function render() {
-      tc = getThemeColors();
-      const { width, height, globeRadius } = updateProjection();
-      const path = d3.geoPath(projection);
-
-      svg.attr("viewBox", `0 0 ${width} ${height}`);
-      svg.selectAll("*").remove();
-
-      const defs = svg.append("defs");
-
-      // Atmosphere glow gradient
-      const [cx, cy] = projection.translate();
-      const atmosGradient = defs
-        .append("radialGradient")
-        .attr("id", "atmos-glow")
-        .attr("gradientUnits", "userSpaceOnUse")
-        .attr("cx", cx)
-        .attr("cy", cy)
-        .attr("r", globeRadius + 40);
-      atmosGradient.append("stop").attr("offset", "75%").attr("stop-color", tc.tealBlue).attr("stop-opacity", 0.06);
-      atmosGradient.append("stop").attr("offset", "90%").attr("stop-color", tc.tealBlue).attr("stop-opacity", 0.12);
-      atmosGradient.append("stop").attr("offset", "100%").attr("stop-color", tc.tealBlue).attr("stop-opacity", 0);
-
-      // Dot glow filter
-      const dotGlow = defs.append("filter").attr("id", "dot-glow").attr("x", "-50%").attr("y", "-50%").attr("width", "200%").attr("height", "200%");
-      dotGlow.append("feGaussianBlur").attr("in", "SourceGraphic").attr("stdDeviation", "3").attr("result", "blur");
-      dotGlow.append("feMerge").selectAll("feMergeNode").data(["blur", "SourceGraphic"]).join("feMergeNode").attr("in", (d) => d);
-
-      // Block outline glow filter
-      const blockGlow = defs.append("filter").attr("id", "block-glow").attr("x", "-30%").attr("y", "-30%").attr("width", "160%").attr("height", "160%");
-      blockGlow.append("feGaussianBlur").attr("in", "SourceGraphic").attr("stdDeviation", "6").attr("result", "blur");
-      blockGlow.append("feMerge").selectAll("feMergeNode").data(["blur", "SourceGraphic"]).join("feMergeNode").attr("in", (d) => d);
-
-      // Layer 1: Atmosphere halo — skip when globe overflows viewport
-      if (globeRadius + 40 < Math.max(width, height)) {
-        svg.append("circle")
-          .attr("cx", cx).attr("cy", cy)
-          .attr("r", globeRadius + 40)
-          .attr("fill", "url(#atmos-glow)")
-          .attr("pointer-events", "none");
-      }
-
-      // Layer 2: Globe disc (ocean)
-      svg.append("circle")
-        .attr("cx", cx).attr("cy", cy)
-        .attr("r", globeRadius)
-        .attr("fill", tc.n950);
-
-      // Layer 3: Graticule — interpolate density with zoom level
-      const zoomT = Math.min((scaleMultiplierRef.current - 1) / 4, 1);
-      const gratStep: [number, number] = [
-        REGIONAL_GRATICULE_STEP[0] + zoomT * (ZOOMED_GRATICULE_STEP[0] - REGIONAL_GRATICULE_STEP[0]),
-        REGIONAL_GRATICULE_STEP[1] + zoomT * (ZOOMED_GRATICULE_STEP[1] - REGIONAL_GRATICULE_STEP[1]),
-      ];
-      const graticule = d3.geoGraticule().step(gratStep);
-      svg.append("path")
-        .datum(graticule())
-        .attr("d", path)
-        .attr("fill", "none")
-        .attr("stroke", tc.n700)
-        .attr("stroke-width", 0.3)
-        .attr("stroke-opacity", 0.35);
-
-      // Layer 4: Land masses
-      const land = topojson.feature(
-        worldData!,
-        worldData!.objects.land as GeometryCollection
-      );
-      svg.append("path")
-        .datum(land)
-        .attr("d", path)
-        .attr("fill", tc.n900)
-        .attr("stroke", tc.n600)
-        .attr("stroke-width", 0.6);
-
-      // Layer 5: Block polygons
-      const currentUi = uiStateRef.current;
-      const blocksGroup = svg.append("g").attr("class", "blocks-layer");
-      blocksGroup.selectAll<SVGPathElement, BlockFeature>(".block-area")
-        .data(geoData!.features, (d) => d.id)
-        .join("path")
-        .attr("class", "block-area")
-        .attr("d", path)
-        .attr("fill-rule", "evenodd")
-        .each(function (d) {
-          const el = d3.select(this);
-          const isActive = d.id === currentUi.blockId;
-          const isSelected = isActive && currentUi.mode === "selected";
-
-          el.attr("fill", tc.amber)
-            .attr("fill-opacity", isSelected ? 0.25 : isActive ? 0.2 : 0.08)
-            .attr("stroke", isSelected ? tc.tealBlue : tc.amber)
-            .attr("stroke-width", isSelected ? 2 : isActive ? 1.5 : 1.0)
-            .attr("stroke-opacity", isSelected ? 0.9 : isActive ? 0.7 : 0.4)
-            .attr("filter", isSelected ? "url(#block-glow)" : "none");
-        });
-
-      // Update tooltip to track block's projected position
-      updateTooltipPosition();
-
-      // Layer 6: Centroid dots
-      const dotsGroup = svg.append("g").attr("class", "dots-layer");
-
-      geoData!.features.forEach((feature) => {
-        const center = geoCentroid(feature);
-        const projected = projection(center);
-        if (!projected) return;
-
-        const dist = d3.geoDistance(center, [
-          -rotationRef.current[0],
-          -rotationRef.current[1],
-        ]);
-        if (dist > Math.PI / 2) return;
-
-        const [px, py] = projected;
-
-        dotsGroup.append("circle")
-          .attr("class", `dot-glow-${feature.id}`)
-          .attr("cx", px).attr("cy", py)
-          .attr("r", DOT_GLOW_RADIUS)
-          .attr("fill", tc.amber)
-          .attr("fill-opacity", 0.15)
-          .attr("filter", "url(#dot-glow)")
-          .attr("pointer-events", "none");
-
-        dotsGroup.append("circle")
-          .attr("class", `dot dot-${feature.id}`)
-          .attr("cx", px).attr("cy", py)
-          .attr("r", DOT_RADIUS)
-          .attr("fill", tc.amber)
-          .attr("fill-opacity", 0.85)
-          .attr("stroke", tc.amber)
-          .attr("stroke-width", 1)
-          .attr("stroke-opacity", 0.5)
-          .attr("cursor", "pointer")
-          .on("mouseenter", function () {
-            handleBlockHover(feature.id);
-            showTooltip(feature);
-            d3.select(this)
-              .transition().duration(prefersReducedMotion ? 0 : DOT_TRANSITION_MS)
-              .attr("r", DOT_HOVER_RADIUS)
-              .attr("fill-opacity", 1);
-            d3.select(`.dot-glow-${feature.id}`)
-              .transition().duration(prefersReducedMotion ? 0 : DOT_TRANSITION_MS)
-              .attr("r", DOT_HOVER_GLOW_RADIUS)
-              .attr("fill-opacity", 0.3);
-          })
-          .on("mouseleave", function () {
-            handleBlockHover(null);
-            hideTooltip();
-            d3.select(this)
-              .transition().duration(prefersReducedMotion ? 0 : DOT_TRANSITION_MS)
-              .attr("r", DOT_RADIUS)
-              .attr("fill-opacity", 0.85);
-            d3.select(`.dot-glow-${feature.id}`)
-              .transition().duration(prefersReducedMotion ? 0 : DOT_TRANSITION_MS)
-              .attr("r", DOT_GLOW_RADIUS)
-              .attr("fill-opacity", 0.15);
-          })
-          .on("click", function () {
-            handleBlockClick(feature.id);
-          });
-      });
-    }
-
-    renderRef.current = render;
 
     // ─── Tooltip helpers ───
     function updateTooltipPosition() {
@@ -298,6 +138,239 @@ export default function useGlobeRenderer({
     showTooltipRef.current = showTooltip;
     hideTooltipRef.current = hideTooltip;
 
+    // ─── Full render: creates all DOM elements (initial, resize, theme change) ───
+    function renderFull() {
+      tc = getThemeColors();
+      const { width, height, globeRadius } = updateProjection();
+      const path = d3.geoPath(projection);
+
+      svg.attr("viewBox", `0 0 ${width} ${height}`);
+      svg.selectAll("*").remove();
+
+      const defs = svg.append("defs");
+
+      // Atmosphere glow gradient
+      const [cx, cy] = projection.translate();
+      const atmosGradient = defs
+        .append("radialGradient")
+        .attr("id", "atmos-glow")
+        .attr("gradientUnits", "userSpaceOnUse")
+        .attr("cx", cx)
+        .attr("cy", cy)
+        .attr("r", globeRadius + 40);
+      atmosGradient.append("stop").attr("offset", "75%").attr("stop-color", tc.tealBlue).attr("stop-opacity", 0.06);
+      atmosGradient.append("stop").attr("offset", "90%").attr("stop-color", tc.tealBlue).attr("stop-opacity", 0.12);
+      atmosGradient.append("stop").attr("offset", "100%").attr("stop-color", tc.tealBlue).attr("stop-opacity", 0);
+
+      // Dot glow filter
+      const dotGlow = defs.append("filter").attr("id", "dot-glow").attr("x", "-50%").attr("y", "-50%").attr("width", "200%").attr("height", "200%");
+      dotGlow.append("feGaussianBlur").attr("in", "SourceGraphic").attr("stdDeviation", "3").attr("result", "blur");
+      dotGlow.append("feMerge").selectAll("feMergeNode").data(["blur", "SourceGraphic"]).join("feMergeNode").attr("in", (d) => d);
+
+      // Block outline glow filter
+      const blockGlow = defs.append("filter").attr("id", "block-glow").attr("x", "-30%").attr("y", "-30%").attr("width", "160%").attr("height", "160%");
+      blockGlow.append("feGaussianBlur").attr("in", "SourceGraphic").attr("stdDeviation", "6").attr("result", "blur");
+      blockGlow.append("feMerge").selectAll("feMergeNode").data(["blur", "SourceGraphic"]).join("feMergeNode").attr("in", (d) => d);
+
+      // Layer 1: Atmosphere halo (always created, hidden when globe overflows)
+      svg.append("circle")
+        .attr("class", "atmos-halo")
+        .attr("cx", cx).attr("cy", cy)
+        .attr("r", globeRadius + 40)
+        .attr("fill", "url(#atmos-glow)")
+        .attr("pointer-events", "none")
+        .attr("display", globeRadius + 40 < Math.max(width, height) ? null : "none");
+
+      // Layer 2: Globe disc (ocean)
+      svg.append("circle")
+        .attr("class", "globe-disc")
+        .attr("cx", cx).attr("cy", cy)
+        .attr("r", globeRadius)
+        .attr("fill", tc.n950);
+
+      // Layer 3: Graticule
+      const zoomT = Math.min((scaleMultiplierRef.current - 1) / 4, 1);
+      const gratStep: [number, number] = [
+        REGIONAL_GRATICULE_STEP[0] + zoomT * (ZOOMED_GRATICULE_STEP[0] - REGIONAL_GRATICULE_STEP[0]),
+        REGIONAL_GRATICULE_STEP[1] + zoomT * (ZOOMED_GRATICULE_STEP[1] - REGIONAL_GRATICULE_STEP[1]),
+      ];
+      const graticule = d3.geoGraticule().step(gratStep);
+      svg.append("path")
+        .attr("class", "graticule-path")
+        .datum(graticule())
+        .attr("d", path)
+        .attr("fill", "none")
+        .attr("stroke", tc.n700)
+        .attr("stroke-width", 0.3)
+        .attr("stroke-opacity", 0.35);
+
+      // Layer 4: Land masses
+      svg.append("path")
+        .attr("class", "land-path")
+        .datum(landFeature)
+        .attr("d", path)
+        .attr("fill", tc.n900)
+        .attr("stroke", tc.n600)
+        .attr("stroke-width", 0.6);
+
+      // Layer 5: Block polygons
+      const currentUi = uiStateRef.current;
+      const blocksGroup = svg.append("g").attr("class", "blocks-layer");
+      blocksGroup.selectAll<SVGPathElement, BlockFeature>(".block-area")
+        .data(geoData!.features, (d) => d.id)
+        .join("path")
+        .attr("class", "block-area")
+        .attr("d", path)
+        .attr("fill-rule", "evenodd")
+        .each(function (d) {
+          const el = d3.select(this);
+          const isActive = d.id === currentUi.blockId;
+          const isSelected = isActive && currentUi.mode === "selected";
+
+          el.attr("fill", tc.amber)
+            .attr("fill-opacity", isSelected ? 0.25 : isActive ? 0.2 : 0.08)
+            .attr("stroke", isSelected ? tc.tealBlue : tc.amber)
+            .attr("stroke-width", isSelected ? 2 : isActive ? 1.5 : 1.0)
+            .attr("stroke-opacity", isSelected ? 0.9 : isActive ? 0.7 : 0.4)
+            .attr("filter", isSelected ? "url(#block-glow)" : "none");
+        });
+
+      updateTooltipPosition();
+
+      // Layer 6: Centroid dots — create ALL dots (hidden ones get display:none)
+      const dotsGroup = svg.append("g").attr("class", "dots-layer");
+
+      geoData!.features.forEach((feature) => {
+        const center = geoCentroid(feature);
+        const projected = projection(center);
+        const dist = d3.geoDistance(center, [
+          -rotationRef.current[0],
+          -rotationRef.current[1],
+        ]);
+        const visible = dist <= Math.PI / 2 && projected != null;
+        const px = visible ? projected![0] : 0;
+        const py = visible ? projected![1] : 0;
+
+        dotsGroup.append("circle")
+          .attr("class", `dot-glow dot-glow-${feature.id}`)
+          .attr("cx", px).attr("cy", py)
+          .attr("r", DOT_GLOW_RADIUS)
+          .attr("fill", tc.amber)
+          .attr("fill-opacity", 0.15)
+          .attr("filter", "url(#dot-glow)")
+          .attr("pointer-events", "none")
+          .attr("display", visible ? null : "none");
+
+        dotsGroup.append("circle")
+          .attr("class", `dot dot-${feature.id}`)
+          .attr("cx", px).attr("cy", py)
+          .attr("r", DOT_RADIUS)
+          .attr("fill", tc.amber)
+          .attr("fill-opacity", 0.85)
+          .attr("stroke", tc.amber)
+          .attr("stroke-width", 1)
+          .attr("stroke-opacity", 0.5)
+          .attr("cursor", "pointer")
+          .attr("display", visible ? null : "none")
+          .on("mouseenter", function () {
+            handleBlockHover(feature.id);
+            showTooltip(feature);
+            d3.select(this)
+              .transition().duration(prefersReducedMotion ? 0 : DOT_TRANSITION_MS)
+              .attr("r", DOT_HOVER_RADIUS)
+              .attr("fill-opacity", 1);
+            svg.select(`.dot-glow-${feature.id}`)
+              .transition().duration(prefersReducedMotion ? 0 : DOT_TRANSITION_MS)
+              .attr("r", DOT_HOVER_GLOW_RADIUS)
+              .attr("fill-opacity", 0.3);
+          })
+          .on("mouseleave", function () {
+            handleBlockHover(null);
+            hideTooltip();
+            d3.select(this)
+              .transition().duration(prefersReducedMotion ? 0 : DOT_TRANSITION_MS)
+              .attr("r", DOT_RADIUS)
+              .attr("fill-opacity", 0.85);
+            svg.select(`.dot-glow-${feature.id}`)
+              .transition().duration(prefersReducedMotion ? 0 : DOT_TRANSITION_MS)
+              .attr("r", DOT_GLOW_RADIUS)
+              .attr("fill-opacity", 0.15);
+          })
+          .on("click", function () {
+            handleBlockClick(feature.id);
+          });
+      });
+
+      initialized = true;
+    }
+
+    // ─── Transform render: updates positions only (drag, zoom frames) ───
+    // Skips DOM teardown/rebuild — only updates projection-dependent attributes.
+    function renderTransform() {
+      if (!initialized) { renderFull(); return; }
+
+      const { width, height, globeRadius } = updateProjection();
+      const path = d3.geoPath(projection);
+      const [cx, cy] = projection.translate();
+
+      svg.attr("viewBox", `0 0 ${width} ${height}`);
+
+      // Update gradient position + radius
+      svg.select("#atmos-glow")
+        .attr("cx", cx).attr("cy", cy).attr("r", globeRadius + 40);
+
+      // Update atmosphere halo
+      svg.select(".atmos-halo")
+        .attr("cx", cx).attr("cy", cy).attr("r", globeRadius + 40)
+        .attr("display", globeRadius + 40 < Math.max(width, height) ? null : "none");
+
+      // Update globe disc
+      svg.select(".globe-disc")
+        .attr("cx", cx).attr("cy", cy).attr("r", globeRadius);
+
+      // Update graticule (step changes with zoom level)
+      const zoomT = Math.min((scaleMultiplierRef.current - 1) / 4, 1);
+      const gratStep: [number, number] = [
+        REGIONAL_GRATICULE_STEP[0] + zoomT * (ZOOMED_GRATICULE_STEP[0] - REGIONAL_GRATICULE_STEP[0]),
+        REGIONAL_GRATICULE_STEP[1] + zoomT * (ZOOMED_GRATICULE_STEP[1] - REGIONAL_GRATICULE_STEP[1]),
+      ];
+      svg.select<SVGPathElement>(".graticule-path")
+        .datum(d3.geoGraticule().step(gratStep)())
+        .attr("d", path);
+
+      // Update land — datum already bound from renderFull, just re-project
+      svg.select(".land-path").attr("d", path as unknown as null);
+
+      // Update block polygons (geometry only — styling managed by ExplorationMap uiState effect)
+      svg.selectAll<SVGPathElement, BlockFeature>(".block-area").attr("d", path);
+
+      // Update dot positions + visibility
+      geoData!.features.forEach((feature) => {
+        const center = geoCentroid(feature);
+        const projected = projection(center);
+        const dist = d3.geoDistance(center, [
+          -rotationRef.current[0],
+          -rotationRef.current[1],
+        ]);
+        const visible = dist <= Math.PI / 2 && projected != null;
+        const px = visible ? projected![0] : 0;
+        const py = visible ? projected![1] : 0;
+
+        svg.select(`.dot-${feature.id}`)
+          .attr("cx", px).attr("cy", py)
+          .attr("display", visible ? null : "none");
+
+        svg.select(`.dot-glow-${feature.id}`)
+          .attr("cx", px).attr("cy", py)
+          .attr("display", visible ? null : "none");
+      });
+
+      updateTooltipPosition();
+    }
+
+    // External callers (useBlockZoom) get the fast path
+    renderRef.current = renderTransform;
+
     // ─── Drag-to-rotate with elastic bounded drag ───
     const containerSel = d3.select(container);
     const dragBehavior = d3.drag<HTMLDivElement, unknown>()
@@ -323,7 +396,7 @@ export default function useGlobeRenderer({
           rubberBand(rawRotationRef.current[1], bounds.phi[0], bounds.phi[1], bounds.rubberBandDim),
           0,
         ];
-        render();
+        renderTransform();
       })
       .on("end", () => {
         if (zoomAnimRef.current) return;
@@ -341,7 +414,7 @@ export default function useGlobeRenderer({
           if (prefersReducedMotion) {
             rotationRef.current = [clampedLambda, clampedPhi, 0];
             rawRotationRef.current = [clampedLambda, clampedPhi];
-            render();
+            renderTransform();
           } else {
             const animTarget = { lambda: rotationRef.current[0], phi: rotationRef.current[1] };
             bounceAnimRef.current = gsap.to(animTarget, {
@@ -351,7 +424,7 @@ export default function useGlobeRenderer({
               ease: "back.out(1.7)",
               onUpdate: () => {
                 rotationRef.current = [animTarget.lambda, animTarget.phi, 0];
-                render();
+                renderTransform();
               },
               onComplete: () => {
                 rawRotationRef.current = [clampedLambda, clampedPhi];
@@ -369,19 +442,20 @@ export default function useGlobeRenderer({
       handleDeselect();
     });
 
-    render();
+    // Initial full render
+    renderFull();
 
-    // Responsive resize
+    // Resize → full render (container dimensions changed)
     const resizeObserver = new ResizeObserver(() => {
-      render();
+      renderFull();
     });
     resizeObserver.observe(container);
 
-    // Re-render when theme changes
+    // Theme change → full render (colors changed)
     const themeObserver = new MutationObserver((mutations) => {
       for (const mutation of mutations) {
         if (mutation.attributeName === "data-theme") {
-          render();
+          renderFull();
           break;
         }
       }

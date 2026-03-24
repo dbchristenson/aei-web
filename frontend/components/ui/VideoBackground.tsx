@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { getVideo } from "@/lib/media";
 import type { VideoKey } from "@/lib/media";
 import usePrefersReducedMotion from "@/hooks/usePrefersReducedMotion";
@@ -33,11 +34,13 @@ export default function VideoBackground({
       aria-hidden="true"
     >
       {prefersReduced ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <Image
           src={posterUrl}
           alt=""
-          className="h-full w-full object-cover"
+          fill
+          className="object-cover"
+          sizes="100vw"
+          priority
         />
       ) : (
         <video

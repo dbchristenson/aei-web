@@ -64,7 +64,7 @@ function renderLogo(logo: PartnerLogo, isMiGaea = false) {
       width={size.width}
       height={size.height}
       className="object-contain"
-      unoptimized
+      unoptimized={logo.src.endsWith(".svg")}
     />
   );
 
@@ -76,7 +76,12 @@ function renderLogo(logo: PartnerLogo, isMiGaea = false) {
           transition-transform duration-300 ease-out"
       >
         {logo.href ? (
-          <a href={logo.href} target="_blank" rel="noopener noreferrer">
+          <a
+            href={logo.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-[var(--radius-button)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+          >
             {image}
           </a>
         ) : (

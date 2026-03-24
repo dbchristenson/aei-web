@@ -1,18 +1,8 @@
-"use client";
-
 import GlassCard from "@/components/ui/GlassCard";
 import VideoBackground from "@/components/ui/VideoBackground";
 import { HERO_BANNER_VIDEO } from "@/lib/media";
 
 export default function HeroBanner() {
-  const handleViewProjects = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    const target = document.getElementById("exploration-map");
-    if (!target) return;
-    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    target.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth" });
-  };
-
   return (
     <section
       className="relative py-24 px-4 bg-bg overflow-hidden"
@@ -30,23 +20,21 @@ export default function HeroBanner() {
             About AEI
           </p>
 
-          {/* Headline — exact spec */}
+          {/* Headline */}
           <h2 className="font-sans-header font-bold text-fg text-hero">
             High Impact Energy Projects.
           </h2>
 
-          {/* Subheadline — exact spec */}
+          {/* Subheadline */}
           <p className="mt-6 text-fg-secondary font-sans-body max-w-2xl text-body-lg">
             PT Agra Energi Indonesia — privately held, providing security and reliability to Indonesia&apos;s grid.
           </p>
 
-          {/* CTA — "View Projects" scrolls to the exploration map */}
+          {/* CTA — native anchor with CSS smooth scroll */}
           <div className="mt-10">
             <a
               href="#exploration-map"
-              onClick={handleViewProjects}
-              className="inline-flex items-center gap-2 font-sans-body font-medium text-white bg-primary hover:bg-primary-hover hover:-translate-y-0.5 transition-all rounded-[var(--radius-button)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary text-body-lg"
-              style={{ padding: "1rem 2rem" }}
+              className="inline-flex items-center gap-2 px-8 py-4 font-sans-body font-medium text-fg-inverse bg-primary hover:bg-primary-hover hover:-translate-y-0.5 transition-all rounded-[var(--radius-button)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary text-body-lg"
             >
               View Projects
               <svg
