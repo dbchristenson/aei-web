@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef } from "react";
-import Image from "next/image";
 import GlassCard from "@/components/ui/GlassCard";
+import Image from "next/image";
+import { useRef } from "react";
 
 interface TeamMember {
   name: string;
@@ -46,9 +46,13 @@ export default function TeamCarousel({ members }: TeamCarouselProps) {
       aria-label="Leadership team"
     >
       <div className="mx-auto" style={{ maxWidth: "var(--container-xl)" }}>
-        <h2 className="text-center font-serif font-semibold text-fg mb-16 text-h2">
-          Leadership
+        <h2 className="text-center font-serif font-semibold text-fg mb-2 text-h2">
+          Board of Directors
         </h2>
+
+        <h4 className="text-center font-body text-fg-muted mb-12 tect body">
+          AEI's strategic council possesses over 100 combined years of experience in the Oil & Gas industry.
+        </h4>
 
         <div className="relative">
           {/* Scroll controls (desktop) */}
@@ -78,9 +82,8 @@ export default function TeamCarousel({ members }: TeamCarouselProps) {
           {/* Card container */}
           <div
             ref={scrollRef}
-            className={`flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-none py-4 -my-4 ${
-              !showControls ? "justify-center" : ""
-            }`}
+            className={`flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-none py-4 -my-4 ${!showControls ? "justify-center" : ""
+              }`}
             style={{ scrollbarWidth: "none", overscrollBehaviorX: "contain" }}
           >
             {members.map((member) => (
@@ -123,6 +126,6 @@ export default function TeamCarousel({ members }: TeamCarouselProps) {
           </div>
         </div>
       </div>
-    </section>
+    </section >
   );
 }
