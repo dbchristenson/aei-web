@@ -60,7 +60,7 @@ export default function Home() {
       />
       <section
         id="exploration-map"
-        className="bg-bg overflow-hidden"
+        className="bg-bg overflow-hidden scroll-mt-20"
         aria-label="Exploration blocks map"
       >
         <ExplorationMapLoader blocksEndpoint="/data/blocks.geojson" />

@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "sync-theme": "node scripts/sync-theme.mjs",
+    "sync-theme:check": "node scripts/sync-theme.mjs --check",
+    "dev": "node scripts/sync-theme.mjs && next dev",
+    "build": "node scripts/sync-theme.mjs && next build",
     "start": "next start",
     "lint": "eslint"
   },

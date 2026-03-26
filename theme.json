@@ -1,14 +1,18 @@
 {
-  "_comment": "Master design token file. Edit here; changes propagate to Next.js (via theme.config.ts) and Plotly (via aei_theme.py).",
+  "_comment": "Master design token file. Edit here, then run 'npm run sync-theme' (or it runs automatically on dev/build). Changes propagate to globals.css, and to Plotly via aei_theme.py.",
   "palette": {
     "tealBlue": "#067bc2",
     "tealBlueHover": "#0568a3",
     "skyReflection": "#84bcda",
+    "scooter": "#33b5dd",
+    "snow": "#fffafa",
+    "ivory": "#FFFFE3",
     "brightAmber": "#ecc30b",
     "coralGlow": "#f37748",
+    "classicCoral": "#E45F4A",
     "jetBlack": "#162521",
     "white": "#ffffff",
-    "alabaster": "#EDEADE",
+    "alabaster": "#fafafa",
     "success": "#2a9d6e",
     "error": "#d93636",
     "neutrals": {
@@ -203,5 +207,14 @@
     "entranceEasing": "cubic-bezier(0.16, 1, 0.3, 1)",
     "hoverDuration": "200ms",
     "logoTransitionMs": 600
+  },
+  "typeScaleMobile": {
+    "hero": "2.25rem",
+    "h1": "1.75rem",
+    "h2": "1.5rem",
+    "h3": "1.25rem",
+    "h4": "1.125rem",
+    "stat": "2.25rem",
+    "logoSplash": "3rem"
   }
 }
