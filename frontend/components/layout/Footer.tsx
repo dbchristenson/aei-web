@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useCallback } from "react";
 
 const companyLinks = [
   { label: "About", href: "/about" },
@@ -14,7 +17,24 @@ const legalLinks = [
   { label: "Drugs & Alcohol Policy", href: "/governance/drugs-alcohol" },
 ];
 
+const ADDRESS = `Equity Tower – Level 35\nSCBD Lot 9\nJl. Jend Sudirman, Kav. 52-53\nJakarta 12190, Indonesia`;
+
 export default function Footer() {
+  const handleCopyAddress = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(ADDRESS);
+    } catch {
+      const textarea = document.createElement("textarea");
+      textarea.value = ADDRESS;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+    }
+  }, []);
+
   return (
     <footer className="bg-bg-subtle border-t border-border-subtle">
       <div
@@ -26,10 +46,10 @@ export default function Footer() {
           <p className="font-serif font-bold text-fg text-h3">
             AEI
           </p>
-          <p className="mt-2 text-fg-muted font-sans-body text-small">
+          <p className="mt-2 text-fg-muted font-body text-small">
             PT Agra Energi Indonesia
           </p>
-          <p className="mt-1 text-fg-muted font-sans-body text-small">
+          <p className="mt-1 text-fg-muted font-body text-small">
             High-impact oil &amp; gas exploration and geothermal development in
             Indonesia.
           </p>
@@ -37,7 +57,7 @@ export default function Footer() {
 
         {/* Navigation */}
         <div>
-          <h2 className="font-sans-header font-semibold text-fg mb-4 text-body">
+          <h2 className="font-sans font-semibold text-fg mb-4 text-body">
             Company
           </h2>
           <ul className="space-y-2">
@@ -45,7 +65,7 @@ export default function Footer() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="text-fg-muted hover:text-fg-secondary transition-colors font-sans-body text-small"
+                  className="text-fg-muted hover:text-fg-secondary transition-colors font-body text-small"
                 >
                   {link.label}
                 </Link>
@@ -56,7 +76,7 @@ export default function Footer() {
 
         {/* Legal & Governance */}
         <div>
-          <h2 className="font-sans-header font-semibold text-fg mb-4 text-body">
+          <h2 className="font-sans font-semibold text-fg mb-4 text-body">
             Legal &amp; Governance
           </h2>
           <ul className="space-y-2">
@@ -64,7 +84,7 @@ export default function Footer() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="text-fg-muted hover:text-fg-secondary transition-colors font-sans-body text-small"
+                  className="text-fg-muted hover:text-fg-secondary transition-colors font-body text-small"
                 >
                   {link.label}
                 </Link>
@@ -75,19 +95,39 @@ export default function Footer() {
 
         {/* Contact */}
         <div>
-          <h2 className="font-sans-header font-semibold text-fg mb-4 text-body">
+          <h2 className="font-sans font-semibold text-fg mb-4 text-body">
             Contact
           </h2>
-          {/* TODO: Replace with actual contact details from client */}
-          <address className="not-italic text-fg-muted font-sans-body space-y-2 text-small">
-            <p>Jakarta, Indonesia</p>
-            <p>info@agraenergi.com</p>
+          <address className="not-italic text-fg-muted font-body space-y-2 text-small">
+            <p>
+              <a href="tel:+622171830231" className="hover:text-fg-secondary transition-colors">
+                +62 21 7183023
+              </a>
+            </p>
+            <p>
+              <a href="mailto:contact@aei-1.com" className="hover:text-fg-secondary transition-colors">
+                contact@aei-1.com
+              </a>
+            </p>
+            <p
+              onClick={handleCopyAddress}
+              className="cursor-pointer"
+              role="button"
+              tabIndex={0}
+              aria-label="Copy address to clipboard"
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") handleCopyAddress(); }}
+            >
+              Equity Tower – Level 35<br />
+              SCBD Lot 9<br />
+              Jl. Jend Sudirman, Kav. 52-53<br />
+              Jakarta 12190, Indonesia
+            </p>
           </address>
         </div>
       </div>
 
       <div className="border-t border-border-subtle py-6 px-4 text-center">
-        <p className="text-fg-muted font-sans-body text-xs">
+        <p className="text-fg-muted font-body text-xs">
           &copy; {new Date().getFullYear()} PT Agra Energi Indonesia. All rights
           reserved.
         </p>

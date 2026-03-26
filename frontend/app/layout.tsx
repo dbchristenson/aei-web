@@ -1,24 +1,12 @@
 import type { Metadata } from "next";
-import { Lora, Rubik, Manrope } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import NavBar from "@/components/layout/NavBar";
 import Footer from "@/components/layout/Footer";
 import ThemeProvider from "@/components/providers/ThemeProvider";
 import "./globals.css";
 
-const lora = Lora({
-  variable: "--font-lora",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const rubik = Rubik({
-  variable: "--font-rubik",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const manrope = Manrope({
-  variable: "--font-manrope",
+const plusJakartaSans = Plus_Jakarta_Sans({
+  variable: "--font-plus-jakarta",
   subsets: ["latin"],
   display: "swap",
 });
@@ -47,11 +35,11 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${lora.variable} ${rubik.variable} ${manrope.variable} antialiased`}
+        className={`${plusJakartaSans.variable} antialiased`}
       >
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-fg-inverse focus:rounded-[var(--radius-button)] focus:font-sans-body focus:text-small"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-fg-inverse focus:rounded-[var(--radius-button)] focus:font-body focus:text-small"
         >
           Skip to main content
         </a>

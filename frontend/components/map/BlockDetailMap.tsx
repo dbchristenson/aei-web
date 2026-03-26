@@ -170,7 +170,7 @@ export default function BlockDetailMap({ blockId }: BlockDetailMapProps) {
       {!loaded && (
         <div className="absolute inset-0 flex items-center justify-center">
           <p
-            className="text-fg-muted font-sans-body animate-pulse text-small"
+            className="text-fg-muted font-body animate-pulse text-small"
           >
             Loading map&hellip;
           </p>

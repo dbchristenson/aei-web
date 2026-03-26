@@ -1,0 +1,21 @@
+# Videos (hosted externally)
+frontend/public/videos/
+
+# Backend (not deployed to Vercel)
+backend/
+
+# Analysis scripts
+analysis/
+
+# Documentation
+docs/
+
+# Python files
+*.py
+pyproject.toml
+uv.lock
+
+# Misc
+.claude/
+AGENTS.md
+scripts/

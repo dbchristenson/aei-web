@@ -54,21 +54,21 @@ export default function InsightCard({
       <div className="p-6">
         {/* Category tag */}
         <span
-          className={`inline-block px-3 py-1 rounded-[var(--radius-pill)] font-sans-body font-medium text-xs ${categoryStyle.bg} ${categoryStyle.text}`}
+          className={`inline-block px-3 py-1 rounded-[var(--radius-pill)] font-body font-medium text-xs ${categoryStyle.bg} ${categoryStyle.text}`}
         >
           {category}
         </span>
 
-        <h3 className="mt-3 font-sans-header font-semibold text-fg group-hover:text-primary transition-colors text-h4">
+        <h3 className="mt-3 font-sans font-semibold text-fg group-hover:text-primary transition-colors text-h4">
           {title}
         </h3>
 
-        <p className="mt-2 text-fg-muted font-sans-body line-clamp-2 text-small">
+        <p className="mt-2 text-fg-muted font-body line-clamp-2 text-small">
           {excerpt}
         </p>
 
         <time
-          className="mt-4 block text-fg-muted font-sans-body text-xs"
+          className="mt-4 block text-fg-muted font-body text-xs"
           dateTime={date}
         >
           {date}

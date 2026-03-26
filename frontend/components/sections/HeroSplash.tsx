@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -12,6 +12,15 @@ gsap.registerPlugin(ScrollTrigger);
 export default function HeroSplash() {
   const sectionRef = useRef<HTMLElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const chevronRef = useRef<HTMLDivElement>(null);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  useEffect(() => {
+    setIsTouchDevice(
+      "ontouchstart" in window || navigator.maxTouchPoints > 0,
+    );
+  }, []);
 
   useGSAP(
     () => {
@@ -51,6 +60,61 @@ export default function HeroSplash() {
           },
         });
       });
+
+      // ── Scroll indicator — delayed entrance with glow ──
+      if (scrollRef.current) {
+        gsap.set(scrollRef.current, { opacity: 0, y: 20 });
+
+        // Fade in
+        gsap.to(scrollRef.current, {
+          opacity: 1,
+          y: 0,
+          duration: 1.2,
+          ease: "power2.out",
+          delay: 2,
+        });
+
+        // Pulsing glow on the text (starts after entrance)
+        const textEl = scrollRef.current.querySelector("[data-scroll-text]");
+        if (textEl) {
+          gsap.fromTo(
+            textEl,
+            { textShadow: "0 0 0px transparent" },
+            {
+              textShadow: "0 0 18px var(--color-secondary)",
+              duration: 2,
+              ease: "sine.inOut",
+              repeat: -1,
+              yoyo: true,
+              delay: 3.2,
+            },
+          );
+        }
+
+        // Fade out on scroll — delayed start, longer range
+        gsap.to(scrollRef.current, {
+          opacity: 0,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "20% top",
+            end: "35% top",
+            scrub: true,
+          },
+        });
+      }
+
+      // Gentle chevron bob (starts after entrance completes)
+      if (chevronRef.current) {
+        gsap.to(chevronRef.current, {
+          y: 10,
+          duration: 1.4,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+          delay: 3.2,
+        });
+      }
     },
     { scope: sectionRef },
   );
@@ -58,7 +122,7 @@ export default function HeroSplash() {
   return (
     <section
       ref={sectionRef}
-      className="relative flex items-center justify-center min-h-screen overflow-hidden bg-bg"
+      className="relative flex items-center justify-center h-dvh overflow-hidden bg-bg"
       aria-label="Hero splash"
     >
       <VideoBackground videoKey={HERO_SPLASH_VIDEO} overlay="vignette" />
@@ -103,32 +167,36 @@ export default function HeroSplash() {
         </h1>
 
         {/* Company name */}
-        <p className="mt-5 text-secondary font-sans-body tracking-[0.22em] uppercase text-xs">
+        <p className="mt-5 text-secondary font-body tracking-[0.22em] uppercase text-xs">
           PT Agra Energi Indonesia
         </p>
       </div>
 
-      {/* Scroll indicator */}
+      {/* Scroll indicator — delayed entrance with glow, fades on scroll */}
       <div
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
+        ref={scrollRef}
+        className="absolute bottom-14 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-4"
         aria-hidden="true"
       >
-        <span className="text-fg-muted font-sans-body tracking-widest uppercase text-xs">
-          Scroll
+        <span
+          data-scroll-text
+          className="text-fg-secondary font-body tracking-[0.3em] uppercase text-body-lg font-medium"
+        >
+          {isTouchDevice ? "Swipe Down to Explore" : "Scroll to Explore"}
         </span>
-        <div className="animate-scroll-bounce">
+        <div ref={chevronRef}>
           <svg
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
+            width="36"
+            height="36"
+            viewBox="0 0 36 36"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              d="M5 8l5 5 5-5"
+              d="M9 14l9 9 9-9"
               stroke="var(--color-secondary)"
-              strokeOpacity="0.6"
-              strokeWidth="1.5"
+              strokeOpacity="0.8"
+              strokeWidth="2.5"
               strokeLinecap="round"
               strokeLinejoin="round"
             />

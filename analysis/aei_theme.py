@@ -22,29 +22,29 @@ f = _t["fonts"]
 g = _t["themes"]["dark"]["glass"]
 
 AEI_THEME = {
-    "font": {"family": f"{f['sansBody']}, sans-serif", "color": c["skyReflection"]},
+    "font": {"family": f"{f['body']}, sans-serif", "color": c["skyReflection"]},
     "paper_bgcolor": "rgba(0,0,0,0)",
     "plot_bgcolor": "rgba(0,0,0,0)",
     "colorway": [c["tealBlue"], c["skyReflection"], c["brightAmber"], c["coralGlow"]],
     "xaxis": {
         "gridcolor": "rgba(132, 188, 218, 0.15)",
         "linecolor": "rgba(132, 188, 218, 0.30)",
-        "tickfont": {"family": f"{f['sansBody']}, sans-serif", "color": c["skyReflection"]},
-        "title_font": {"family": f"{f['sansHeader']}, sans-serif", "color": c["white"]},
+        "tickfont": {"family": f"{f['body']}, sans-serif", "color": c["skyReflection"]},
+        "title_font": {"family": f"{f['sans']}, sans-serif", "color": c["white"]},
     },
     "yaxis": {
         "gridcolor": "rgba(132, 188, 218, 0.15)",
         "linecolor": "rgba(132, 188, 218, 0.30)",
-        "tickfont": {"family": f"{f['sansBody']}, sans-serif", "color": c["skyReflection"]},
-        "title_font": {"family": f"{f['sansHeader']}, sans-serif", "color": c["white"]},
+        "tickfont": {"family": f"{f['body']}, sans-serif", "color": c["skyReflection"]},
+        "title_font": {"family": f"{f['sans']}, sans-serif", "color": c["white"]},
     },
     "hoverlabel": {
         "bgcolor": g["background"],
         "bordercolor": g["border"],
-        "font": {"family": f"{f['sansBody']}, sans-serif", "color": c["white"]},
+        "font": {"family": f"{f['body']}, sans-serif", "color": c["white"]},
     },
     "title": {
-        "font": {"family": f"{f['sansHeader']}, sans-serif", "color": c["white"], "size": 18},
+        "font": {"family": f"{f['sans']}, sans-serif", "color": c["white"], "size": 18},
         "x": 0.0,
     },
     "margin": {"l": 48, "r": 24, "t": 48, "b": 48},

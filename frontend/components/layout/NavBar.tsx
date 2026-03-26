@@ -135,7 +135,7 @@ export default function NavBar() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-fg-secondary hover:text-fg transition-colors font-sans-body text-small"
+              className="text-fg-secondary hover:text-fg transition-colors font-body text-small"
             >
               {link.label}
             </Link>
@@ -214,7 +214,7 @@ export default function NavBar() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-fg hover:text-secondary transition-colors font-sans-header font-semibold text-h3"
+              className="text-fg hover:text-secondary transition-colors font-sans font-semibold text-h3"
               onClick={closeMobileMenu}
             >
               {link.label}

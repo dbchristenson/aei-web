@@ -5,28 +5,28 @@ import { HERO_BANNER_VIDEO } from "@/lib/media";
 export default function HeroBanner() {
   return (
     <section
-      className="relative py-24 px-4 bg-bg overflow-hidden"
+      className="relative pt-24 pb-44 md:pt-32 md:pb-56 px-4 bg-bg-subtle overflow-hidden"
       aria-label="Company overview"
     >
       <VideoBackground videoKey={HERO_BANNER_VIDEO} overlay="darken" />
 
       <div
-        className="relative mx-auto"
+        className="relative z-10 mx-auto"
         style={{ maxWidth: "var(--container-lg)" }}
       >
         <GlassCard className="p-8 md:p-12 lg:p-16">
           {/* Section label */}
-          <p className="font-sans-body text-secondary tracking-[0.18em] uppercase mb-6 text-xs">
+          <p className="font-sans text-secondary tracking-[0.18em] uppercase mb-6 text-xs">
             About AEI
           </p>
 
           {/* Headline */}
-          <h2 className="font-sans-header font-bold text-fg text-hero">
+          <h2 className="font-serif font-bold text-fg text-hero">
             High Impact Energy Projects.
           </h2>
 
           {/* Subheadline */}
-          <p className="mt-6 text-fg-secondary font-sans-body max-w-2xl text-body-lg">
+          <p className="mt-6 text-fg-secondary font-body max-w-2xl text-body-lg">
             PT Agra Energi Indonesia — privately held, providing security and reliability to Indonesia&apos;s grid.
           </p>
 
@@ -34,7 +34,7 @@ export default function HeroBanner() {
           <div className="mt-10">
             <a
               href="#exploration-map"
-              className="inline-flex items-center gap-2 px-8 py-4 font-sans-body font-medium text-fg-inverse bg-primary hover:bg-primary-hover hover:-translate-y-0.5 transition-all rounded-[var(--radius-button)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary text-body-lg"
+              className="inline-flex items-center gap-2 px-8 py-4 font-sans font-medium text-fg-inverse bg-primary hover:bg-primary-hover hover:-translate-y-0.5 transition-all rounded-[var(--radius-button)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary text-body-lg"
             >
               View Projects
               <svg
@@ -57,6 +57,15 @@ export default function HeroBanner() {
           </div>
         </GlassCard>
       </div>
+
+      {/* Bottom gradient — cinematic fade into partners section */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-44 md:h-56 pointer-events-none z-[1]"
+        aria-hidden="true"
+        style={{
+          background: "linear-gradient(to bottom, transparent, var(--color-bg-subtle))",
+        }}
+      />
     </section>
   );
 }

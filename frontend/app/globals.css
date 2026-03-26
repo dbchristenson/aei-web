@@ -1,24 +1,33 @@
 @import "tailwindcss";
 
+/* @generated:theme-inline start */
 @theme inline {
-  /* ── Palette (static, not theme-dependent) ── */
+  /* Palette (static, not theme-dependent) */
   --color-palette-teal-blue: #067bc2;
+  --color-palette-teal-blue-hover: #0568a3;
   --color-palette-sky-reflection: #84bcda;
+  --color-palette-scooter: #33b5dd;
+  --color-palette-snow: #fffafa;
+  --color-palette-ivory: #FFFFE3;
   --color-palette-bright-amber: #ecc30b;
   --color-palette-coral-glow: #f37748;
+  --color-palette-classic-coral: #E45F4A;
   --color-palette-jet-black: #162521;
-
-  --color-palette-neutral-950: #0c1512;
-  --color-palette-neutral-900: #162521;
-  --color-palette-neutral-800: #1e332d;
-  --color-palette-neutral-700: #2d4a42;
-  --color-palette-neutral-600: #3d6358;
-  --color-palette-neutral-400: #7a9e94;
-  --color-palette-neutral-200: #c8dbd6;
-  --color-palette-neutral-100: #e8f0ed;
+  --color-palette-white: #ffffff;
+  --color-palette-alabaster: #fafafa;
+  --color-palette-success: #2a9d6e;
+  --color-palette-error: #d93636;
   --color-palette-neutral-50: #f4f8f6;
+  --color-palette-neutral-100: #e8f0ed;
+  --color-palette-neutral-200: #c8dbd6;
+  --color-palette-neutral-400: #7a9e94;
+  --color-palette-neutral-600: #3d6358;
+  --color-palette-neutral-700: #2d4a42;
+  --color-palette-neutral-800: #1e332d;
+  --color-palette-neutral-900: #162521;
+  --color-palette-neutral-950: #0c1512;
 
-  /* ── Semantic role tokens (resolved via --theme-* vars) ── */
+  /* Semantic role tokens (resolved via --theme-* vars) */
   --color-primary: var(--theme-primary);
   --color-primary-hover: var(--theme-primary-hover);
   --color-secondary: var(--theme-secondary);
@@ -39,17 +48,18 @@
   --color-error: var(--theme-error);
 
   /* Fonts */
-  --font-serif: var(--font-lora), Georgia, serif;
-  --font-sans-header: var(--font-rubik), sans-serif;
-  --font-sans-body: var(--font-manrope), sans-serif;
+  --font-sans: var(--font-plus-jakarta), sans-serif;
+  --font-serif: var(--font-plus-jakarta), sans-serif;
+  --font-body: var(--font-plus-jakarta), sans-serif;
 
   /* Border radius */
   --radius-card: 16px;
   --radius-button: 8px;
   --radius-pill: 9999px;
 }
+/* @generated:theme-inline end */
 
-/* ── Dark theme (default) ── */
+/* @generated:dark-theme start */
 :root,
 [data-theme="dark"] {
   --theme-primary: #067bc2;
@@ -73,9 +83,11 @@
 
   /* Glass tokens */
   --glass-bg: rgba(22, 37, 33, 0.55);
+  --glass-blur: 14px;
   --glass-border: rgba(132, 188, 218, 0.20);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.40);
   --glass-light-bg: rgba(255, 255, 255, 0.12);
+  --glass-light-blur: 14px;
   --glass-light-border: rgba(255, 255, 255, 0.20);
   --glass-light-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
 
@@ -93,10 +105,10 @@
   --text-stat: 3rem;
   --text-logo-splash: 5rem;
 
-  /* Font stacks (CSS custom properties for inline styles) */
-  --font-serif-stack: var(--font-lora), Georgia, serif;
-  --font-sans-header-stack: var(--font-rubik), sans-serif;
-  --font-sans-body-stack: var(--font-manrope), sans-serif;
+  /* Font stacks */
+  --font-sans-stack: var(--font-plus-jakarta), sans-serif;
+  --font-serif-stack: var(--font-plus-jakarta), sans-serif;
+  --font-body-stack: var(--font-plus-jakarta), sans-serif;
 
   /* Animation tokens */
   --entrance-duration: 600ms;
@@ -110,8 +122,9 @@
   --container-lg: 1024px;
   --container-xl: 1280px;
 }
+/* @generated:dark-theme end */
 
-/* ── Light theme ── */
+/* @generated:light-theme start */
 [data-theme="light"] {
   --theme-bg: #f4f8f6;
   --theme-bg-subtle: #e8f0ed;
@@ -124,16 +137,19 @@
   --theme-fg-muted: #3d6358;
   --theme-fg-inverse: #f4f8f6;
 
-  /* Glass tokens for light theme */
+  /* Glass tokens */
   --glass-bg: rgba(255, 255, 255, 0.45);
+  --glass-blur: 14px;
   --glass-border: rgba(0, 0, 0, 0.10);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
   --glass-light-bg: rgba(255, 255, 255, 0.55);
+  --glass-light-blur: 14px;
   --glass-light-border: rgba(0, 0, 0, 0.08);
   --glass-light-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
+/* @generated:light-theme end */
 
-/* System preference fallback when no data-theme is set */
+/* @generated:light-fallback start */
 @media (prefers-color-scheme: light) {
   :root:not([data-theme]) {
     --theme-bg: #f4f8f6;
@@ -147,10 +163,13 @@
     --theme-fg-muted: #3d6358;
     --theme-fg-inverse: #f4f8f6;
 
+    /* Glass tokens */
     --glass-bg: rgba(255, 255, 255, 0.45);
+    --glass-blur: 14px;
     --glass-border: rgba(0, 0, 0, 0.10);
     --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
     --glass-light-bg: rgba(255, 255, 255, 0.55);
+    --glass-light-blur: 14px;
     --glass-light-border: rgba(0, 0, 0, 0.08);
     --glass-light-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   }
@@ -160,7 +179,9 @@
     background: none;
   }
 }
+/* @generated:light-fallback end */
 
+/* @generated:mobile-type-scale start */
 @media (max-width: 767px) {
   :root {
     --text-hero: 2.25rem;
@@ -172,13 +193,14 @@
     --text-logo-splash: 3rem;
   }
 }
+/* @generated:mobile-type-scale end */
 
 /* Glass card utility classes */
 @layer components {
   .glass-card {
     background: var(--glass-light-bg);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(var(--glass-light-blur));
+    -webkit-backdrop-filter: blur(var(--glass-light-blur));
     border: 1px solid var(--glass-light-border);
     border-radius: var(--radius-card);
     box-shadow: var(--glass-light-shadow);
@@ -186,8 +208,8 @@
 
   .glass-card-dark {
     background: var(--glass-bg);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-card);
     box-shadow: var(--glass-shadow);
@@ -237,7 +259,7 @@ html {
 body {
   background: var(--color-bg);
   color: var(--color-fg);
-  font-family: var(--font-sans-body);
+  font-family: var(--font-body);
 }
 
 /* Map loading skeleton pulse */
@@ -275,7 +297,7 @@ body {
     animation: grid-pulse 2s ease-in-out infinite;
   }
 
-  /* Type scale utilities — mapped from theme.json typeScale */
+  /* @generated:type-utilities start */
   .text-hero { font-size: var(--text-hero); line-height: 1.1; }
   .text-h1 { font-size: var(--text-h1); line-height: 1.2; }
   .text-h2 { font-size: var(--text-h2); line-height: 1.25; }
@@ -286,8 +308,9 @@ body {
   .text-small { font-size: var(--text-small); line-height: 1.5; }
   .text-xs { font-size: var(--text-xs); line-height: 1.4; }
   .text-quote { font-size: var(--text-quote); line-height: 1.4; }
-  .text-stat { font-size: var(--text-stat); line-height: 1.0; }
-  .text-logo-splash { font-size: var(--text-logo-splash); line-height: 1.0; }
+  .text-stat { font-size: var(--text-stat); line-height: 1; }
+  .text-logo-splash { font-size: var(--text-logo-splash); line-height: 1; }
+/* @generated:type-utilities end */
 }
 
 /* Reduced motion */

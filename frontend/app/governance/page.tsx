@@ -39,13 +39,13 @@ function GovernanceCard({
       }}
     >
       <div>
-        <span className="text-xs font-sans-body font-medium text-fg-muted tracking-widest uppercase">
+        <span className="text-xs font-body font-medium text-fg-muted tracking-widest uppercase">
           {String(index).padStart(2, "0")}
         </span>
-        <h2 className="mt-3 font-sans-header font-semibold text-fg text-h3 group-hover:text-primary transition-colors">
+        <h2 className="mt-3 font-sans font-semibold text-fg text-h3 group-hover:text-primary transition-colors">
           {policy.title}
         </h2>
-        <p className="mt-2 text-fg-muted font-sans-body text-small">
+        <p className="mt-2 text-fg-muted font-body text-small">
           {policy.description}
         </p>
       </div>

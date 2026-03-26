@@ -1,3 +1,6 @@
+# Claude Code worktrees
+.claude/worktrees/
+
 # Dependencies
 node_modules/
 .pnp/
@@ -48,3 +51,9 @@ next-env.d.ts
 
 # Docs
 .impeccable.md
+
+# Resources
+frontend/public/images/supplements/jkt_office_full_res.jpg
+frontend/public/images/supplements/office_convo.png
+.vercel
+.env*.local

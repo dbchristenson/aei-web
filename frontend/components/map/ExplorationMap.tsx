@@ -232,7 +232,7 @@ export default function ExplorationMap({
                 ))}
               </g>
             </svg>
-            <p className="absolute text-fg-muted font-sans-body animate-pulse text-small">
+            <p className="absolute text-fg-muted font-body animate-pulse text-small">
               Loading exploration data&hellip;
             </p>
           </div>
@@ -240,7 +240,7 @@ export default function ExplorationMap({
 
         {mapState === "error" && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <p className="text-fg-muted font-sans-body text-body">
+            <p className="text-fg-muted font-body text-body">
               Unable to load map data. Please try again later.
             </p>
           </div>
@@ -248,7 +248,7 @@ export default function ExplorationMap({
 
         {mapState === "empty" && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <p className="text-fg-muted font-sans-body text-body">
+            <p className="text-fg-muted font-body text-body">
               Exploration block data coming soon.
             </p>
           </div>
@@ -265,7 +265,7 @@ export default function ExplorationMap({
         {/* Hover tooltip */}
         <div
           ref={tooltipRef}
-          className="absolute pointer-events-none z-20 px-3 py-1.5 rounded-[var(--radius-button)] font-sans-body text-fg whitespace-nowrap transition-opacity duration-150 text-small"
+          className="absolute pointer-events-none z-20 px-3 py-1.5 rounded-[var(--radius-button)] font-body text-fg whitespace-nowrap transition-opacity duration-150 text-small"
           style={{
             opacity: 0,
             background: "color-mix(in srgb, var(--color-bg-subtle) 85%, transparent)",

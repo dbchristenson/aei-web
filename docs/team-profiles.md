@@ -1,19 +1,15 @@
-# Gary Christenson
-### Position: CEO
-### Summary: Gary is a seasoned Indonesian O&G explorationist who has held leadership roles at Chevron, Unocal, Niko, and Black Gold Energy
+# GN Christenson
+### Position: Chief Executive
+### Summary: Gary is a seasoned O&G explorationist who has held leadership roles in the Indonesian exploration divisions at Unocal and Niko. Gary was also founder and chief executive of Black Gold Energy until its sale in 2010
 
-# Sujud Sunawan
-### Position: CTO
-### Summary: Sujud is an IT savant that manages AEI's immense intelligence data sets
+# Amjad Bseisu
+### Position: Non-Executive Director
+### Summary: Amjad is an internationally recognized member of the energy community acting as the chairman of the independent energy community for the World Economic Forum since 2016 as well as the founder of Petrofac and EnQuest
 
-# Yusak
-### Position: Senior Project Developer
-### Summary: Yusak's primary ideal is to enjoy the moment—especially when it involves drilling for gas
-
-# Agung
-### Position: Senior Project Developer
-### Summary: Agung loves cats and is a very personable individual who has extensive off shore operations experience in drilling and well development
+# Ravi Shankar
+### Position: Non-Executive Director
+### Summary: Ravi is a seasoned Oil & Gas and maritime executive who established SP Oil & Gas across Southeast Asia, building a US$1.5B asset base. He brings deep experience in finance, shipping, and offshore operations from leadership roles at Wilh. Wilhelmsen and Barber Ship Management
 
 # DB Christenson
-### Position: Development Intern
-### Summary: DB received his MS in Energy from Northwestern University and is eager to hone his energy project developement skills
+### Position: Research Scientist
+### Summary: DB received his MS in Energy from Northwestern University and is eager to hone his energy project development skills

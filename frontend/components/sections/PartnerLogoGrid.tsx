@@ -131,10 +131,10 @@ export default function PartnerLogoGrid() {
         className="mx-auto text-center"
         style={{ maxWidth: "var(--container-xl)" }}
       >
-        <h2 className="font-sans-header font-semibold text-fg mb-3 text-h2">
+        <h2 className="font-serif font-semibold text-fg mb-3 text-h2">
           Our Partners &amp; Stakeholders
         </h2>
-        <p className="text-fg-muted font-sans-body mb-12 text-body">
+        <p className="text-fg-muted font-body mb-12 text-body">
           Working alongside world-class operators and institutional partners.
         </p>
 

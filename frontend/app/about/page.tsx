@@ -14,10 +14,10 @@ export default function AboutPage() {
       {/* Hero */}
       <section className="py-24 px-4 bg-bg">
         <div className="mx-auto" style={{ maxWidth: "var(--container-lg)" }}>
-          <h1 className="font-sans-header font-bold text-fg text-h1">
+          <h1 className="font-sans font-bold text-fg text-h1">
             About AEI
           </h1>
-          <p className="mt-6 text-fg-secondary font-sans-body max-w-2xl text-body-lg">
+          <p className="mt-6 text-fg-secondary font-body max-w-2xl text-body-lg">
             {/* TODO: Replace with actual company history from client */}
             PT Agra Energi Indonesia was established in 2015 with a focus on
             high-impact oil and gas exploration. We acquire exploration blocks
@@ -31,10 +31,10 @@ export default function AboutPage() {
       <section className="py-24 px-4 bg-bg-subtle">
         <div className="mx-auto" style={{ maxWidth: "var(--container-lg)" }}>
           <GlassCard variant="dark" className="p-8 md:p-12">
-            <h2 className="font-sans-header font-semibold text-fg mb-6 text-h2">
+            <h2 className="font-sans font-semibold text-fg mb-6 text-h2">
               Our Mission
             </h2>
-            <p className="text-fg-secondary font-sans-body text-body">
+            <p className="text-fg-secondary font-body text-body">
               {/* TODO: Replace with actual mission statement */}
               We believe in the potential of Indonesia&apos;s energy resources.
               Our mission is to responsibly develop these resources while

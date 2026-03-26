@@ -69,12 +69,12 @@ export default function StatCounter({
 
   return (
     <div ref={ref} className="text-center">
-      <p className="font-sans-header font-bold text-primary text-stat">
+      <p className="font-sans font-bold text-primary text-stat">
         {prefix}
         {displayValue.toLocaleString()}
         {suffix}
       </p>
-      <p className="mt-2 text-fg-muted font-sans-body text-small">
+      <p className="mt-2 text-fg-muted font-body text-small">
         {label}
       </p>
     </div>
