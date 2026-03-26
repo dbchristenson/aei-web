@@ -9,34 +9,28 @@ import ExplorationMapLoader from "@/components/map/ExplorationMapLoader";
 
 const teamMembers = [
   {
-    name: "Gary Christenson",
-    title: "CEO",
-    bio: "Gary is a seasoned Indonesian O&G explorationist who has held leadership roles at Chevron, Unocal, Niko, and Black Gold Energy.",
-    photo: "/images/headshots/blank_headshot.png",
+    name: "GN Christenson",
+    title: "Chief Executive",
+    bio: "Gary is a seasoned O&G explorationist who has held leadership roles in the Indonesian exploration divisions at Unocal and Niko. Gary was also founder and chief executive of Black Gold Energy until its sale in 2010.",
+    photo: "/images/headshots/gary_christenson.webp",
   },
   {
-    name: "Sujud Sunawan",
-    title: "CTO",
-    bio: "Sujud is an IT savant that manages AEI\u2019s immense intelligence data sets.",
-    photo: "/images/headshots/blank_headshot.png",
+    name: "Amjad Bseisu",
+    title: "Non-Executive Director",
+    bio: "Amjad is an internationally recognized member of the energy community acting as the chairman of the independent energy community for the World Economic Forum since 2016 as well as the founder of Petrofac and EnQuest.",
+    photo: "/images/headshots/amjad_bseisu.webp",
   },
   {
-    name: "Yusak",
-    title: "Senior Project Developer",
-    bio: "Yusak\u2019s primary ideal is to enjoy the moment\u2014especially when it involves drilling for gas.",
-    photo: "/images/headshots/blank_headshot.png",
-  },
-  {
-    name: "Agung",
-    title: "Senior Project Developer",
-    bio: "Agung is a very personable individual who has extensive offshore operations experience in drilling and well development.",
-    photo: "/images/headshots/blank_headshot.png",
+    name: "Ravi Shankar",
+    title: "Non-Executive Director",
+    bio: "Ravi established SP Oil & Gas across Southeast Asia, building a US$1.5B asset base. He brings deep experience in finance, shipping, and offshore operations from roles at Wilh. Wilhelmsen and Barber Ship Management.",
+    photo: "/images/headshots/ravi_shankar.webp",
   },
   {
     name: "DB Christenson",
     title: "Development Intern",
     bio: "DB received his MS in Energy from Northwestern University and is eager to hone his energy project development skills.",
-    photo: "/images/headshots/blank_headshot.png",
+    photo: "/images/headshots/db_christenson.webp",
   },
 ];
 

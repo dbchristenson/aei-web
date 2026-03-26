@@ -17,7 +17,7 @@ export default function ContactPage() {
           <div className="lg:grid lg:grid-cols-[5fr_7fr] lg:items-start">
 
             {/* Jakarta office — warm accent, peeks behind glass card */}
-            <div className="relative rounded-xl overflow-hidden aspect-[16/9] lg:aspect-[4/5] mb-8 lg:mb-0 lg:mr-[-5rem]">
+            <div className="relative rounded-xl overflow-hidden aspect-[16/9] lg:aspect-[4/5] mb-8 lg:mb-0 lg:mt-14 lg:mr-[-5rem] shadow-md">
               <Image
                 src="/images/supplements/jkt_office.jpg"
                 alt="AEI Jakarta office at Equity Tower, SCBD"
@@ -25,6 +25,15 @@ export default function ContactPage() {
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 42vw"
                 quality={80}
+              />
+              {/* Darken the overlap edge for text readability on the glass card */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                aria-hidden="true"
+                style={{
+                  background:
+                    "linear-gradient(to left, rgba(0,0,0,0.35), transparent 60%)",
+                }}
               />
             </div>
 
