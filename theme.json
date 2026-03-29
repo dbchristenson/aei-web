@@ -3,6 +3,7 @@
   "palette": {
     "primary": "#12587c",
     "primaryMuted": "#1b7fa3",
+    "primaryDark": "#003c5e",
     "alternate": "#0aadd6",
     "alternateMuted": "#62caeb",
     "white": "#ffffff",

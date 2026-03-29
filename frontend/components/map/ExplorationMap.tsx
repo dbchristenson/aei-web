@@ -20,6 +20,7 @@ export default function ExplorationMap({
   blocksEndpoint = "/data/blocks.geojson",
 }: ExplorationMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const rotationRef = useRef<[number, number, number]>(INITIAL_ROTATION);
@@ -145,7 +146,7 @@ export default function ExplorationMap({
 
   // ─── D3 globe rendering + drag behavior ───
   const { renderRef, showTooltipRef, hideTooltipRef } = useGlobeRenderer({
-    svgRef, containerRef, tooltipRef,
+    svgRef, canvasRef, containerRef, tooltipRef,
     geoData, worldData, terrainData, mapState,
     rotationRef, rawRotationRef, scaleMultiplierRef, dragBoundsRef,
     tooltipBlockRef, bounceAnimRef, zoomAnimRef,
@@ -273,10 +274,18 @@ export default function ExplorationMap({
           </div>
         )}
 
-        {/* D3 renders into this SVG */}
+        {/* Canvas: non-interactive background layers (globe, land, terrain) */}
+        <canvas
+          ref={canvasRef}
+          className={`absolute inset-0 ${mapState !== "active" ? "hidden" : ""}`}
+          aria-hidden="true"
+        />
+
+        {/* SVG: interactive layers (block polygons, dots, glow filters) */}
         <svg
           ref={svgRef}
-          className={`w-full h-full ${mapState !== "active" ? "hidden" : ""}`}
+          className={`absolute inset-0 ${mapState !== "active" ? "hidden" : ""}`}
+          style={{ background: "transparent" }}
           role="img"
           aria-label="Interactive orthographic globe map showing AEI exploration blocks in Indonesia"
         />

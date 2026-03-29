@@ -2,13 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { parseContactForm } from "@/lib/schemas/contact";
 import { buildContactNotification } from "@/lib/email/contact-notification";
+import { buildContactConfirmation } from "@/lib/email/contact-confirmation";
 import { rateLimit } from "@/lib/rate-limit";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const CONTACT_EMAIL_TO = process.env.CONTACT_EMAIL_TO ?? "contact@aei-1.com";
 const CONTACT_EMAIL_FROM =
-  process.env.CONTACT_EMAIL_FROM ?? "AEI Website <noreply@aei-1.com>";
+  process.env.CONTACT_EMAIL_FROM ?? "AEI Website <noreply@aei-mail.com>";
 
 export async function POST(request: NextRequest) {
   // --- Content-Type check ---
@@ -106,6 +107,25 @@ export async function POST(request: NextRequest) {
       },
       { status: 500 }
     );
+  }
+
+  // --- Send confirmation email to submitter (best-effort, non-blocking) ---
+  const confirmation = buildContactConfirmation(parsed.data);
+
+  try {
+    const { error: confirmErr } = await resend.emails.send({
+      from: CONTACT_EMAIL_FROM,
+      to: parsed.data.email,
+      subject: confirmation.subject,
+      html: confirmation.html,
+      text: confirmation.text,
+    });
+
+    if (confirmErr) {
+      console.error("[contact] Confirmation email error:", confirmErr);
+    }
+  } catch (err) {
+    console.error("[contact] Failed to send confirmation email:", err);
   }
 
   return NextResponse.json({ status: "ok" });
