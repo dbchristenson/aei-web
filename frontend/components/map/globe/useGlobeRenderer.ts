@@ -79,19 +79,25 @@ export default function useGlobeRenderer({
       worldData.objects.land as GeometryCollection
     );
 
-    // Pre-compute terrain elevation bands (grouped into 3 FeatureCollections)
+    // Pre-compute terrain elevation bands as merged FeatureCollections.
+    // Each band becomes a single <path> (3 total) for fast drag re-projection.
+    // The land clipPath prevents any orthographic clipping artifacts from showing.
     const terrainBands = terrainData ? (() => {
       const allFeatures = topojson.feature(
         terrainData,
         terrainData.objects.data as GeometryCollection
       ) as GeoJSON.FeatureCollection;
 
-      const makeBand = (band: string): GeoJSON.FeatureCollection => ({
+      const byBand = (band: string): GeoJSON.FeatureCollection => ({
         type: "FeatureCollection",
         features: allFeatures.features.filter((f) => f.properties?.band === band),
       });
 
-      return { low: makeBand("low"), medium: makeBand("medium"), high: makeBand("high") };
+      return {
+        low: byBand("low"),
+        medium: byBand("medium"),
+        high: byBand("high"),
+      };
     })() : null;
 
     function updateProjection() {
@@ -229,21 +235,37 @@ export default function useGlobeRenderer({
         .attr("stroke", tc.n600)
         .attr("stroke-width", 0.6);
 
-      // Layer 4b: Terrain elevation bands (low → medium → high, painted bottom-up)
+      // Layer 4b: Terrain elevation bands (low → medium → high, painted bottom-up).
+      // Each polygon is its own <path> to avoid D3 orthographic clipping artefacts.
+      // Terrain is clipped to the land boundary so it never bleeds into ocean.
       if (terrainBands) {
-        const bands: Array<{ key: string; data: GeoJSON.FeatureCollection; fill: string }> = [
-          { key: "low", data: terrainBands.low, fill: tc.terrainLow },
-          { key: "medium", data: terrainBands.medium, fill: tc.terrainMed },
-          { key: "high", data: terrainBands.high, fill: tc.terrainHigh },
-        ];
-        for (const band of bands) {
-          svg.append("path")
-            .attr("class", `terrain-${band.key}`)
-            .datum(band.data)
-            .attr("d", path)
-            .attr("fill", band.fill)
-            .attr("stroke", "none");
-        }
+        // Create clipPath from land geometry so terrain stays within coastlines
+        const landClip = defs.append("clipPath").attr("id", "land-clip");
+        landClip.append("path").datum(landFeature).attr("d", path);
+
+        const terrainGroup = svg.append("g")
+          .attr("class", "terrain-layer")
+          .attr("clip-path", "url(#land-clip)");
+
+        // One <path> per band (3 total) — fast to re-project during drag
+        terrainGroup.append("path")
+          .attr("class", "terrain-low")
+          .datum(terrainBands.low)
+          .attr("d", path)
+          .attr("fill", tc.terrainLow)
+          .attr("stroke", "none");
+        terrainGroup.append("path")
+          .attr("class", "terrain-medium")
+          .datum(terrainBands.medium)
+          .attr("d", path)
+          .attr("fill", tc.terrainMed)
+          .attr("stroke", "none");
+        terrainGroup.append("path")
+          .attr("class", "terrain-high")
+          .datum(terrainBands.high)
+          .attr("d", path)
+          .attr("fill", tc.terrainHigh)
+          .attr("stroke", "none");
       }
 
       // Layer 5: Block polygons
@@ -374,7 +396,8 @@ export default function useGlobeRenderer({
       // Update land — datum already bound from renderFull, just re-project
       svg.select(".land-path").attr("d", path as unknown as null);
 
-      // Update terrain bands
+      // Update land clip mask + terrain bands (4 paths total — fast)
+      svg.select("#land-clip path").attr("d", path as unknown as null);
       if (terrainBands) {
         svg.select(".terrain-low").attr("d", path as unknown as null);
         svg.select(".terrain-medium").attr("d", path as unknown as null);

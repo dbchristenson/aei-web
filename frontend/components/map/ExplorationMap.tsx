@@ -59,6 +59,10 @@ export default function ExplorationMap({
       (entries) => {
         if (entries[0].isIntersecting) {
           observer.disconnect();
+
+          // Load blocks + land first (essential for map render).
+          // Terrain loads independently to avoid blocking the map and
+          // competing with video/image resources higher up the page.
           Promise.all([
             fetch(blocksEndpoint).then((r) => {
               if (!r.ok) throw new Error(`Blocks fetch failed: ${r.status}`);
@@ -68,12 +72,8 @@ export default function ExplorationMap({
               if (!r.ok) throw new Error(`Land fetch failed: ${r.status}`);
               return r.json() as Promise<Topology>;
             }),
-            fetch("/data/indonesia-terrain.json").then((r) => {
-              if (!r.ok) throw new Error(`Terrain fetch failed: ${r.status}`);
-              return r.json() as Promise<Topology>;
-            }),
           ])
-            .then(([blocks, world, terrain]) => {
+            .then(([blocks, world]) => {
               if (cancelled) return;
               if (!blocks.features.length) {
                 setMapState("empty");
@@ -81,11 +81,24 @@ export default function ExplorationMap({
               }
               setGeoData(blocks);
               setWorldData(world);
-              setTerrainData(terrain);
               setMapState("active");
             })
             .catch(() => {
               if (!cancelled) setMapState("error");
+            });
+
+          // Terrain loaded separately — map renders without it, then
+          // terrain fades in once ready.
+          fetch("/data/indonesia-terrain.json")
+            .then((r) => {
+              if (!r.ok) throw new Error(`Terrain fetch failed: ${r.status}`);
+              return r.json() as Promise<Topology>;
+            })
+            .then((terrain) => {
+              if (!cancelled) setTerrainData(terrain);
+            })
+            .catch(() => {
+              // Terrain is cosmetic — map works fine without it
             });
         }
       },

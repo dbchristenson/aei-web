@@ -57,3 +57,4 @@ frontend/public/images/supplements/jkt_office_full_res.jpg
 frontend/public/images/supplements/office_convo.png
 .vercel
 .env*.local
+*.tif

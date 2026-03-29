@@ -42,12 +42,13 @@ BAND_MED_MAX = 500
 
 # Simplification tolerance in degrees (~0.01° ≈ 1.1 km at equator).
 # Balances detail vs file size for SVG rendering on an orthographic globe.
-SIMPLIFY_TOLERANCE = 0.012
+SIMPLIFY_TOLERANCE = 0.025
 
 # Minimum polygon area in square degrees to discard tiny fragments.
-# 0.001 sq deg ≈ 12 km² at equator — filters tiny islets while keeping all
-# visually meaningful islands.
-MIN_AREA = 0.001
+# 0.008 sq deg ≈ 100 km² at equator — keeps only visually significant
+# landmasses for SVG globe rendering. Smaller islands merge with the
+# base land layer underneath.
+MIN_AREA = 0.008
 
 
 def read_indonesia_elevation() -> tuple[np.ndarray, rasterio.Affine]:
@@ -151,7 +152,6 @@ def build_topojson(all_features: list[dict]) -> dict:
         "type": "FeatureCollection",
         "features": all_features,
     }
-    # topojson library converts GeoJSON → TopoJSON with arc deduplication
     topology = tp.Topology(geojson, prequantize=True, presimplify=False)
     topo_dict = topology.to_dict()
     return topo_dict
@@ -184,7 +184,7 @@ def main():
     print(f"\nOutput: {OUTPUT_PATH}")
     print(f"Size: {size_kb:.0f} KB ({size_mb:.1f} MB)")
 
-    # Quick validation: count geometries per band in the output
+    # Quick validation
     objects = topo.get("objects", {})
     for obj_name, obj in objects.items():
         geoms = obj.get("geometries", [])
