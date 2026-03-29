@@ -42,6 +42,7 @@ export default function ExplorationMap({
   }, [uiState]);
   const [geoData, setGeoData] = useState<BlocksGeoJSON | null>(null);
   const [worldData, setWorldData] = useState<Topology | null>(null);
+  const [terrainData, setTerrainData] = useState<Topology | null>(null);
 
   const prefersReducedMotion = usePrefersReducedMotion();
 
@@ -67,8 +68,12 @@ export default function ExplorationMap({
               if (!r.ok) throw new Error(`Land fetch failed: ${r.status}`);
               return r.json() as Promise<Topology>;
             }),
+            fetch("/data/indonesia-terrain.json").then((r) => {
+              if (!r.ok) throw new Error(`Terrain fetch failed: ${r.status}`);
+              return r.json() as Promise<Topology>;
+            }),
           ])
-            .then(([blocks, world]) => {
+            .then(([blocks, world, terrain]) => {
               if (cancelled) return;
               if (!blocks.features.length) {
                 setMapState("empty");
@@ -76,6 +81,7 @@ export default function ExplorationMap({
               }
               setGeoData(blocks);
               setWorldData(world);
+              setTerrainData(terrain);
               setMapState("active");
             })
             .catch(() => {
@@ -127,7 +133,7 @@ export default function ExplorationMap({
   // ─── D3 globe rendering + drag behavior ───
   const { renderRef, showTooltipRef, hideTooltipRef } = useGlobeRenderer({
     svgRef, containerRef, tooltipRef,
-    geoData, worldData, mapState,
+    geoData, worldData, terrainData, mapState,
     rotationRef, rawRotationRef, scaleMultiplierRef, dragBoundsRef,
     tooltipBlockRef, bounceAnimRef, zoomAnimRef,
     uiStateRef,

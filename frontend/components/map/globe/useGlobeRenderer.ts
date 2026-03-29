@@ -26,6 +26,7 @@ export interface UseGlobeRendererParams {
   tooltipRef: React.RefObject<HTMLDivElement | null>;
   geoData: BlocksGeoJSON | null;
   worldData: Topology | null;
+  terrainData: Topology | null;
   mapState: MapState;
   rotationRef: React.MutableRefObject<[number, number, number]>;
   rawRotationRef: React.MutableRefObject<[number, number]>;
@@ -49,7 +50,7 @@ export interface UseGlobeRendererReturn {
 
 export default function useGlobeRenderer({
   svgRef, containerRef, tooltipRef,
-  geoData, worldData, mapState,
+  geoData, worldData, terrainData, mapState,
   rotationRef, rawRotationRef, scaleMultiplierRef, dragBoundsRef,
   tooltipBlockRef, bounceAnimRef, zoomAnimRef,
   uiStateRef,
@@ -77,6 +78,21 @@ export default function useGlobeRenderer({
       worldData,
       worldData.objects.land as GeometryCollection
     );
+
+    // Pre-compute terrain elevation bands (grouped into 3 FeatureCollections)
+    const terrainBands = terrainData ? (() => {
+      const allFeatures = topojson.feature(
+        terrainData,
+        terrainData.objects.data as GeometryCollection
+      ) as GeoJSON.FeatureCollection;
+
+      const makeBand = (band: string): GeoJSON.FeatureCollection => ({
+        type: "FeatureCollection",
+        features: allFeatures.features.filter((f) => f.properties?.band === band),
+      });
+
+      return { low: makeBand("low"), medium: makeBand("medium"), high: makeBand("high") };
+    })() : null;
 
     function updateProjection() {
       const width = container!.clientWidth;
@@ -204,7 +220,7 @@ export default function useGlobeRenderer({
         .attr("stroke-width", 0.3)
         .attr("stroke-opacity", 0.35);
 
-      // Layer 4: Land masses
+      // Layer 4: Land masses (base fill, visible where terrain has gaps)
       svg.append("path")
         .attr("class", "land-path")
         .datum(landFeature)
@@ -212,6 +228,23 @@ export default function useGlobeRenderer({
         .attr("fill", tc.n900)
         .attr("stroke", tc.n600)
         .attr("stroke-width", 0.6);
+
+      // Layer 4b: Terrain elevation bands (low → medium → high, painted bottom-up)
+      if (terrainBands) {
+        const bands: Array<{ key: string; data: GeoJSON.FeatureCollection; fill: string }> = [
+          { key: "low", data: terrainBands.low, fill: tc.terrainLow },
+          { key: "medium", data: terrainBands.medium, fill: tc.terrainMed },
+          { key: "high", data: terrainBands.high, fill: tc.terrainHigh },
+        ];
+        for (const band of bands) {
+          svg.append("path")
+            .attr("class", `terrain-${band.key}`)
+            .datum(band.data)
+            .attr("d", path)
+            .attr("fill", band.fill)
+            .attr("stroke", "none");
+        }
+      }
 
       // Layer 5: Block polygons
       const currentUi = uiStateRef.current;
@@ -340,6 +373,13 @@ export default function useGlobeRenderer({
 
       // Update land — datum already bound from renderFull, just re-project
       svg.select(".land-path").attr("d", path as unknown as null);
+
+      // Update terrain bands
+      if (terrainBands) {
+        svg.select(".terrain-low").attr("d", path as unknown as null);
+        svg.select(".terrain-medium").attr("d", path as unknown as null);
+        svg.select(".terrain-high").attr("d", path as unknown as null);
+      }
 
       // Update block polygons (geometry only — styling managed by ExplorationMap uiState effect)
       svg.selectAll<SVGPathElement, BlockFeature>(".block-area").attr("d", path);
@@ -479,7 +519,7 @@ export default function useGlobeRenderer({
         zoomAnimRef.current = null;
       }
     };
-  }, [mapState, geoData, worldData, handleBlockHover, handleBlockClick, handleDeselect, prefersReducedMotion,
+  }, [mapState, geoData, worldData, terrainData, handleBlockHover, handleBlockClick, handleDeselect, prefersReducedMotion,
       svgRef, containerRef, tooltipRef, rotationRef, rawRotationRef, scaleMultiplierRef, dragBoundsRef,
       tooltipBlockRef, bounceAnimRef, zoomAnimRef, uiStateRef]);
 

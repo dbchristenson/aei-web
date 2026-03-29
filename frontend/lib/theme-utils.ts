@@ -15,5 +15,8 @@ export function getThemeColors() {
     n700: getCssVar("--color-surface-hover"),
     n600: getCssVar("--color-border"),
     n400: getCssVar("--color-fg-muted"),
+    terrainLow: getCssVar("--color-terrain-low"),
+    terrainMed: getCssVar("--color-terrain-med"),
+    terrainHigh: getCssVar("--color-terrain-high"),
   };
 }

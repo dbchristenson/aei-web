@@ -1,11 +1,11 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import VideoBackground from "@/components/ui/VideoBackground";
+import { HERO_SPLASH_VIDEO } from "@/lib/media";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import VideoBackground from "@/components/ui/VideoBackground";
-import { HERO_SPLASH_VIDEO } from "@/lib/media";
+import { useEffect, useRef, useState } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -129,6 +129,14 @@ export default function HeroSplash() {
 
       {/* Centered logo — animated to dock in nav on scroll */}
       <div ref={logoRef} className="relative z-10 flex flex-col items-center text-center px-4">
+        {/* AEI wordmark — logo-splash size */}
+        <h1 className="font-serif font-bold text-fg leading-none tracking-tight text-logo-splash">
+          Agra Energi
+        </h1>
+        <h1 className="font-serif font-bold text-fg leading-none tracking-tight text-logo-splash">
+          Indonesia
+        </h1>
+
         {/* Placeholder logo mark (client to provide SVG) */}
         <div className="mb-8" aria-hidden="true">
           <svg
@@ -160,16 +168,6 @@ export default function HeroSplash() {
             />
           </svg>
         </div>
-
-        {/* AEI wordmark — Lora serif, logo-splash size */}
-        <h1 className="font-serif font-bold text-fg leading-none tracking-tight text-logo-splash">
-          AEI
-        </h1>
-
-        {/* Company name */}
-        <p className="mt-5 text-secondary font-body tracking-[0.22em] uppercase text-xs">
-          PT Agra Energi Indonesia
-        </p>
       </div>
 
       {/* Scroll indicator — delayed entrance with glow, fades on scroll */}

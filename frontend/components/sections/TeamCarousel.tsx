@@ -51,7 +51,7 @@ export default function TeamCarousel({ members }: TeamCarouselProps) {
         </h2>
 
         <h4 className="text-center font-body text-fg-muted mb-12 tect body">
-          AEI's strategic council possesses over 100 combined years of experience in the Oil & Gas industry.
+          Navigating the Energy sector with over 100 years of collective industry insight.
         </h4>
 
         <div className="relative">
