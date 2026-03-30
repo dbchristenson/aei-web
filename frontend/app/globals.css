@@ -1,11 +1,23 @@
 @import "tailwindcss";
 
+/* Register glow position properties so CSS transitions can interpolate them */
+@property --glow-x {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 50%;
+}
+@property --glow-y {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 50%;
+}
+
 /* @generated:theme-inline start */
 @theme inline {
   /* Palette (static, not theme-dependent) */
   --color-palette-primary: #12587c;
   --color-palette-primary-muted: #1b7fa3;
-  --color-palette-primary-dark: #003c5e;
+  --color-palette-primary-dark: #002236;
   --color-palette-alternate: #0aadd6;
   --color-palette-alternate-muted: #62caeb;
   --color-palette-white: #ffffff;
@@ -233,6 +245,44 @@
     background: none;
   }
 
+  /* Clips content to the logo shape only */
+  .emboss-logo-mask {
+    -webkit-mask-image: url(/images/logos/astrolabe_white.svg);
+    -webkit-mask-size: cover;
+    -webkit-mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    mask-image: url(/images/logos/astrolabe_white.svg);
+    mask-size: cover;
+    mask-position: center;
+    mask-repeat: no-repeat;
+  }
+
+  /* Cursor-following spotlight — parent .emboss-logo-mask clips to logo shape */
+  .emboss-glow {
+    position: absolute;
+    inset: 0;
+    background-color: white;
+    pointer-events: none;
+    user-select: none;
+    opacity: 0;
+    -webkit-mask: radial-gradient(
+      clamp(320px, 45vw, 620px) clamp(320px, 45vw, 620px) at var(--glow-x, 50%) var(--glow-y, 50%),
+      rgba(0,0,0,0.3) 0%,
+      rgba(0,0,0,0.18) 30%,
+      rgba(0,0,0,0.06) 60%,
+      transparent 100%
+    );
+    mask: radial-gradient(
+      clamp(320px, 45vw, 620px) clamp(320px, 45vw, 620px) at var(--glow-x, 50%) var(--glow-y, 50%),
+      rgba(0,0,0,0.3) 0%,
+      rgba(0,0,0,0.18) 30%,
+      rgba(0,0,0,0.06) 60%,
+      transparent 100%
+    );
+    transition: --glow-x 100ms ease-out, --glow-y 100ms ease-out, opacity 400ms ease;
+    will-change: mask;
+  }
+
   .custom-scrollbar::-webkit-scrollbar {
     width: 4px;
   }
@@ -251,6 +301,7 @@
     scrollbar-color: var(--glass-border) transparent;
   }
 }
+
 
 html {
   scroll-behavior: smooth;

@@ -8,7 +8,7 @@ export default function HeroBanner() {
       className="relative pt-24 pb-44 md:pt-32 md:pb-56 px-4 bg-bg-subtle overflow-hidden"
       aria-label="Company overview"
     >
-      <VideoBackground videoKey={HERO_BANNER_VIDEO} overlay="darken" />
+      <VideoBackground videoKey={HERO_BANNER_VIDEO} overlay="darken" priority />
 
       <div
         className="relative z-10 mx-auto"
