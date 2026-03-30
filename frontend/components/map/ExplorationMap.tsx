@@ -1,7 +1,8 @@
 "use client";
 
-import { useRef, useState, useEffect, useCallback } from "react";
-import * as d3 from "d3";
+import { useRef, useState, useEffect, useCallback, useMemo } from "react";
+import { select } from "d3-selection";
+import "d3-transition";
 import gsap from "gsap";
 import BlockInfoPanel from "./BlockInfoPanel";
 import type { Topology } from "topojson-specification";
@@ -43,11 +44,13 @@ export default function ExplorationMap({
   }, [uiState]);
   const [geoData, setGeoData] = useState<BlocksGeoJSON | null>(null);
   const [worldData, setWorldData] = useState<Topology | null>(null);
-  const [terrainData, setTerrainData] = useState<Topology | null>(null);
 
   const prefersReducedMotion = usePrefersReducedMotion();
 
-  const allBlocks = geoData?.features.map((f) => f.properties) ?? [];
+  const allBlocks = useMemo(
+    () => geoData?.features.map((f) => f.properties) ?? [],
+    [geoData]
+  );
 
   // ─── Data fetching via IntersectionObserver ───
   useEffect(() => {
@@ -61,9 +64,7 @@ export default function ExplorationMap({
         if (entries[0].isIntersecting) {
           observer.disconnect();
 
-          // Load blocks + land first (essential for map render).
-          // Terrain loads independently to avoid blocking the map and
-          // competing with video/image resources higher up the page.
+          // Load blocks + land (essential for map render).
           Promise.all([
             fetch(blocksEndpoint).then((r) => {
               if (!r.ok) throw new Error(`Blocks fetch failed: ${r.status}`);
@@ -88,19 +89,6 @@ export default function ExplorationMap({
               if (!cancelled) setMapState("error");
             });
 
-          // Terrain loaded separately — map renders without it, then
-          // terrain fades in once ready.
-          fetch("/data/indonesia-terrain.json")
-            .then((r) => {
-              if (!r.ok) throw new Error(`Terrain fetch failed: ${r.status}`);
-              return r.json() as Promise<Topology>;
-            })
-            .then((terrain) => {
-              if (!cancelled) setTerrainData(terrain);
-            })
-            .catch(() => {
-              // Terrain is cosmetic — map works fine without it
-            });
         }
       },
       { rootMargin: "200px" }
@@ -147,7 +135,7 @@ export default function ExplorationMap({
   // ─── D3 globe rendering + drag behavior ───
   const { renderRef, showTooltipRef, hideTooltipRef } = useGlobeRenderer({
     svgRef, canvasRef, containerRef, tooltipRef,
-    geoData, worldData, terrainData, mapState,
+    geoData, worldData, mapState,
     rotationRef, rawRotationRef, scaleMultiplierRef, dragBoundsRef,
     tooltipBlockRef, bounceAnimRef, zoomAnimRef,
     uiStateRef,
@@ -167,7 +155,7 @@ export default function ExplorationMap({
   // ─── Sync selected dot visual state + tooltip ───
   useEffect(() => {
     if (!svgRef.current || mapState !== "active" || !geoData) return;
-    const svg = d3.select(svgRef.current);
+    const svg = select(svgRef.current);
     const tc = getThemeColors();
     const dur = prefersReducedMotion ? 0 : 200;
 
@@ -274,7 +262,7 @@ export default function ExplorationMap({
           </div>
         )}
 
-        {/* Canvas: non-interactive background layers (globe, land, terrain) */}
+        {/* Canvas: non-interactive background layers (globe, land) */}
         <canvas
           ref={canvasRef}
           className={`absolute inset-0 ${mapState !== "active" ? "hidden" : ""}`}

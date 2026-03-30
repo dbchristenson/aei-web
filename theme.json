@@ -55,10 +55,7 @@
         "blur": "14px",
         "border": "rgba(253, 251, 245, 0.15)",
         "shadow": "0 8px 32px rgba(0, 0, 0, 0.25)"
-      },
-      "terrainLow": "#2d3322",
-      "terrainMed": "#3a3226",
-      "terrainHigh": "#55412e"
+      }
     },
     "light": {
       "primary": "#12587c",
@@ -91,10 +88,7 @@
         "blur": "14px",
         "border": "rgba(207, 200, 182, 0.20)",
         "shadow": "0 4px 16px rgba(25, 23, 15, 0.05)"
-      },
-      "terrainLow": "#c8d4a4",
-      "terrainMed": "#c4b68a",
-      "terrainHigh": "#a8876a"
+      }
     }
   },
   "fonts": {

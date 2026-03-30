@@ -5,6 +5,7 @@
   /* Palette (static, not theme-dependent) */
   --color-palette-primary: #12587c;
   --color-palette-primary-muted: #1b7fa3;
+  --color-palette-primary-dark: #003c5e;
   --color-palette-alternate: #0aadd6;
   --color-palette-alternate-muted: #62caeb;
   --color-palette-white: #ffffff;
@@ -42,9 +43,6 @@
   --color-success: var(--theme-success);
   --color-warning: var(--theme-warning);
   --color-error: var(--theme-error);
-  --color-terrain-low: var(--theme-terrain-low);
-  --color-terrain-med: var(--theme-terrain-med);
-  --color-terrain-high: var(--theme-terrain-high);
 
   /* Fonts */
   --font-sans: var(--font-plus-jakarta), sans-serif;
@@ -80,9 +78,6 @@
   --theme-success: #2a9d6e;
   --theme-warning: #E87C03;
   --theme-error: #d93636;
-  --theme-terrain-low: #2d3322;
-  --theme-terrain-med: #3a3226;
-  --theme-terrain-high: #55412e;
 
   /* Glass tokens */
   --glass-bg: rgba(37, 33, 26, 0.55);
@@ -140,9 +135,6 @@
   --theme-fg-secondary: #25211A;
   --theme-fg-muted: #6A6252;
   --theme-fg-inverse: #F0EBDD;
-  --theme-terrain-low: #c8d4a4;
-  --theme-terrain-med: #c4b68a;
-  --theme-terrain-high: #a8876a;
 
   /* Glass tokens */
   --glass-bg: rgba(253, 251, 245, 0.65);
@@ -170,9 +162,6 @@
     --theme-fg-secondary: #25211A;
     --theme-fg-muted: #6A6252;
     --theme-fg-inverse: #F0EBDD;
-    --theme-terrain-low: #c8d4a4;
-    --theme-terrain-med: #c4b68a;
-    --theme-terrain-high: #a8876a;
 
     /* Glass tokens */
     --glass-bg: rgba(253, 251, 245, 0.65);

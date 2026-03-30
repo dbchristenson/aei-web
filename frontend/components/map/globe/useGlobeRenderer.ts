@@ -1,10 +1,15 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import * as d3 from "d3";
-import * as topojson from "topojson-client";
+import { select } from "d3-selection";
+import { geoOrthographic, geoPath, geoGraticule, geoDistance } from "d3-geo";
+import { drag } from "d3-drag";
+import "d3-transition";
+import { feature as topoFeature } from "topojson-client";
 import gsap from "gsap";
 import type { Topology, GeometryCollection } from "topojson-specification";
+import type { D3DragEvent } from "d3-drag";
+import type { GeoPermissibleObjects } from "d3-geo";
 import type { BlockFeature, BlocksGeoJSON, MapState, UIState, DragBounds } from "./types";
 import {
   REGIONAL_GRATICULE_STEP,
@@ -27,7 +32,6 @@ export interface UseGlobeRendererParams {
   tooltipRef: React.RefObject<HTMLDivElement | null>;
   geoData: BlocksGeoJSON | null;
   worldData: Topology | null;
-  terrainData: Topology | null;
   mapState: MapState;
   rotationRef: React.MutableRefObject<[number, number, number]>;
   rawRotationRef: React.MutableRefObject<[number, number]>;
@@ -58,7 +62,7 @@ function withAlpha(color: string, alpha: number): string {
 
 export default function useGlobeRenderer({
   svgRef, canvasRef, containerRef, tooltipRef,
-  geoData, worldData, terrainData, mapState,
+  geoData, worldData, mapState,
   rotationRef, rawRotationRef, scaleMultiplierRef, dragBoundsRef,
   tooltipBlockRef, bounceAnimRef, zoomAnimRef,
   uiStateRef,
@@ -72,7 +76,7 @@ export default function useGlobeRenderer({
   useEffect(() => {
     if (mapState !== "active" || !geoData || !worldData || !svgRef.current) return;
 
-    const svg = d3.select(svgRef.current);
+    const svgSel = select(svgRef.current);
     const container = containerRef.current;
     if (!container) return;
 
@@ -84,34 +88,15 @@ export default function useGlobeRenderer({
     let tc = getThemeColors();
     let initialized = false;
     let dragRafId: number | null = null;
+    let resizeRafId: number | null = null;
 
-    const projection = d3.geoOrthographic().clipAngle(90);
+    const projection = geoOrthographic().clipAngle(90);
 
     // Pre-compute land topology once
-    const landFeature = topojson.feature(
+    const landFeature = topoFeature(
       worldData,
       worldData.objects.land as GeometryCollection
     );
-
-    // Pre-compute terrain elevation bands as merged FeatureCollections.
-    // Each band becomes a single canvas path call for fast drag re-projection.
-    const terrainBands = terrainData ? (() => {
-      const allFeatures = topojson.feature(
-        terrainData,
-        terrainData.objects.data as GeometryCollection
-      ) as GeoJSON.FeatureCollection;
-
-      const byBand = (band: string): GeoJSON.FeatureCollection => ({
-        type: "FeatureCollection",
-        features: allFeatures.features.filter((f) => f.properties?.band === band),
-      });
-
-      return {
-        low: byBand("low"),
-        medium: byBand("medium"),
-        high: byBand("high"),
-      };
-    })() : null;
 
     function updateProjection() {
       const width = container!.clientWidth;
@@ -144,7 +129,7 @@ export default function useGlobeRenderer({
       ctx!.clearRect(0, 0, width, height);
 
       const [cx, cy] = projection.translate();
-      const canvasPath = d3.geoPath(projection, ctx!);
+      const canvasPath = geoPath(projection, ctx!);
 
       // Layer 1: Atmosphere halo (radial gradient)
       if (globeRadius + 40 < Math.max(width, height)) {
@@ -171,7 +156,7 @@ export default function useGlobeRenderer({
         REGIONAL_GRATICULE_STEP[1] + zoomT * (ZOOMED_GRATICULE_STEP[1] - REGIONAL_GRATICULE_STEP[1]),
       ];
       ctx!.beginPath();
-      canvasPath(d3.geoGraticule().step(gratStep)());
+      canvasPath(geoGraticule().step(gratStep)());
       ctx!.strokeStyle = tc.n700;
       ctx!.lineWidth = 0.3;
       ctx!.globalAlpha = 0.35;
@@ -180,37 +165,13 @@ export default function useGlobeRenderer({
 
       // Layer 4: Land masses (base fill)
       ctx!.beginPath();
-      canvasPath(landFeature as d3.GeoPermissibleObjects);
+      canvasPath(landFeature as GeoPermissibleObjects);
       ctx!.fillStyle = tc.n900;
       ctx!.fill();
       ctx!.strokeStyle = tc.n600;
       ctx!.lineWidth = 0.6;
       ctx!.stroke();
 
-      // Layer 4b: Terrain elevation bands (clipped to land coastline)
-      if (terrainBands) {
-        ctx!.save();
-        ctx!.beginPath();
-        canvasPath(landFeature as d3.GeoPermissibleObjects);
-        ctx!.clip();
-
-        ctx!.beginPath();
-        canvasPath(terrainBands.low as d3.GeoPermissibleObjects);
-        ctx!.fillStyle = tc.terrainLow;
-        ctx!.fill();
-
-        ctx!.beginPath();
-        canvasPath(terrainBands.medium as d3.GeoPermissibleObjects);
-        ctx!.fillStyle = tc.terrainMed;
-        ctx!.fill();
-
-        ctx!.beginPath();
-        canvasPath(terrainBands.high as d3.GeoPermissibleObjects);
-        ctx!.fillStyle = tc.terrainHigh;
-        ctx!.fill();
-
-        ctx!.restore();
-      }
     }
 
     // ─── Tooltip helpers ───
@@ -226,7 +187,7 @@ export default function useGlobeRenderer({
         return;
       }
 
-      const dist = d3.geoDistance(center, [
+      const dist = geoDistance(center, [
         -rotationRef.current[0],
         -rotationRef.current[1],
       ]);
@@ -262,17 +223,17 @@ export default function useGlobeRenderer({
     function renderFull() {
       tc = getThemeColors();
       const { width, height, globeRadius } = updateProjection();
-      const svgPath = d3.geoPath(projection);
+      const svgPath = geoPath(projection);
 
       // ── Canvas background layers ──
       sizeCanvas(width, height);
       renderCanvasLayers(width, height, globeRadius);
 
       // ── SVG interactive layers ──
-      svg.attr("viewBox", `0 0 ${width} ${height}`);
-      svg.selectAll("*").remove();
+      svgSel.attr("viewBox", `0 0 ${width} ${height}`);
+      svgSel.selectAll("*").remove();
 
-      const defs = svg.append("defs");
+      const defs = svgSel.append("defs");
 
       // Dot glow filter
       const dotGlow = defs.append("filter").attr("id", "dot-glow").attr("x", "-50%").attr("y", "-50%").attr("width", "200%").attr("height", "200%");
@@ -286,7 +247,7 @@ export default function useGlobeRenderer({
 
       // Block polygons
       const currentUi = uiStateRef.current;
-      const blocksGroup = svg.append("g").attr("class", "blocks-layer");
+      const blocksGroup = svgSel.append("g").attr("class", "blocks-layer");
       blocksGroup.selectAll<SVGPathElement, BlockFeature>(".block-area")
         .data(geoData!.features, (d) => d.id)
         .join("path")
@@ -294,7 +255,7 @@ export default function useGlobeRenderer({
         .attr("d", svgPath)
         .attr("fill-rule", "evenodd")
         .each(function (d) {
-          const el = d3.select(this);
+          const el = select(this);
           const isActive = d.id === currentUi.blockId;
           const isSelected = isActive && currentUi.mode === "selected";
 
@@ -309,12 +270,12 @@ export default function useGlobeRenderer({
       updateTooltipPosition();
 
       // Centroid dots
-      const dotsGroup = svg.append("g").attr("class", "dots-layer");
+      const dotsGroup = svgSel.append("g").attr("class", "dots-layer");
 
       geoData!.features.forEach((feature) => {
         const center = geoCentroid(feature);
         const projected = projection(center);
-        const dist = d3.geoDistance(center, [
+        const dist = geoDistance(center, [
           -rotationRef.current[0],
           -rotationRef.current[1],
         ]);
@@ -346,11 +307,11 @@ export default function useGlobeRenderer({
           .on("mouseenter", function () {
             handleBlockHover(feature.id);
             showTooltip(feature);
-            d3.select(this)
+            select(this)
               .transition().duration(prefersReducedMotion ? 0 : DOT_TRANSITION_MS)
               .attr("r", DOT_HOVER_RADIUS)
               .attr("fill-opacity", 1);
-            svg.select(`.dot-glow-${feature.id}`)
+            svgSel.select(`.dot-glow-${feature.id}`)
               .transition().duration(prefersReducedMotion ? 0 : DOT_TRANSITION_MS)
               .attr("r", DOT_HOVER_GLOW_RADIUS)
               .attr("fill-opacity", 0.3);
@@ -358,11 +319,11 @@ export default function useGlobeRenderer({
           .on("mouseleave", function () {
             handleBlockHover(null);
             hideTooltip();
-            d3.select(this)
+            select(this)
               .transition().duration(prefersReducedMotion ? 0 : DOT_TRANSITION_MS)
               .attr("r", DOT_RADIUS)
               .attr("fill-opacity", 0.85);
-            svg.select(`.dot-glow-${feature.id}`)
+            svgSel.select(`.dot-glow-${feature.id}`)
               .transition().duration(prefersReducedMotion ? 0 : DOT_TRANSITION_MS)
               .attr("r", DOT_GLOW_RADIUS)
               .attr("fill-opacity", 0.15);
@@ -380,20 +341,20 @@ export default function useGlobeRenderer({
       if (!initialized) { renderFull(); return; }
 
       const { width, height, globeRadius } = updateProjection();
-      const svgPath = d3.geoPath(projection);
+      const svgPath = geoPath(projection);
 
-      // Canvas: full redraw (fast — no string serialization)
+      // Canvas: full redraw
       renderCanvasLayers(width, height, globeRadius);
 
       // SVG: only block polygons + dots (~435 coords)
-      svg.attr("viewBox", `0 0 ${width} ${height}`);
-      svg.selectAll<SVGPathElement, BlockFeature>(".block-area").attr("d", svgPath);
+      svgSel.attr("viewBox", `0 0 ${width} ${height}`);
+      svgSel.selectAll<SVGPathElement, BlockFeature>(".block-area").attr("d", svgPath);
 
       // Update dot positions + visibility
       geoData!.features.forEach((feature) => {
         const center = geoCentroid(feature);
         const projected = projection(center);
-        const dist = d3.geoDistance(center, [
+        const dist = geoDistance(center, [
           -rotationRef.current[0],
           -rotationRef.current[1],
         ]);
@@ -401,11 +362,11 @@ export default function useGlobeRenderer({
         const px = visible ? projected![0] : 0;
         const py = visible ? projected![1] : 0;
 
-        svg.select(`.dot-${feature.id}`)
+        svgSel.select(`.dot-${feature.id}`)
           .attr("cx", px).attr("cy", py)
           .attr("display", visible ? null : "none");
 
-        svg.select(`.dot-glow-${feature.id}`)
+        svgSel.select(`.dot-glow-${feature.id}`)
           .attr("cx", px).attr("cy", py)
           .attr("display", visible ? null : "none");
       });
@@ -417,8 +378,8 @@ export default function useGlobeRenderer({
     renderRef.current = renderTransform;
 
     // ─── Drag-to-rotate with elastic bounded drag + rAF throttle ───
-    const containerSel = d3.select(container);
-    const dragBehavior = d3.drag<HTMLDivElement, unknown>()
+    const containerSel = select(container);
+    const dragBehavior = drag<HTMLDivElement, unknown>()
       .on("start", () => {
         if (zoomAnimRef.current) return;
         if (bounceAnimRef.current) {
@@ -428,7 +389,7 @@ export default function useGlobeRenderer({
         rawRotationRef.current = [rotationRef.current[0], rotationRef.current[1]];
         containerSel.style("cursor", "grabbing");
       })
-      .on("drag", (event: d3.D3DragEvent<HTMLDivElement, unknown, unknown>) => {
+      .on("drag", (event: D3DragEvent<HTMLDivElement, unknown, unknown>) => {
         if (zoomAnimRef.current) return;
         const sensitivity = 0.08 / scaleMultiplierRef.current;
         const bounds = dragBoundsRef.current;
@@ -486,6 +447,7 @@ export default function useGlobeRenderer({
               onComplete: () => {
                 rawRotationRef.current = [clampedLambda, clampedPhi];
                 bounceAnimRef.current = null;
+                renderTransform();
               },
             });
           }
@@ -505,9 +467,13 @@ export default function useGlobeRenderer({
     // Initial full render
     renderFull();
 
-    // Resize → full render (container dimensions changed)
+    // Resize → full render (coalesced via rAF to prevent resize storm)
     const resizeObserver = new ResizeObserver(() => {
-      renderFull();
+      if (resizeRafId !== null) cancelAnimationFrame(resizeRafId);
+      resizeRafId = requestAnimationFrame(() => {
+        resizeRafId = null;
+        renderFull();
+      });
     });
     resizeObserver.observe(container);
 
@@ -527,6 +493,7 @@ export default function useGlobeRenderer({
 
     return () => {
       if (dragRafId !== null) cancelAnimationFrame(dragRafId);
+      if (resizeRafId !== null) cancelAnimationFrame(resizeRafId);
       resizeObserver.disconnect();
       themeObserver.disconnect();
       containerSel.on("dblclick", null);
@@ -545,7 +512,7 @@ export default function useGlobeRenderer({
         ctx.clearRect(0, 0, canvas!.width, canvas!.height);
       }
     };
-  }, [mapState, geoData, worldData, terrainData, handleBlockHover, handleBlockClick, handleDeselect, prefersReducedMotion,
+  }, [mapState, geoData, worldData, handleBlockHover, handleBlockClick, handleDeselect, prefersReducedMotion,
       svgRef, canvasRef, containerRef, tooltipRef, rotationRef, rawRotationRef, scaleMultiplierRef, dragBoundsRef,
       tooltipBlockRef, bounceAnimRef, zoomAnimRef, uiStateRef]);
 

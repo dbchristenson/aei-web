@@ -1,4 +1,4 @@
-import * as d3 from "d3";
+import { geoCentroid as d3GeoCentroid, geoBounds } from "d3-geo";
 import type { BlockFeature } from "./types";
 import {
   MAX_OVERSHOOT,
@@ -23,7 +23,7 @@ export function rubberBand(value: number, min: number, max: number, dim: number)
 
 /** Compute the centroid of a GeoJSON feature in [lon, lat]. */
 export function geoCentroid(feature: GeoJSON.Feature): [number, number] {
-  return d3.geoCentroid(feature);
+  return d3GeoCentroid(feature);
 }
 
 /** Compute per-block zoom parameters: rotation, scale multiplier, and tightened drag bounds. */
@@ -39,7 +39,7 @@ export function getBlockZoomParams(
   const [clon, clat] = geoCentroid(feature);
   const rotation: [number, number, number] = [-clon, -clat, 0];
 
-  const bbox = d3.geoBounds(feature);
+  const bbox = geoBounds(feature);
   const lonSpan = bbox[1][0] - bbox[0][0];
   const latSpan = bbox[1][1] - bbox[0][1];
   const maxSpan = Math.max(lonSpan, latSpan);

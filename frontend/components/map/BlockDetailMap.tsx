@@ -1,9 +1,11 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
-import * as d3 from "d3";
-import * as topojson from "topojson-client";
+import { select } from "d3-selection";
+import { geoOrthographic, geoPath, geoCentroid, geoBounds, geoGraticule } from "d3-geo";
+import { feature as topoFeature } from "topojson-client";
 import type { Topology, GeometryCollection } from "topojson-specification";
+import type { GeoPermissibleObjects } from "d3-geo";
 import { getCssVar } from "@/lib/theme-utils";
 
 interface BlockDetailMapProps {
@@ -35,23 +37,29 @@ export default function BlockDetailMap({ blockId }: BlockDetailMapProps) {
 
       setLoaded(true);
 
+      // Pre-compute land once (avoid re-parsing topology on every render)
+      const land = topoFeature(world, world.objects.land as GeometryCollection);
+      let resizeRafId: number | null = null;
+
       function render() {
+        const s = getComputedStyle(document.documentElement);
+        const v = (name: string) => s.getPropertyValue(name).trim();
         const tc = {
-          tealBlue: getCssVar("--color-primary"),
-          amber: getCssVar("--color-accent"),
-          n950: getCssVar("--color-bg"),
-          n900: getCssVar("--color-bg-subtle"),
-          n700: getCssVar("--color-surface-hover"),
-          n600: getCssVar("--color-border"),
+          tealBlue: v("--color-primary"),
+          amber: v("--color-accent"),
+          n950: v("--color-bg"),
+          n900: v("--color-bg-subtle"),
+          n700: v("--color-surface-hover"),
+          n600: v("--color-border"),
         };
         const width = container!.clientWidth;
         const height = container!.clientHeight;
-        const svg = d3.select(svgEl!);
-        svg.attr("viewBox", `0 0 ${width} ${height}`);
-        svg.selectAll("*").remove();
+        const svgSel = select(svgEl!);
+        svgSel.attr("viewBox", `0 0 ${width} ${height}`);
+        svgSel.selectAll("*").remove();
 
-        const [clon, clat] = d3.geoCentroid(feature!);
-        const bbox = d3.geoBounds(feature!);
+        const [clon, clat] = geoCentroid(feature!);
+        const bbox = geoBounds(feature!);
         const lonSpan = bbox[1][0] - bbox[0][0];
         const latSpan = bbox[1][1] - bbox[0][1];
         const maxSpan = Math.max(lonSpan, latSpan, 2);
@@ -61,16 +69,15 @@ export default function BlockDetailMap({ blockId }: BlockDetailMapProps) {
         const angularRad = maxSpan * (Math.PI / 180);
         const scale = fitDim / angularRad;
 
-        const projection = d3
-          .geoOrthographic()
+        const projection = geoOrthographic()
           .clipAngle(90)
           .scale(scale)
           .rotate([-clon, -clat, 0])
           .translate([width / 2, height / 2]);
 
-        const path = d3.geoPath(projection);
+        const path = geoPath(projection);
 
-        const defs = svg.append("defs");
+        const defs = svgSel.append("defs");
 
         // Atmosphere glow
         const atmosGradient = defs
@@ -91,7 +98,7 @@ export default function BlockDetailMap({ blockId }: BlockDetailMapProps) {
 
         // Atmosphere
         if (scale + 40 < Math.max(width, height)) {
-          svg.append("circle")
+          svgSel.append("circle")
             .attr("cx", width / 2).attr("cy", height / 2)
             .attr("r", scale + 40)
             .attr("fill", "url(#detail-atmos)")
@@ -99,14 +106,14 @@ export default function BlockDetailMap({ blockId }: BlockDetailMapProps) {
         }
 
         // Globe disc
-        svg.append("circle")
+        svgSel.append("circle")
           .attr("cx", width / 2).attr("cy", height / 2)
           .attr("r", scale)
           .attr("fill", tc.n950);
 
         // Graticule
-        const graticule = d3.geoGraticule().step([2, 2]);
-        svg.append("path")
+        const graticule = geoGraticule().step([2, 2]);
+        svgSel.append("path")
           .datum(graticule())
           .attr("d", path)
           .attr("fill", "none")
@@ -115,16 +122,15 @@ export default function BlockDetailMap({ blockId }: BlockDetailMapProps) {
           .attr("stroke-opacity", 0.35);
 
         // Land
-        const land = topojson.feature(world, world.objects.land as GeometryCollection);
-        svg.append("path")
-          .datum(land)
+        svgSel.append("path")
+          .datum(land as GeoPermissibleObjects)
           .attr("d", path)
           .attr("fill", tc.n900)
           .attr("stroke", tc.n600)
           .attr("stroke-width", 0.6);
 
         // Block polygon
-        svg.append("path")
+        svgSel.append("path")
           .datum(feature!)
           .attr("d", path)
           .attr("fill-rule", "evenodd")
@@ -138,7 +144,14 @@ export default function BlockDetailMap({ blockId }: BlockDetailMapProps) {
 
       render();
 
-      const resizeObserver = new ResizeObserver(() => render());
+      // Coalesce resize events via rAF
+      const resizeObserver = new ResizeObserver(() => {
+        if (resizeRafId !== null) cancelAnimationFrame(resizeRafId);
+        resizeRafId = requestAnimationFrame(() => {
+          resizeRafId = null;
+          render();
+        });
+      });
       resizeObserver.observe(container!);
 
       const themeObserver = new MutationObserver((mutations) => {
@@ -155,6 +168,7 @@ export default function BlockDetailMap({ blockId }: BlockDetailMapProps) {
       });
 
       return () => {
+        if (resizeRafId !== null) cancelAnimationFrame(resizeRafId);
         resizeObserver.disconnect();
         themeObserver.disconnect();
       };
