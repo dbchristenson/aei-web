@@ -18,10 +18,10 @@ export function useTheme(): ThemeContextValue {
 }
 
 function getInitialTheme(): Theme {
-  if (typeof window === "undefined") return "dark";
+  if (typeof window === "undefined") return "light";
   const stored = localStorage.getItem("aei-theme");
   if (stored === "light" || stored === "dark") return stored;
-  return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
@@ -47,10 +47,10 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
 
   // Listen for system preference changes when no manual override
   useEffect(() => {
-    const mql = window.matchMedia("(prefers-color-scheme: light)");
+    const mql = window.matchMedia("(prefers-color-scheme: dark)");
     const handler = (e: MediaQueryListEvent) => {
       if (!localStorage.getItem("aei-theme")) {
-        const next = e.matches ? "light" : "dark";
+        const next = e.matches ? "dark" : "light";
         setTheme(next);
         applyTheme(next);
       }
