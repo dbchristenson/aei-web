@@ -4,7 +4,7 @@
 export const INITIAL_ROTATION: [number, number, number] = [-118, -2, 0];
 
 /** Longitude bounds for regional drag (rotation-space) */
-export const LAMBDA_BOUNDS: [number, number] = [-128, -108];
+export const LAMBDA_BOUNDS: [number, number] = [-128, -105];
 
 /** Latitude bounds for regional drag (rotation-space) */
 export const PHI_BOUNDS: [number, number] = [-6, 4];

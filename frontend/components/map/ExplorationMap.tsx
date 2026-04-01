@@ -206,7 +206,10 @@ export default function ExplorationMap({
   }, [uiState.mode, handleDeselect]);
 
   return (
-    <div className="relative overflow-hidden" style={{ minHeight: "600px" }}>
+    <div
+      className="relative overflow-hidden mx-4 md:mx-8 mt-4 md:mt-6 rounded-tl-[var(--radius-card)] rounded-tr-[var(--radius-card)] border border-border"
+      style={{ minHeight: "600px", boxShadow: "var(--glass-shadow)" }}
+    >
       {/* Content overlay — left side, pointer-events pass through to globe */}
       <div className="relative z-10 flex items-start py-4 md:py-6 px-4 md:px-8 pointer-events-none" style={{ minHeight: "600px" }}>
         <div className="w-full md:max-w-[420px] pointer-events-auto">

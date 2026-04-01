@@ -53,6 +53,20 @@ export default function HeroSplash() {
       if (!logoRef.current || !sectionRef.current) return;
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
+      // ── H1 entrance choreography ──
+      const headings = logoRef.current.querySelectorAll("h1");
+      if (headings.length) {
+        gsap.set(headings, { opacity: 0, y: 30 });
+        gsap.to(headings, {
+          opacity: 1,
+          y: 0,
+          duration: 0.9,
+          ease: "power3.out",
+          stagger: 0.2,
+          delay: 0.4,
+        });
+      }
+
       const mm = gsap.matchMedia();
 
       // Desktop: animate from 30vh → 50vh scroll

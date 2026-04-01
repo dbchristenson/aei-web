@@ -42,7 +42,7 @@ export default function TeamCarousel({ members }: TeamCarouselProps) {
 
   return (
     <section
-      className="py-24 px-4 bg-bg"
+      className="py-24 px-4 bg-bg-subtle"
       aria-label="Leadership team"
     >
       <div className="mx-auto" style={{ maxWidth: "var(--container-xl)" }}>

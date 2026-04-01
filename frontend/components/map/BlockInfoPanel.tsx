@@ -1,5 +1,5 @@
-import { forwardRef, useEffect, useRef } from "react";
 import Link from "next/link";
+import { forwardRef, useEffect, useRef } from "react";
 
 export interface BlockProperties {
   id: string;
@@ -99,12 +99,9 @@ export default function BlockInfoPanel({
     <div className="flex flex-col gap-6">
       {/* Section heading */}
       <div>
-        <h2 className="font-sans font-bold text-fg mb-2 uppercase tracking-wider text-h1">
+        <h2 className="font-sans font-bold text-fg uppercase tracking-wider text-h1">
           Exploration Blocks
         </h2>
-        <p className="text-fg-muted font-body text-body">
-          Active exploration across Indonesia.
-        </p>
       </div>
 
       {/* Block cards list */}
@@ -116,23 +113,23 @@ export default function BlockInfoPanel({
           WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 4%, black 90%, transparent 100%)",
         }}
       >
-      <div
-        className="flex flex-col gap-2 overflow-y-auto pr-1 pt-2 pb-6 custom-scrollbar"
-        style={{ maxHeight: "420px" }}
-      >
-        {sorted.map((block) => (
-          <BlockCard
-            key={block.id}
-            ref={(el) => {
-              if (el) cardRefs.current.set(block.id, el);
-              else cardRefs.current.delete(block.id);
-            }}
-            block={block}
-            isSelected={isLocked && selectedBlockId === block.id}
-            onClick={() => onBlockClick(block.id)}
-          />
-        ))}
-      </div>
+        <div
+          className="flex flex-col gap-2 overflow-y-auto pr-1 pt-2 pb-6 custom-scrollbar"
+          style={{ maxHeight: "420px" }}
+        >
+          {sorted.map((block) => (
+            <BlockCard
+              key={block.id}
+              ref={(el) => {
+                if (el) cardRefs.current.set(block.id, el);
+                else cardRefs.current.delete(block.id);
+              }}
+              block={block}
+              isSelected={isLocked && selectedBlockId === block.id}
+              onClick={() => onBlockClick(block.id)}
+            />
+          ))}
+        </div>
       </div>
 
       {/* Hint when nothing selected */}
