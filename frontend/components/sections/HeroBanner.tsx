@@ -1,17 +1,79 @@
+"use client";
+
+import { useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import GlassCard from "@/components/ui/GlassCard";
 import VideoBackground from "@/components/ui/VideoBackground";
 import { HERO_BANNER_VIDEO } from "@/lib/media";
+import usePrefersReducedMotion from "@/hooks/usePrefersReducedMotion";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function HeroBanner() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const videoWrapRef = useRef<HTMLDivElement>(null);
+  const prefersReduced = usePrefersReducedMotion();
+
+  useGSAP(
+    () => {
+      if (prefersReduced || !sectionRef.current) return;
+
+      // Subtle parallax zoom on the video as content slides over
+      if (videoWrapRef.current) {
+        gsap.to(videoWrapRef.current, {
+          scale: 1.08,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+      }
+
+      // GlassCard content fades + drifts up (holds 30%, then fades)
+      if (contentRef.current) {
+        gsap.to(contentRef.current, {
+          opacity: 0,
+          y: -80,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "30% top",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+      }
+    },
+    { scope: sectionRef },
+  );
+
   return (
     <section
-      className="relative pt-24 pb-44 md:pt-32 md:pb-56 px-4 bg-bg-subtle overflow-hidden"
+      ref={sectionRef}
+      className="sticky top-0 min-h-dvh flex items-center px-4 bg-bg-subtle overflow-hidden"
+      style={{ zIndex: 0 }}
       aria-label="Company overview"
     >
-      <VideoBackground videoKey={HERO_BANNER_VIDEO} overlay="darken" priority />
+      <div
+        ref={videoWrapRef}
+        className="absolute inset-0 will-change-transform"
+      >
+        <VideoBackground
+          videoKey={HERO_BANNER_VIDEO}
+          overlay="darken"
+          priority
+        />
+      </div>
 
       <div
-        className="relative z-10 mx-auto"
+        ref={contentRef}
+        className="relative z-10 mx-auto w-full will-change-[transform,opacity]"
         style={{ maxWidth: "var(--container-lg)" }}
       >
         <GlassCard className="p-8 md:p-12 lg:p-16">
@@ -27,7 +89,8 @@ export default function HeroBanner() {
 
           {/* Subheadline */}
           <p className="mt-6 text-fg-secondary font-body max-w-2xl text-body-lg">
-            PT Agra Energi Indonesia — privately held, providing security and reliability to Indonesia&apos;s grid.
+            PT Agra Energi Indonesia — privately held, providing security and
+            reliability to Indonesia&apos;s grid.
           </p>
 
           {/* CTA — native anchor with CSS smooth scroll */}
@@ -58,12 +121,13 @@ export default function HeroBanner() {
         </GlassCard>
       </div>
 
-      {/* Bottom gradient — cinematic fade into partners section */}
+      {/* Bottom gradient — cinematic fade */}
       <div
         className="absolute bottom-0 left-0 right-0 h-44 md:h-56 pointer-events-none z-[1]"
         aria-hidden="true"
         style={{
-          background: "linear-gradient(to bottom, transparent, var(--color-bg-subtle))",
+          background:
+            "linear-gradient(to bottom, transparent, var(--color-bg-subtle))",
         }}
       />
     </section>

@@ -43,28 +43,39 @@ export default function Home() {
       {/* Section 2 — Hero Banner (gradient fades into partners) */}
       <HeroBanner />
 
-      {/* Section 3 — Partner Logos (seamless continuation from banner gradient) */}
-      <PartnerLogoGrid />
-
-      {/* Section 4 — Leadership Team */}
-      <SectionDivider
-        fromColor="var(--color-bg-subtle)"
-        toColor="var(--color-bg)"
-      />
-      <TeamCarousel members={teamMembers} />
-
-      {/* Section 5 — Interactive Exploration Map */}
-      <SectionDivider
-        fromColor="var(--color-bg)"
-        toColor="var(--color-bg)"
-      />
-      <section
-        id="exploration-map"
-        className="bg-bg overflow-hidden scroll-mt-20"
-        aria-label="Exploration blocks map"
+      {/* Sections 3–5 — slide up over the pinned HeroBanner */}
+      <div
+        className="relative bg-bg-subtle overflow-hidden"
+        style={{
+          zIndex: 1,
+          borderTopLeftRadius: "var(--radius-card)",
+          borderTopRightRadius: "var(--radius-card)",
+          boxShadow: "0 -16px 60px rgba(0, 0, 0, 0.35)",
+        }}
       >
-        <ExplorationMapLoader blocksEndpoint="/data/blocks.geojson" />
-      </section>
+        {/* Section 3 — Partner Logos */}
+        <PartnerLogoGrid />
+
+        {/* Section 4 — Leadership Team */}
+        <SectionDivider
+          fromColor="var(--color-bg-subtle)"
+          toColor="var(--color-bg)"
+        />
+        <TeamCarousel members={teamMembers} />
+
+        {/* Section 5 — Interactive Exploration Map */}
+        <SectionDivider
+          fromColor="var(--color-bg)"
+          toColor="var(--color-bg)"
+        />
+        <section
+          id="exploration-map"
+          className="bg-bg overflow-hidden scroll-mt-20"
+          aria-label="Exploration blocks map"
+        >
+          <ExplorationMapLoader blocksEndpoint="/data/blocks.geojson" />
+        </section>
+      </div>
 
       {/* Section 6 — Footer (in layout) */}
     </main>

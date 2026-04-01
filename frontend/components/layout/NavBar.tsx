@@ -1,14 +1,15 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import Button from "@/components/ui/Button";
+import { useTheme } from "@/components/providers/ThemeProvider";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Button from "@/components/ui/Button";
-import ThemeToggle from "@/components/ui/ThemeToggle";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const navLinks = [
   { label: "About", href: "/about" },
-  { label: "Projects", href: "/projects" },
+  { label: "Portfolio", href: "/projects" },
 ];
 
 export default function NavBar() {
@@ -18,11 +19,27 @@ export default function NavBar() {
   const hamburgerRef = useRef<HTMLButtonElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { theme } = useTheme();
+  const whiteLogoRef = useRef<HTMLImageElement>(null);
+  const blackLogoRef = useRef<HTMLImageElement>(null);
 
-  // ─── Scroll-linked opacity + aria-hidden for home page ───
+  // ─── Scroll-linked opacity + logo crossfade for home page ───
   useEffect(() => {
     const nav = navRef.current;
+    const whiteLogo = whiteLogoRef.current;
+    const blackLogo = blackLogoRef.current;
     if (!nav) return;
+
+    const setLogos = (progress: number) => {
+      if (!whiteLogo || !blackLogo) return;
+      if (theme === "dark") {
+        whiteLogo.style.opacity = "1";
+        blackLogo.style.opacity = "0";
+      } else {
+        whiteLogo.style.opacity = String(1 - progress);
+        blackLogo.style.opacity = String(progress);
+      }
+    };
 
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -30,17 +47,19 @@ export default function NavBar() {
       nav.style.opacity = "1";
       nav.style.pointerEvents = "auto";
       nav.removeAttribute("aria-hidden");
+      setLogos(1);
       return;
     }
 
-    const applyOpacity = (opacity: number) => {
-      nav.style.opacity = String(opacity);
-      nav.style.pointerEvents = opacity < 0.1 ? "none" : "auto";
-      if (opacity < 0.1) {
+    const applyState = (progress: number) => {
+      nav.style.opacity = String(progress);
+      nav.style.pointerEvents = progress < 0.1 ? "none" : "auto";
+      if (progress < 0.1) {
         nav.setAttribute("aria-hidden", "true");
       } else {
         nav.removeAttribute("aria-hidden");
       }
+      setLogos(progress);
     };
 
     const handleScroll = () => {
@@ -51,20 +70,20 @@ export default function NavBar() {
       const scrollY = window.scrollY;
 
       if (scrollY <= start) {
-        applyOpacity(0);
+        applyState(0);
       } else if (scrollY >= end) {
-        applyOpacity(1);
+        applyState(1);
       } else {
-        applyOpacity((scrollY - start) / (end - start));
+        applyState((scrollY - start) / (end - start));
       }
     };
 
-    applyOpacity(0);
+    applyState(0);
     handleScroll();
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [isHome]);
+  }, [isHome, theme]);
 
   // ─── Focus trap + close handler for mobile menu ───
   const closeMobileMenu = useCallback(() => {
@@ -124,9 +143,33 @@ export default function NavBar() {
         {/* Logo */}
         <Link
           href="/"
-          className="font-serif font-bold text-fg hover:text-secondary transition-colors text-h4"
+          className="group flex items-center gap-2.5"
         >
-          AEI
+          <div className="relative w-6 h-6 shrink-0">
+            <img
+              ref={whiteLogoRef}
+              src="/images/logos/astrolabe_white.svg"
+              alt=""
+              className="absolute inset-0 w-full h-full"
+              aria-hidden="true"
+            />
+            <img
+              ref={blackLogoRef}
+              src="/images/logos/astrolabe_black.svg"
+              alt=""
+              className="absolute inset-0 w-full h-full"
+              aria-hidden="true"
+            />
+            <img
+              src="/images/logos/astrolabe_blue.svg"
+              alt=""
+              className="absolute inset-0 w-full h-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+              aria-hidden="true"
+            />
+          </div>
+          <span className="font-sans font-bold text-fg group-hover:text-secondary transition-colors duration-200 text-h4">
+            AEI
+          </span>
         </Link>
 
         {/* Desktop nav links */}
@@ -140,7 +183,7 @@ export default function NavBar() {
               {link.label}
             </Link>
           ))}
-          <ThemeToggle />
+          {/* TODO: re-enable ThemeToggle when dark mode is ready */}
           <Button href="/contact" size="sm">
             Contact Us
           </Button>
@@ -220,7 +263,7 @@ export default function NavBar() {
               {link.label}
             </Link>
           ))}
-          <ThemeToggle />
+          {/* TODO: re-enable ThemeToggle when dark mode is ready */}
           <Button href="/contact" size="lg" onClick={closeMobileMenu}>
             Contact Us
           </Button>
