@@ -60,7 +60,7 @@ export default function TeamCarousel({ members }: TeamCarouselProps) {
             <>
               <button
                 onClick={() => scroll("left")}
-                className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 glass-card-dark w-11 h-11 items-center justify-center rounded-full text-fg-muted hover:text-fg transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 glass-card w-11 h-11 items-center justify-center rounded-full text-fg-muted hover:text-fg transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                 aria-label="Scroll left"
               >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
@@ -69,7 +69,7 @@ export default function TeamCarousel({ members }: TeamCarouselProps) {
               </button>
               <button
                 onClick={() => scroll("right")}
-                className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 glass-card-dark w-11 h-11 items-center justify-center rounded-full text-fg-muted hover:text-fg transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 glass-card w-11 h-11 items-center justify-center rounded-full text-fg-muted hover:text-fg transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                 aria-label="Scroll right"
               >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
@@ -91,7 +91,7 @@ export default function TeamCarousel({ members }: TeamCarouselProps) {
                 key={member.name}
                 className="snap-start shrink-0 w-72"
               >
-                <GlassCard variant="light" hoverable className="p-6 h-full">
+                <GlassCard variant="subtle" hoverable className="p-6 h-full">
                   {/* Photo or initials */}
                   <div className="mx-auto mb-4 w-20 h-20 rounded-full overflow-hidden">
                     {member.photo ? (

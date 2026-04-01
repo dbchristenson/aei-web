@@ -147,7 +147,6 @@
   --theme-fg-secondary: #1C2830;
   --theme-fg-muted: #5A6F7E;
   --theme-fg-inverse: #E9F1F6;
-  --theme-fg-inverse-secondary: #d5dee3;
 
   /* Glass tokens */
   --glass-bg: rgba(245, 249, 252, 0.65);
@@ -175,7 +174,6 @@
     --theme-fg-secondary: #1C2830;
     --theme-fg-muted: #5A6F7E;
     --theme-fg-inverse: #E9F1F6;
-    --theme-fg-inverse-secondary: #d5dee3;
 
     /* Glass tokens */
     --glass-bg: rgba(245, 249, 252, 0.65);
@@ -212,20 +210,22 @@
 /* Glass card utility classes */
 @layer components {
   .glass-card {
-    background: var(--glass-light-bg);
-    backdrop-filter: blur(var(--glass-light-blur));
-    -webkit-backdrop-filter: blur(var(--glass-light-blur));
-    border: 1px solid var(--glass-light-border);
-    border-radius: var(--radius-card);
-    box-shadow: var(--glass-light-shadow);
-  }
-
-  .glass-card-dark {
     background: var(--glass-bg);
     backdrop-filter: blur(var(--glass-blur));
     -webkit-backdrop-filter: blur(var(--glass-blur));
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-card);
+  }
+
+  .glass-card-subtle {
+    background: var(--glass-light-bg);
+    backdrop-filter: blur(var(--glass-light-blur));
+    -webkit-backdrop-filter: blur(var(--glass-light-blur));
+    border: 1px solid var(--glass-light-border);
+    border-radius: var(--radius-card);
+  }
+
+  .glass-elevated {
     box-shadow: var(--glass-shadow);
   }
 

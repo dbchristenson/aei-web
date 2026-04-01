@@ -146,7 +146,7 @@ export default function useGlobeRenderer({
       // Layer 2: Globe disc (ocean)
       ctx!.beginPath();
       ctx!.arc(cx, cy, globeRadius, 0, 2 * Math.PI);
-      ctx!.fillStyle = tc.n950;
+      ctx!.fillStyle = tc.white;
       ctx!.fill();
 
       // Layer 3: Graticule

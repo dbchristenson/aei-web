@@ -29,7 +29,7 @@ const BlockCard = forwardRef<HTMLButtonElement, {
       aria-pressed={isSelected}
     >
       <div
-        className="glass-card-dark p-5 py-6 transition-all duration-200"
+        className="glass-card p-5 py-6 transition-all duration-200"
         style={{
           borderColor: isSelected ? "var(--color-primary)" : undefined,
           borderWidth: isSelected ? "1px" : undefined,

@@ -31,7 +31,7 @@ export default function InsightCard({
   return (
     <Link
       href={`/insights/${slug}`}
-      className="group block glass-card-dark overflow-hidden transition-transform hover:-translate-y-1"
+      className="group block glass-card glass-elevated overflow-hidden transition-transform hover:-translate-y-1"
     >
       {/* Cover image */}
       <div

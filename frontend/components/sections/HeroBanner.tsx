@@ -121,15 +121,6 @@ export default function HeroBanner() {
         </GlassCard>
       </div>
 
-      {/* Bottom gradient — cinematic fade */}
-      <div
-        className="absolute bottom-0 left-0 right-0 h-44 md:h-56 pointer-events-none z-[1]"
-        aria-hidden="true"
-        style={{
-          background:
-            "linear-gradient(to bottom, transparent, var(--color-bg-subtle))",
-        }}
-      />
     </section>
   );
 }

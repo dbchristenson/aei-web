@@ -18,5 +18,6 @@ export function getThemeColors() {
     n700: v("--color-surface-hover"),
     n600: v("--color-border"),
     n400: v("--color-fg-muted"),
+    white: v("--color-palette-white"),
   };
 }

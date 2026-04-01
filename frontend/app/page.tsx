@@ -60,7 +60,7 @@ export default function Home() {
 
         {/* Section 5 — Interactive Exploration Map (app-like breakout) */}
         <div
-          className="relative bg-bg overflow-hidden"
+          className="relative bg-primary overflow-hidden"
           style={{
             borderTopLeftRadius: "var(--radius-card)",
             borderTopRightRadius: "var(--radius-card)",
@@ -69,7 +69,7 @@ export default function Home() {
         >
           <section
             id="exploration-map"
-            className="bg-bg overflow-hidden scroll-mt-20"
+            className="bg-gradient-to-b from-bg to-primary overflow-hidden scroll-mt-20"
             aria-label="Exploration blocks map"
           >
             <ExplorationMapLoader blocksEndpoint="/data/blocks.geojson" />

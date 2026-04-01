@@ -29,7 +29,7 @@ export default function TeamPage() {
             {teamMembers.map((member) => (
               <div
                 key={member.name}
-                className="glass-card p-6 text-center"
+                className="glass-card-subtle p-6 text-center"
               >
                 {/* Photo placeholder */}
                 <div className="mx-auto mb-4 w-24 h-24 rounded-full bg-palette-neutral-200 flex items-center justify-center">
