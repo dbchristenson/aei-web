@@ -18,4 +18,4 @@ uv.lock
 # Misc
 .claude/
 AGENTS.md
-scripts/
+/scripts/
