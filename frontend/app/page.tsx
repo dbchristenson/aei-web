@@ -1,7 +1,6 @@
 import HeroSplash from "@/components/sections/HeroSplash";
 import HeroBanner from "@/components/sections/HeroBanner";
 import PartnerLogoGrid from "@/components/sections/PartnerLogoGrid";
-import SectionDivider from "@/components/ui/SectionDivider";
 import TeamCarousel from "@/components/sections/TeamCarousel";
 
 // Heavy components — lazy-loaded client-side only
@@ -43,28 +42,40 @@ export default function Home() {
       {/* Section 2 — Hero Banner (gradient fades into partners) */}
       <HeroBanner />
 
-      {/* Section 3 — Partner Logos (seamless continuation from banner gradient) */}
-      <PartnerLogoGrid />
-
-      {/* Section 4 — Leadership Team */}
-      <SectionDivider
-        fromColor="var(--color-bg-subtle)"
-        toColor="var(--color-bg)"
-      />
-      <TeamCarousel members={teamMembers} />
-
-      {/* Section 5 — Interactive Exploration Map */}
-      <SectionDivider
-        fromColor="var(--color-bg)"
-        toColor="var(--color-bg)"
-      />
-      <section
-        id="exploration-map"
-        className="bg-bg overflow-hidden scroll-mt-20"
-        aria-label="Exploration blocks map"
+      {/* Sections 3–5 — slide up over the pinned HeroBanner */}
+      <div
+        className="relative bg-bg-subtle overflow-hidden"
+        style={{
+          zIndex: 1,
+          borderTopLeftRadius: "var(--radius-card)",
+          borderTopRightRadius: "var(--radius-card)",
+          boxShadow: "0 -16px 60px rgba(0, 0, 0, 0.35)",
+        }}
       >
-        <ExplorationMapLoader blocksEndpoint="/data/blocks.geojson" />
-      </section>
+        {/* Section 3 — Partner Logos */}
+        <PartnerLogoGrid />
+
+        {/* Section 4 — Leadership Team (continuous with partners) */}
+        <TeamCarousel members={teamMembers} />
+
+        {/* Section 5 — Interactive Exploration Map (app-like breakout) */}
+        <div
+          className="relative bg-primary overflow-hidden"
+          style={{
+            borderTopLeftRadius: "var(--radius-card)",
+            borderTopRightRadius: "var(--radius-card)",
+            boxShadow: "0 -12px 48px rgba(0, 0, 0, 0.3)",
+          }}
+        >
+          <section
+            id="exploration-map"
+            className="bg-gradient-to-b from-bg to-primary overflow-hidden scroll-mt-20"
+            aria-label="Exploration blocks map"
+          >
+            <ExplorationMapLoader blocksEndpoint="/data/blocks.geojson" />
+          </section>
+        </div>
+      </div>
 
       {/* Section 6 — Footer (in layout) */}
     </main>

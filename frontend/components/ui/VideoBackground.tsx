@@ -10,6 +10,7 @@ interface VideoBackgroundProps {
   overlay?: "vignette" | "darken" | "none";
   overlayClassName?: string;
   className?: string;
+  priority?: boolean;
 }
 
 const OVERLAY_CLASSES: Record<string, string> = {
@@ -24,6 +25,7 @@ export default function VideoBackground({
   overlay = "none",
   overlayClassName,
   className = "",
+  priority = false,
 }: VideoBackgroundProps) {
   const prefersReduced = usePrefersReducedMotion();
   const { videoUrl, posterUrl } = getVideo(videoKey);
@@ -48,6 +50,7 @@ export default function VideoBackground({
           muted
           loop
           playsInline
+          preload={priority ? "auto" : "metadata"}
           poster={posterUrl}
           className="h-full w-full object-cover"
         >

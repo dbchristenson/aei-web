@@ -30,7 +30,7 @@ export default function AboutPage() {
       {/* History / Mission */}
       <section className="py-24 px-4 bg-bg-subtle">
         <div className="mx-auto" style={{ maxWidth: "var(--container-lg)" }}>
-          <GlassCard variant="dark" className="p-8 md:p-12">
+          <GlassCard variant="default" elevated className="p-8 md:p-12">
             <h2 className="font-sans font-semibold text-fg mb-6 text-h2">
               Our Mission
             </h2>

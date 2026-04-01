@@ -32,7 +32,7 @@ export default function InsightsPage() {
 
           {/* TODO: Replace with InsightCard grid populated from MDX frontmatter */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="glass-card-dark p-8 text-center">
+            <div className="glass-card p-8 text-center">
               <p className="text-fg-muted font-body">
                 Articles coming soon. Check back for market research and energy
                 trend analysis.

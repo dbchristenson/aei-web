@@ -12,10 +12,10 @@ interface InsightCardProps {
 }
 
 const categoryStyles: Record<InsightCategory, { bg: string; text: string }> = {
-  "O&G": { bg: "bg-palette-teal-blue/15", text: "text-palette-teal-blue" },
-  Geothermal: { bg: "bg-palette-coral-glow/15", text: "text-palette-coral-glow" },
-  Policy: { bg: "bg-palette-sky-reflection/15", text: "text-palette-sky-reflection" },
-  Market: { bg: "bg-palette-bright-amber/15", text: "text-palette-bright-amber" },
+  "O&G": { bg: "bg-palette-primary/15", text: "text-palette-primary" },
+  Geothermal: { bg: "bg-palette-success/15", text: "text-palette-success" },
+  Policy: { bg: "bg-palette-alternate/15", text: "text-palette-alternate" },
+  Market: { bg: "bg-palette-warning/15", text: "text-palette-warning" },
 };
 
 export default function InsightCard({
@@ -31,7 +31,7 @@ export default function InsightCard({
   return (
     <Link
       href={`/insights/${slug}`}
-      className="group block glass-card-dark overflow-hidden transition-transform hover:-translate-y-1"
+      className="group block glass-card glass-elevated overflow-hidden transition-transform hover:-translate-y-1"
     >
       {/* Cover image */}
       <div

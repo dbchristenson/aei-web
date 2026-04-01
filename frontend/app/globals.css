@@ -1,31 +1,39 @@
 @import "tailwindcss";
 
+/* Register glow position properties so CSS transitions can interpolate them */
+@property --glow-x {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 50%;
+}
+@property --glow-y {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 50%;
+}
+
 /* @generated:theme-inline start */
 @theme inline {
   /* Palette (static, not theme-dependent) */
-  --color-palette-teal-blue: #067bc2;
-  --color-palette-teal-blue-hover: #0568a3;
-  --color-palette-sky-reflection: #84bcda;
-  --color-palette-scooter: #33b5dd;
-  --color-palette-snow: #fffafa;
-  --color-palette-ivory: #FFFFE3;
-  --color-palette-bright-amber: #ecc30b;
-  --color-palette-coral-glow: #f37748;
-  --color-palette-classic-coral: #E45F4A;
-  --color-palette-jet-black: #162521;
+  --color-palette-primary: #12587c;
+  --color-palette-primary-muted: #1b7fa3;
+  --color-palette-primary-dark: #002236;
+  --color-palette-alternate: #0aadd6;
+  --color-palette-alternate-muted: #62caeb;
   --color-palette-white: #ffffff;
-  --color-palette-alabaster: #fafafa;
   --color-palette-success: #2a9d6e;
+  --color-palette-warning: #E87C03;
   --color-palette-error: #d93636;
-  --color-palette-neutral-50: #f4f8f6;
-  --color-palette-neutral-100: #e8f0ed;
-  --color-palette-neutral-200: #c8dbd6;
-  --color-palette-neutral-400: #7a9e94;
-  --color-palette-neutral-600: #3d6358;
-  --color-palette-neutral-700: #2d4a42;
-  --color-palette-neutral-800: #1e332d;
-  --color-palette-neutral-900: #162521;
-  --color-palette-neutral-950: #0c1512;
+  --color-palette-neutral-50: #F5F9FC;
+  --color-palette-neutral-100: #E9F1F6;
+  --color-palette-neutral-200: #D8E4EC;
+  --color-palette-neutral-300: #BFCFD9;
+  --color-palette-neutral-400: #95ABB8;
+  --color-palette-neutral-600: #5A6F7E;
+  --color-palette-neutral-700: #3F5261;
+  --color-palette-neutral-800: #2B3A44;
+  --color-palette-neutral-900: #1C2830;
+  --color-palette-neutral-950: #151E25;
 
   /* Semantic role tokens (resolved via --theme-* vars) */
   --color-primary: var(--theme-primary);
@@ -37,6 +45,7 @@
   --color-bg-subtle: var(--theme-bg-subtle);
   --color-surface: var(--theme-surface);
   --color-surface-hover: var(--theme-surface-hover);
+  --color-highlight: var(--theme-highlight);
   --color-border: var(--theme-border);
   --color-border-subtle: var(--theme-border-subtle);
   --color-fg: var(--theme-fg);
@@ -62,33 +71,34 @@
 /* @generated:dark-theme start */
 :root,
 [data-theme="dark"] {
-  --theme-primary: #067bc2;
-  --theme-primary-hover: #0568a3;
-  --theme-secondary: #84bcda;
-  --theme-accent: #ecc30b;
-  --theme-accent-alt: #f37748;
-  --theme-bg: #0c1512;
-  --theme-bg-subtle: #162521;
-  --theme-surface: #1e332d;
-  --theme-surface-hover: #2d4a42;
-  --theme-border: #2d4a42;
-  --theme-border-subtle: #1e332d;
-  --theme-fg: #f4f8f6;
-  --theme-fg-secondary: #c8dbd6;
-  --theme-fg-muted: #7a9e94;
-  --theme-fg-inverse: #0c1512;
+  --theme-primary: #12587c;
+  --theme-primary-hover: #1b7fa3;
+  --theme-secondary: #0aadd6;
+  --theme-accent: #0aadd6;
+  --theme-accent-alt: #62caeb;
+  --theme-bg: #151E25;
+  --theme-bg-subtle: #1C2830;
+  --theme-surface: #2B3A44;
+  --theme-surface-hover: #3F5261;
+  --theme-highlight: #1A3040;
+  --theme-border: #3F5261;
+  --theme-border-subtle: #2B3A44;
+  --theme-fg: #F5F9FC;
+  --theme-fg-secondary: #D8E4EC;
+  --theme-fg-muted: #95ABB8;
+  --theme-fg-inverse: #151E25;
   --theme-success: #2a9d6e;
-  --theme-warning: #ecc30b;
+  --theme-warning: #E87C03;
   --theme-error: #d93636;
 
   /* Glass tokens */
-  --glass-bg: rgba(22, 37, 33, 0.55);
+  --glass-bg: rgba(28, 40, 48, 0.55);
   --glass-blur: 14px;
-  --glass-border: rgba(132, 188, 218, 0.20);
+  --glass-border: rgba(10, 173, 214, 0.20);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.40);
-  --glass-light-bg: rgba(255, 255, 255, 0.12);
+  --glass-light-bg: rgba(245, 249, 252, 0.10);
   --glass-light-blur: 14px;
-  --glass-light-border: rgba(255, 255, 255, 0.20);
+  --glass-light-border: rgba(245, 249, 252, 0.15);
   --glass-light-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
 
   /* Type scale */
@@ -126,52 +136,54 @@
 
 /* @generated:light-theme start */
 [data-theme="light"] {
-  --theme-bg: #f4f8f6;
-  --theme-bg-subtle: #e8f0ed;
-  --theme-surface: #ffffff;
-  --theme-surface-hover: #e8f0ed;
-  --theme-border: #c8dbd6;
-  --theme-border-subtle: #e8f0ed;
-  --theme-fg: #0c1512;
-  --theme-fg-secondary: #162521;
-  --theme-fg-muted: #3d6358;
-  --theme-fg-inverse: #f4f8f6;
+  --theme-bg: #E9F1F6;
+  --theme-bg-subtle: #D8E4EC;
+  --theme-surface: #F5F9FC;
+  --theme-surface-hover: #E9F1F6;
+  --theme-highlight: #D5E8F2;
+  --theme-border: #BFCFD9;
+  --theme-border-subtle: #D8E4EC;
+  --theme-fg: #151E25;
+  --theme-fg-secondary: #1C2830;
+  --theme-fg-muted: #5A6F7E;
+  --theme-fg-inverse: #E9F1F6;
 
   /* Glass tokens */
-  --glass-bg: rgba(255, 255, 255, 0.45);
+  --glass-bg: rgba(245, 249, 252, 0.65);
   --glass-blur: 14px;
-  --glass-border: rgba(0, 0, 0, 0.10);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
-  --glass-light-bg: rgba(255, 255, 255, 0.55);
+  --glass-border: rgba(191, 207, 217, 0.30);
+  --glass-shadow: 0 8px 32px rgba(21, 30, 37, 0.08);
+  --glass-light-bg: rgba(245, 249, 252, 0.75);
   --glass-light-blur: 14px;
-  --glass-light-border: rgba(0, 0, 0, 0.08);
-  --glass-light-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --glass-light-border: rgba(191, 207, 217, 0.20);
+  --glass-light-shadow: 0 4px 16px rgba(21, 30, 37, 0.05);
 }
 /* @generated:light-theme end */
 
 /* @generated:light-fallback start */
 @media (prefers-color-scheme: light) {
   :root:not([data-theme]) {
-    --theme-bg: #f4f8f6;
-    --theme-bg-subtle: #e8f0ed;
-    --theme-surface: #ffffff;
-    --theme-surface-hover: #e8f0ed;
-    --theme-border: #c8dbd6;
-    --theme-border-subtle: #e8f0ed;
-    --theme-fg: #0c1512;
-    --theme-fg-secondary: #162521;
-    --theme-fg-muted: #3d6358;
-    --theme-fg-inverse: #f4f8f6;
+    --theme-bg: #E9F1F6;
+    --theme-bg-subtle: #D8E4EC;
+    --theme-surface: #F5F9FC;
+    --theme-surface-hover: #E9F1F6;
+    --theme-highlight: #D5E8F2;
+    --theme-border: #BFCFD9;
+    --theme-border-subtle: #D8E4EC;
+    --theme-fg: #151E25;
+    --theme-fg-secondary: #1C2830;
+    --theme-fg-muted: #5A6F7E;
+    --theme-fg-inverse: #E9F1F6;
 
     /* Glass tokens */
-    --glass-bg: rgba(255, 255, 255, 0.45);
+    --glass-bg: rgba(245, 249, 252, 0.65);
     --glass-blur: 14px;
-    --glass-border: rgba(0, 0, 0, 0.10);
-    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
-    --glass-light-bg: rgba(255, 255, 255, 0.55);
+    --glass-border: rgba(191, 207, 217, 0.30);
+    --glass-shadow: 0 8px 32px rgba(21, 30, 37, 0.08);
+    --glass-light-bg: rgba(245, 249, 252, 0.75);
     --glass-light-blur: 14px;
-    --glass-light-border: rgba(0, 0, 0, 0.08);
-    --glass-light-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    --glass-light-border: rgba(191, 207, 217, 0.20);
+    --glass-light-shadow: 0 4px 16px rgba(21, 30, 37, 0.05);
   }
 
   :root:not([data-theme]) .video-overlay-vignette,
@@ -198,20 +210,22 @@
 /* Glass card utility classes */
 @layer components {
   .glass-card {
-    background: var(--glass-light-bg);
-    backdrop-filter: blur(var(--glass-light-blur));
-    -webkit-backdrop-filter: blur(var(--glass-light-blur));
-    border: 1px solid var(--glass-light-border);
-    border-radius: var(--radius-card);
-    box-shadow: var(--glass-light-shadow);
-  }
-
-  .glass-card-dark {
     background: var(--glass-bg);
     backdrop-filter: blur(var(--glass-blur));
     -webkit-backdrop-filter: blur(var(--glass-blur));
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-card);
+  }
+
+  .glass-card-subtle {
+    background: var(--glass-light-bg);
+    backdrop-filter: blur(var(--glass-light-blur));
+    -webkit-backdrop-filter: blur(var(--glass-light-blur));
+    border: 1px solid var(--glass-light-border);
+    border-radius: var(--radius-card);
+  }
+
+  .glass-elevated {
     box-shadow: var(--glass-shadow);
   }
 
@@ -233,6 +247,44 @@
     background: none;
   }
 
+  /* Clips content to the logo shape only */
+  .emboss-logo-mask {
+    -webkit-mask-image: url(/images/logos/astrolabe_white.svg);
+    -webkit-mask-size: cover;
+    -webkit-mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    mask-image: url(/images/logos/astrolabe_white.svg);
+    mask-size: cover;
+    mask-position: center;
+    mask-repeat: no-repeat;
+  }
+
+  /* Cursor-following spotlight — parent .emboss-logo-mask clips to logo shape */
+  .emboss-glow {
+    position: absolute;
+    inset: 0;
+    background-color: white;
+    pointer-events: none;
+    user-select: none;
+    opacity: 0;
+    -webkit-mask: radial-gradient(
+      clamp(320px, 45vw, 620px) clamp(320px, 45vw, 620px) at var(--glow-x, 50%) var(--glow-y, 50%),
+      rgba(0,0,0,0.3) 0%,
+      rgba(0,0,0,0.18) 30%,
+      rgba(0,0,0,0.06) 60%,
+      transparent 100%
+    );
+    mask: radial-gradient(
+      clamp(320px, 45vw, 620px) clamp(320px, 45vw, 620px) at var(--glow-x, 50%) var(--glow-y, 50%),
+      rgba(0,0,0,0.3) 0%,
+      rgba(0,0,0,0.18) 30%,
+      rgba(0,0,0,0.06) 60%,
+      transparent 100%
+    );
+    transition: --glow-x 100ms ease-out, --glow-y 100ms ease-out, opacity 400ms ease;
+    will-change: mask;
+  }
+
   .custom-scrollbar::-webkit-scrollbar {
     width: 4px;
   }
@@ -251,6 +303,7 @@
     scrollbar-color: var(--glass-border) transparent;
   }
 }
+
 
 html {
   scroll-behavior: smooth;

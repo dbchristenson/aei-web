@@ -39,7 +39,7 @@ export default function ContactPage() {
 
             {/* Form card — glass frosts the image overlap on the left edge */}
             <div className="relative z-10">
-              <GlassCard variant="light" className="p-6 md:p-8">
+              <GlassCard variant="subtle" className="p-6 md:p-8">
                 <ContactForm />
 
                 {/* Contact details — compact strip */}

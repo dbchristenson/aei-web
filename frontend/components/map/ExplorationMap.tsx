@@ -1,7 +1,8 @@
 "use client";
 
-import { useRef, useState, useEffect, useCallback } from "react";
-import * as d3 from "d3";
+import { useRef, useState, useEffect, useCallback, useMemo } from "react";
+import { select } from "d3-selection";
+import "d3-transition";
 import gsap from "gsap";
 import BlockInfoPanel from "./BlockInfoPanel";
 import type { Topology } from "topojson-specification";
@@ -20,6 +21,7 @@ export default function ExplorationMap({
   blocksEndpoint = "/data/blocks.geojson",
 }: ExplorationMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const rotationRef = useRef<[number, number, number]>(INITIAL_ROTATION);
@@ -45,7 +47,10 @@ export default function ExplorationMap({
 
   const prefersReducedMotion = usePrefersReducedMotion();
 
-  const allBlocks = geoData?.features.map((f) => f.properties) ?? [];
+  const allBlocks = useMemo(
+    () => geoData?.features.map((f) => f.properties) ?? [],
+    [geoData]
+  );
 
   // ─── Data fetching via IntersectionObserver ───
   useEffect(() => {
@@ -58,6 +63,8 @@ export default function ExplorationMap({
       (entries) => {
         if (entries[0].isIntersecting) {
           observer.disconnect();
+
+          // Load blocks + land (essential for map render).
           Promise.all([
             fetch(blocksEndpoint).then((r) => {
               if (!r.ok) throw new Error(`Blocks fetch failed: ${r.status}`);
@@ -81,6 +88,7 @@ export default function ExplorationMap({
             .catch(() => {
               if (!cancelled) setMapState("error");
             });
+
         }
       },
       { rootMargin: "200px" }
@@ -126,7 +134,7 @@ export default function ExplorationMap({
 
   // ─── D3 globe rendering + drag behavior ───
   const { renderRef, showTooltipRef, hideTooltipRef } = useGlobeRenderer({
-    svgRef, containerRef, tooltipRef,
+    svgRef, canvasRef, containerRef, tooltipRef,
     geoData, worldData, mapState,
     rotationRef, rawRotationRef, scaleMultiplierRef, dragBoundsRef,
     tooltipBlockRef, bounceAnimRef, zoomAnimRef,
@@ -147,7 +155,7 @@ export default function ExplorationMap({
   // ─── Sync selected dot visual state + tooltip ───
   useEffect(() => {
     if (!svgRef.current || mapState !== "active" || !geoData) return;
-    const svg = d3.select(svgRef.current);
+    const svg = select(svgRef.current);
     const tc = getThemeColors();
     const dur = prefersReducedMotion ? 0 : 200;
 
@@ -198,7 +206,10 @@ export default function ExplorationMap({
   }, [uiState.mode, handleDeselect]);
 
   return (
-    <div className="relative overflow-hidden" style={{ minHeight: "600px" }}>
+    <div
+      className="relative overflow-hidden mx-4 md:mx-8 mt-4 md:mt-6 rounded-tl-[var(--radius-card)] rounded-tr-[var(--radius-card)] border border-border"
+      style={{ minHeight: "600px", boxShadow: "var(--glass-shadow)" }}
+    >
       {/* Content overlay — left side, pointer-events pass through to globe */}
       <div className="relative z-10 flex items-start py-4 md:py-6 px-4 md:px-8 pointer-events-none" style={{ minHeight: "600px" }}>
         <div className="w-full md:max-w-[420px] pointer-events-auto">
@@ -254,10 +265,18 @@ export default function ExplorationMap({
           </div>
         )}
 
-        {/* D3 renders into this SVG */}
+        {/* Canvas: non-interactive background layers (globe, land) */}
+        <canvas
+          ref={canvasRef}
+          className={`absolute inset-0 ${mapState !== "active" ? "hidden" : ""}`}
+          aria-hidden="true"
+        />
+
+        {/* SVG: interactive layers (block polygons, dots, glow filters) */}
         <svg
           ref={svgRef}
-          className={`w-full h-full ${mapState !== "active" ? "hidden" : ""}`}
+          className={`absolute inset-0 ${mapState !== "active" ? "hidden" : ""}`}
+          style={{ background: "transparent" }}
           role="img"
           aria-label="Interactive orthographic globe map showing AEI exploration blocks in Indonesia"
         />

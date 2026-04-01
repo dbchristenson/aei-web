@@ -43,7 +43,7 @@ export default function InsightChart({
   }, [dataPath]);
 
   return (
-    <div className="glass-card-dark p-6">
+    <div className="glass-card glass-elevated p-6">
       {title && (
         <h3 className="font-sans font-semibold text-fg mb-4 text-h4">
           {title}

@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: BlockPageProps): Promise<Meta
 
 function NewsCard({ item }: { item: NewsItem }) {
   const content = (
-    <div className="glass-card-dark p-5 transition-all duration-200 hover:border-primary/30">
+    <div className="glass-card p-5 transition-all duration-200 hover:border-primary/30">
       <div className="flex items-center gap-2 mb-2">
         <span
           className={`inline-block px-2 py-0.5 rounded-[var(--radius-button)] font-body text-xs ${
@@ -113,7 +113,7 @@ export default async function BlockPage({ params }: BlockPageProps) {
               ))}
             </div>
           ) : (
-            <div className="glass-card-dark p-8 text-center">
+            <div className="glass-card p-8 text-center">
               <p className="text-fg-muted font-body text-body">
                 No news or updates for this block yet.
               </p>

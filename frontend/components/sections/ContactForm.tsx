@@ -17,9 +17,22 @@ interface FormFields {
 const inputClass =
   "w-full bg-surface border border-border rounded-[var(--radius-button)] px-4 py-3 text-fg font-body text-body focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
 
+const inputErrorClass =
+  "w-full bg-surface border border-error rounded-[var(--radius-button)] px-4 py-3 text-fg font-body text-body focus:outline-none focus:border-error focus:ring-2 focus:ring-error/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
+
+function FieldError({ message }: { message?: string }) {
+  if (!message) return null;
+  return (
+    <p className="mt-1.5 text-error text-xs font-body" role="alert">
+      {message}
+    </p>
+  );
+}
+
 export default function ContactForm() {
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [fields, setFields] = useState<FormFields>({
     name: "",
     organization: "",
@@ -42,6 +55,7 @@ export default function ContactForm() {
 
     setStatus("submitting");
     setErrorMsg("");
+    setFieldErrors({});
 
     try {
       const res = await fetch("/api/contact", {
@@ -58,9 +72,21 @@ export default function ContactForm() {
 
       if (res.ok) {
         setStatus("success");
-      } else {
-        throw new Error();
+        return;
       }
+
+      // Parse structured error from server
+      const data = await res.json().catch(() => null);
+
+      if (data?.fields && typeof data.fields === "object") {
+        setFieldErrors(data.fields as Record<string, string>);
+      }
+
+      setStatus("error");
+      setErrorMsg(
+        data?.error ??
+          "Something went wrong. Please try again or email us directly at contact@aei-1.com."
+      );
     } catch {
       setStatus("error");
       setErrorMsg(
@@ -140,8 +166,11 @@ export default function ContactForm() {
             value={fields.name}
             onChange={handleChange}
             disabled={isDisabled}
-            className={inputClass}
+            aria-invalid={!!fieldErrors.name}
+            aria-describedby={fieldErrors.name ? "name-error" : undefined}
+            className={fieldErrors.name ? inputErrorClass : inputClass}
           />
+          <FieldError message={fieldErrors.name} />
         </div>
         <div>
           <label
@@ -178,8 +207,11 @@ export default function ContactForm() {
             value={fields.email}
             onChange={handleChange}
             disabled={isDisabled}
-            className={inputClass}
+            aria-invalid={!!fieldErrors.email}
+            aria-describedby={fieldErrors.email ? "email-error" : undefined}
+            className={fieldErrors.email ? inputErrorClass : inputClass}
           />
+          <FieldError message={fieldErrors.email} />
         </div>
         <div>
           <label
@@ -217,8 +249,11 @@ export default function ContactForm() {
           value={fields.message}
           onChange={handleChange}
           disabled={isDisabled}
-          className={`${inputClass} resize-y`}
+          aria-invalid={!!fieldErrors.message}
+          aria-describedby={fieldErrors.message ? "message-error" : undefined}
+          className={`${fieldErrors.message ? inputErrorClass : inputClass} resize-y`}
         />
+        <FieldError message={fieldErrors.message} />
       </div>
 
       <div className="pt-2">
