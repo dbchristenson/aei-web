@@ -38,7 +38,7 @@ export default function Footer() {
   return (
     <footer className="relative z-10" style={{ backgroundColor: "var(--color-palette-primary-dark)" }}>
       <div
-        className="mx-auto px-4 py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12"
+        className="mx-auto px-4 py-16 grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-12"
         style={{ maxWidth: "var(--container-xl)" }}
       >
         {/* Brand */}

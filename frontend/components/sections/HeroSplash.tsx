@@ -188,13 +188,13 @@ export default function HeroSplash() {
       <div ref={logoRef} className="relative z-10 flex flex-col items-center text-center px-4">
         <h1
           className="font-serif font-extralight text-white leading-none m-0"
-          style={{ fontSize: "calc(var(--text-logo-splash) * 2)", letterSpacing: "-0.06em" }}
+          style={{ fontSize: "var(--text-logo-splash)", letterSpacing: "-0.06em" }}
         >
           Agra Energi
         </h1>
         <h1
           className="font-serif font-extralight text-white leading-none m-0"
-          style={{ fontSize: "calc(var(--text-logo-splash) * 2)", letterSpacing: "-0.06em" }}
+          style={{ fontSize: "var(--text-logo-splash)", letterSpacing: "-0.06em" }}
         >
           Indonesia
         </h1>
@@ -208,7 +208,7 @@ export default function HeroSplash() {
       >
         <span
           data-scroll-text
-          className="text-white font-body tracking-[0.3em] pl-[0.3em] uppercase text-body-lg font-medium"
+          className="text-white font-body tracking-[0.3em] pl-[0.3em] uppercase text-body-lg font-medium whitespace-nowrap"
         >
           {isTouchDevice ? "Swipe Down to Explore" : "Scroll to Explore"}
         </span>

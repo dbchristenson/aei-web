@@ -113,7 +113,7 @@
   --text-xs: 0.75rem;
   --text-quote: 1.75rem;
   --text-stat: 3rem;
-  --text-logo-splash: 5rem;
+  --text-logo-splash: 10rem;
 
   /* Font stacks */
   --font-sans-stack: var(--font-plus-jakarta), sans-serif;
@@ -202,7 +202,7 @@
     --text-h3: 1.25rem;
     --text-h4: 1.125rem;
     --text-stat: 2.25rem;
-    --text-logo-splash: 3rem;
+    --text-logo-splash: 6rem;
   }
 }
 /* @generated:mobile-type-scale end */

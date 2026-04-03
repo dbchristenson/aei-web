@@ -171,7 +171,7 @@
       "font": "sansHeader"
     },
     "logoSplash": {
-      "size": "5rem",
+      "size": "10rem",
       "lineHeight": 1.0,
       "weight": 700,
       "font": "serif"
@@ -213,6 +213,6 @@
     "h3": "1.25rem",
     "h4": "1.125rem",
     "stat": "2.25rem",
-    "logoSplash": "3rem"
+    "logoSplash": "6rem"
   }
 }

@@ -2,7 +2,7 @@
 
 import GlassCard from "@/components/ui/GlassCard";
 import Image from "next/image";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface TeamMember {
   name: string;
@@ -26,6 +26,24 @@ function getInitials(name: string): string {
 
 export default function TeamCarousel({ members }: TeamCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  // Track visible card for mobile dot indicators
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const onScroll = () => {
+      const gap = 24;
+      const firstCard = el.children[0] as HTMLElement | undefined;
+      if (!firstCard) return;
+      const cardWidth = firstCard.offsetWidth + gap;
+      setActiveIndex(
+        Math.min(Math.round(el.scrollLeft / cardWidth), members.length - 1),
+      );
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  }, [members.length]);
 
   const scroll = (direction: "left" | "right") => {
     if (!scrollRef.current) return;
@@ -42,7 +60,7 @@ export default function TeamCarousel({ members }: TeamCarouselProps) {
 
   return (
     <section
-      className="py-24 px-4 bg-bg-subtle"
+      className="py-16 md:py-24 px-4 bg-bg-subtle"
       aria-label="Leadership team"
     >
       <div className="mx-auto" style={{ maxWidth: "var(--container-xl)" }}>
@@ -124,8 +142,31 @@ export default function TeamCarousel({ members }: TeamCarouselProps) {
               </div>
             ))}
           </div>
+
+          {/* Mobile scroll indicators */}
+          {showControls && (
+            <div className="flex md:hidden justify-center gap-2 mt-6">
+              {members.map((_, i) => (
+                <button
+                  key={i}
+                  className={`h-2 rounded-full transition-all duration-200 ${
+                    i === activeIndex ? "w-6 bg-primary" : "w-2 bg-border"
+                  }`}
+                  onClick={() => {
+                    const el = scrollRef.current;
+                    if (!el) return;
+                    const firstCard = el.children[0] as HTMLElement | undefined;
+                    if (!firstCard) return;
+                    const cardWidth = firstCard.offsetWidth + 24;
+                    el.scrollTo({ left: i * cardWidth, behavior: "smooth" });
+                  }}
+                  aria-label={`Go to card ${i + 1}`}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
-    </section >
+    </section>
   );
 }
