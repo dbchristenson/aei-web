@@ -6,6 +6,9 @@ import TeamCarousel from "@/components/sections/TeamCarousel";
 // Heavy components — lazy-loaded client-side only
 import ExplorationMapLoader from "@/components/map/ExplorationMapLoader";
 
+// Toggle to false to hide the Board of Directors section (e.g. pending legal clearance)
+const SHOW_BOARD_OF_DIRECTORS = false;
+
 const teamMembers = [
   {
     name: "GN Christenson",
@@ -56,7 +59,7 @@ export default function Home() {
         <PartnerLogoGrid />
 
         {/* Section 4 — Leadership Team (continuous with partners) */}
-        <TeamCarousel members={teamMembers} />
+        {SHOW_BOARD_OF_DIRECTORS && <TeamCarousel members={teamMembers} />}
 
         {/* Section 5 — Interactive Exploration Map (app-like breakout) */}
         <div
