@@ -12,7 +12,7 @@ B2B investor-facing website for PT Agra Energi Indonesia, an Indonesian oil & ga
 - **Animation:** GSAP (ScrollTrigger) for scroll-driven animations
 - **Backend:** FastAPI (Python), PostgreSQL + PostGIS
 - **Python Packages:** uv
-- **Fonts:** Google Fonts via next/font — Lora, Rubik, Manrope
+- **Fonts:** Google Fonts via next/font — Plus Jakarta Sans (single font, Indonesian foundry)
 
 ## Directory Structure
 ```
@@ -91,7 +91,7 @@ ALL colors, fonts, spacing, border radii, and glass styles come from `theme.json
 - TypeScript strict mode, no `any`
 - Prefer interfaces over type aliases
 - All components are functional with hooks
-- Tailwind utility classes using AEI token names (e.g., `bg-teal-blue`, `font-sans-header`)
+- Tailwind utility classes using semantic token names (e.g., `bg-primary`, `text-fg`, `bg-surface`)
 - All components must respect `prefers-reduced-motion`
 - WCAG 2.1 AA compliance required — never rely on color alone
 
@@ -113,8 +113,14 @@ Prospective investors and operating partners in the oil & gas / energy sector. S
 Primary emotion: **confidence and trust** — "These people know what they're doing." Every design decision reinforces perceived stability, expertise, and institutional-grade seriousness.
 
 ### Aesthetic Direction — Two Modes
-1. **Landing & marketing pages** (Home, About, Team, Contact): Editorial, cinematic. Inspired by sonauraenergy.com — clean section hierarchy, strong visual storytelling, frosted glass over video/imagery, measured scroll pacing, generous whitespace, type-driven hierarchy.
+1. **Landing & marketing pages** (Home, About, Team, Contact): Editorial, cinematic authority. Clean section hierarchy, strong visual storytelling, frosted glass over video/imagery, measured scroll pacing, generous whitespace, type-driven hierarchy through weight and scale.
 2. **Block detail pages** (Gaea, Gaea II, Talu, etc.): Bloomberg-style data density — accolades, production numbers, partners, charts, timelines, news. Same token system, but layout shifts from editorial to dashboard-adjacent.
+
+### Design System Summary
+- **Colors:** Cool blue-grey neutral scale (#151E25–#F5F9FC), deep teal primary (#12587c), cyan alternate (#0aadd6), muted cyan (#62caeb). Oceanic and cool. Warm accents may be reintroduced later as complements to the blue-teal foundation.
+- **Typography:** Plus Jakarta Sans only (Indonesian foundry). Hierarchy via weight (400–700) and size, not font-family contrast.
+- **Glass:** Frosted glass cards with per-theme tokens (opacity, blur, shadow). Signature pattern over video/imagery.
+- **Motion:** GSAP ScrollTrigger. Measured, purposeful. Always respect `prefers-reduced-motion`.
 
 ### Anti-References
 - No crypto/startup aesthetics (neon, particles, hype, countdowns)
@@ -124,6 +130,6 @@ Primary emotion: **confidence and trust** — "These people know what they're do
 ### Design Principles
 1. **Trust before flash.** If a design element doesn't build confidence, remove it.
 2. **Earned density.** Landing pages = editorial pacing. Block pages = data density. Match density to context.
-3. **Grounded in place.** Colors and imagery connect to Indonesia — volcanic ridges, deep ocean, tropical light.
-4. **Warmth through craft.** Custom effects, thoughtful type pairing, responsive animations signal care. Never ornament for its own sake.
+3. **Grounded in place.** Indonesia is deep ocean, volcanic ridges, tropical light. The cool blue-teal palette and Plus Jakarta Sans (Indonesian roots) connect back to the landscape.
+4. **Warmth through craft.** Custom glass effects, considered weight/scale typography, responsive scroll animations signal care. Never ornament for its own sake.
 5. **Accessible by default.** WCAG 2.1 AA. Never color-only. Keyboard navigable. Reduced-motion fallbacks. Legibility is non-negotiable.

@@ -30,7 +30,7 @@ export default function RootLayout({
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){var t=localStorage.getItem("aei-theme");if(!t)t=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.setAttribute("data-theme",t)})();`,
+            __html: `(function(){var t=localStorage.getItem("aei-theme")||"light";document.documentElement.setAttribute("data-theme",t)})();`,
           }}
         />
       </head>

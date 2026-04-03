@@ -1,0 +1,4 @@
+{
+  "buildCommand": "cp ../theme.json ./theme.json && npm run build",
+  "outputDirectory": ".next"
+}

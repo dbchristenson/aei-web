@@ -15,8 +15,13 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { existsSync } from "node:fs";
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const THEME_PATH = resolve(__dirname, "../../theme.json");
+// In Vercel builds, theme.json is copied into frontend/; locally it's at repo root
+const THEME_PATH = existsSync(resolve(__dirname, "../theme.json"))
+  ? resolve(__dirname, "../theme.json")
+  : resolve(__dirname, "../../theme.json");
 const CSS_PATH = resolve(__dirname, "../app/globals.css");
 
 // ─── Utilities ───────────────────────────────────────────────────────────────
