@@ -18,10 +18,10 @@ export function useTheme(): ThemeContextValue {
 }
 
 function getInitialTheme(): Theme {
-  if (typeof window === "undefined") return "dark";
+  if (typeof window === "undefined") return "light";
   const stored = localStorage.getItem("aei-theme");
   if (stored === "light" || stored === "dark") return stored;
-  return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {

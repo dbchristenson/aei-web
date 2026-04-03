@@ -13,6 +13,7 @@ interface PartnerLogo {
   src: string;
   href?: string;
   aspectRatio: number;
+  fullWidth?: boolean;
 }
 
 const LOGOS: PartnerLogo[] = [
@@ -26,13 +27,14 @@ const LOGOS: PartnerLogo[] = [
   { name: "ENEOS", src: "/images/partner_logos/eneos-2.png", href: "https://www.eneos.co.jp/english", aspectRatio: 1.72 },
   { name: "Mecon", src: "/images/partner_logos/mecon.png", aspectRatio: 0.99 },
   // Row 3: Ultra-wide
-  { name: "MI Gaea B.V.", src: "/images/partner_logos/mi-gaea.png", aspectRatio: 6.44 },
+  { name: "MI Gaea B.V.", src: "/images/partner_logos/mi-gaea.png", aspectRatio: 6.44, fullWidth: true },
 ];
 
 const ROW_1 = LOGOS.slice(0, 4);
 const ROW_2 = LOGOS.slice(4, 7);
-const MI_GAEA = LOGOS[7];
+const FULL_WIDTH = LOGOS.filter((l) => l.fullWidth);
 
+// Responsive sizing rationale: docs/partner-logo-grid-responsive.md
 const TARGET_AREA = 40000;
 
 function computeLogoSize(aspectRatio: number): { width: number; height: number } {
@@ -52,10 +54,16 @@ function computeLogoSize(aspectRatio: number): { width: number; height: number }
   return { width: Math.round(width), height: Math.round(height) };
 }
 
-function renderLogo(logo: PartnerLogo, isMiGaea = false) {
-  const size = isMiGaea
+function renderLogo(logo: PartnerLogo) {
+  const size = logo.fullWidth
     ? { width: Math.round(56 * logo.aspectRatio), height: 56 }
     : computeLogoSize(logo.aspectRatio);
+
+  // Mobile caps: 72px height keeps 4 logos visible within viewport width.
+  // Full-width logos get tighter caps. Desktop lifts both via md:max-h-none.
+  const mobileClass = logo.fullWidth
+    ? "max-w-[200px] max-h-[31px] md:max-w-none md:max-h-none"
+    : "max-h-[72px] md:max-h-none";
 
   const image = (
     <Image
@@ -63,7 +71,7 @@ function renderLogo(logo: PartnerLogo, isMiGaea = false) {
       alt={logo.name}
       width={size.width}
       height={size.height}
-      className="object-contain"
+      className={`object-contain max-w-full h-auto ${mobileClass}`}
       unoptimized={logo.src.endsWith(".svg")}
     />
   );
@@ -71,9 +79,10 @@ function renderLogo(logo: PartnerLogo, isMiGaea = false) {
   return (
     <div key={logo.name} data-logo>
       <div
-        className="flex items-center justify-center p-4
+        className="flex items-center justify-center p-2 md:p-4
+          grayscale hover:grayscale-0 focus-within:grayscale-0
           hover:scale-105 focus-within:scale-105
-          transition-transform duration-300 ease-out"
+          transition-[filter,transform] duration-300 ease-out"
       >
         {logo.href ? (
           <a
@@ -99,23 +108,60 @@ export default function PartnerLogoGrid() {
     () => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-      const logos = sectionRef.current?.querySelectorAll("[data-logo]");
-      if (!logos?.length) return;
+      const section = sectionRef.current;
+      if (!section) return;
 
-      gsap.fromTo(
-        logos,
-        { opacity: 0, y: 32 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          stagger: 0.12,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 60%",
-          },
+      const heading = section.querySelector("[data-heading]");
+      const subheading = section.querySelector("[data-subheading]");
+      const row1 = section.querySelector('[data-row="1"]');
+      const row2 = section.querySelector('[data-row="2"]');
+      const row3 = section.querySelector('[data-row="3"]');
+
+      if (!heading || !subheading || !row1 || !row2 || !row3) return;
+
+      const row1Logos = row1.querySelectorAll("[data-logo]");
+      const row2Logos = row2.querySelectorAll("[data-logo]");
+      const row3Logos = row3.querySelectorAll("[data-logo]");
+
+      const duration = 0.6;
+      const ease = "power3.out";
+
+      // Set initial states
+      gsap.set([heading, subheading], { opacity: 0, y: 24 });
+      gsap.set(row1Logos, { opacity: 0, y: 20 });
+      gsap.set(row2Logos, { opacity: 0, x: (i) => (i % 2 === 0 ? -30 : 30) });
+      gsap.set(row3Logos, { opacity: 0, scale: 0.85 });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top 60%",
         },
+      });
+
+      // Phase 1: Heading and subheading fade up
+      tl.to(heading, { opacity: 1, y: 0, duration, ease });
+      tl.to(subheading, { opacity: 1, y: 0, duration: duration * 0.8, ease }, "-=0.35");
+
+      // Phase 2: Row 1 — fade up with stagger
+      tl.to(
+        row1Logos,
+        { opacity: 1, y: 0, duration, ease, stagger: 0.08 },
+        "-=0.2",
+      );
+
+      // Phase 3: Row 2 — slide in from sides
+      tl.to(
+        row2Logos,
+        { opacity: 1, x: 0, duration, ease, stagger: 0.08 },
+        "-=0.3",
+      );
+
+      // Phase 4: Row 3 (MI Gaea) — scale up from center
+      tl.to(
+        row3Logos,
+        { opacity: 1, scale: 1, duration: duration * 0.8, ease },
+        "-=0.2",
       );
     },
     { scope: sectionRef },
@@ -124,35 +170,37 @@ export default function PartnerLogoGrid() {
   return (
     <section
       ref={sectionRef}
-      className="py-24 px-4 bg-bg-subtle"
+      className="py-16 md:py-24 px-4 bg-bg-subtle"
       aria-label="Partners and stakeholders"
     >
       <div
         className="mx-auto text-center"
         style={{ maxWidth: "var(--container-xl)" }}
       >
-        <h2 className="font-serif font-semibold text-fg mb-3 text-h2">
-          Our Partners &amp; Stakeholders
+        <h2 data-heading className="font-serif font-semibold text-fg mb-3 text-h2">
+          Our Partners & Stakeholders
         </h2>
-        <p className="text-fg-muted font-body mb-12 text-body">
+        <p data-subheading className="text-fg-muted font-body mb-12 text-body">
           Working alongside world-class operators and institutional partners.
         </p>
 
-        {/* Logo rows — weighted flex layout */}
-        <div className="flex flex-col items-center gap-8 lg:gap-10">
+        {/* Logo rows
+             Mobile: CSS grid matching desktop row structure (4, 3, 1).
+             Desktop (md+): flex layout with computed sizes from TARGET_AREA. */}
+        <div className="flex flex-col items-center gap-4 md:gap-8 lg:gap-10 overflow-hidden">
           {/* Row 1: BP, Mitsui, CNOOC, LNG Japan */}
-          <div className="flex flex-wrap justify-center items-center gap-6 lg:gap-12">
+          <div data-row="1" className="grid grid-cols-4 place-items-center gap-2 md:flex md:flex-wrap md:justify-center md:items-center md:gap-6 lg:gap-12">
             {ROW_1.map((logo) => renderLogo(logo))}
           </div>
 
           {/* Row 2: EnQuest, ENEOS, Mecon */}
-          <div className="flex flex-wrap justify-center items-center gap-6 lg:gap-12">
+          <div data-row="2" className="grid grid-cols-3 place-items-center gap-2 md:flex md:flex-wrap md:justify-center md:items-center md:gap-6 lg:gap-12">
             {ROW_2.map((logo) => renderLogo(logo))}
           </div>
 
-          {/* Row 3: MI Gaea (ultra-wide, own row) */}
-          <div className="flex justify-center items-center">
-            {renderLogo(MI_GAEA, true)}
+          {/* Row 3: Full-width logos (ultra-wide, own row each) */}
+          <div data-row="3" className="flex justify-center items-center">
+            {FULL_WIDTH.map((logo) => renderLogo(logo))}
           </div>
         </div>
       </div>

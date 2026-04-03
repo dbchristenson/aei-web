@@ -33,10 +33,14 @@ export default function NavBar() {
 
     const setLogos = (progress: number) => {
       if (!whiteLogo || !blackLogo) return;
+      // Over the dark hero (progress≈0): white logo on dark background.
+      // Scrolled past hero (progress≈1): theme-appropriate logo.
       if (theme === "dark") {
+        // Dark mode bg is always dark — white logo throughout
         whiteLogo.style.opacity = "1";
         blackLogo.style.opacity = "0";
       } else {
+        // Light mode: crossfade white→black as navbar bg becomes light
         whiteLogo.style.opacity = String(1 - progress);
         blackLogo.style.opacity = String(progress);
       }
@@ -159,16 +163,14 @@ export default function NavBar() {
                 ref={whiteLogoRef}
                 src="/images/logos/astrolabe_white.svg"
                 alt=""
-                className="absolute inset-0 w-full h-full"
-                style={{ opacity: isHome ? 1 : 0 }}
+                className="absolute inset-0 w-full h-full transition-opacity duration-300"
                 aria-hidden="true"
               />
               <img
                 ref={blackLogoRef}
                 src="/images/logos/astrolabe_black.svg"
                 alt=""
-                className="absolute inset-0 w-full h-full"
-                style={{ opacity: isHome ? 0 : 1 }}
+                className="absolute inset-0 w-full h-full transition-opacity duration-300"
                 aria-hidden="true"
               />
               <img
@@ -206,44 +208,47 @@ export default function NavBar() {
             aria-expanded={mobileOpen}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
           >
-            {mobileOpen ? (
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                aria-hidden="true"
-              >
-                <path d="M18 6L6 18M6 6l12 12" />
-              </svg>
-            ) : (
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                aria-hidden="true"
-              >
-                <path d="M3 12h18M3 6h18M3 18h18" />
-              </svg>
-            )}
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden="true"
+            >
+              <path d="M3 12h18M3 6h18M3 18h18" />
+            </svg>
           </button>
         </div>
       </div>
 
-      {/* Mobile full-screen overlay with focus trap */}
-      {mobileOpen && (
+      {/* Mobile sidebar with backdrop + focus trap */}
+      <div
+        ref={overlayRef}
+        className="md:hidden fixed inset-0 z-50"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigation menu"
+        style={{ pointerEvents: mobileOpen ? "auto" : "none" }}
+      >
+        {/* Semi-transparent backdrop — click to close */}
         <div
-          ref={overlayRef}
-          className="md:hidden fixed inset-0 bg-bg-subtle/95 flex flex-col items-center justify-center gap-10 z-50"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Navigation menu"
+          className="absolute inset-0 bg-black/40 transition-opacity duration-200"
+          style={{ opacity: mobileOpen ? 1 : 0 }}
+          onClick={closeMobileMenu}
+          aria-hidden="true"
+        />
+
+        {/* Sidebar panel */}
+        <div
+          className="absolute top-0 right-0 h-full w-[min(75vw,280px)] bg-bg-subtle/95 backdrop-blur-[12px] border-l border-border-subtle/40 overflow-y-auto flex flex-col px-8 pt-20 gap-8"
+          style={{
+            transform: mobileOpen ? "translateX(0)" : "translateX(100%)",
+            transition: "transform 300ms cubic-bezier(0.16, 1, 0.3, 1)",
+          }}
         >
+          {/* Close button */}
           <button
             data-close-menu
             className="absolute top-4 right-4 text-fg p-2 rounded focus-visible:outline-2 focus-visible:outline-primary"
@@ -267,14 +272,14 @@ export default function NavBar() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-fg hover:text-secondary transition-colors font-sans font-semibold text-h3"
+              className="text-fg hover:text-secondary transition-colors font-sans font-semibold text-h4"
               onClick={closeMobileMenu}
             >
               {link.label}
             </Link>
           ))}
         </div>
-      )}
+      </div>
     </nav>
   );
 }
