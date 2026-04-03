@@ -170,7 +170,7 @@ export default function PartnerLogoGrid() {
   return (
     <section
       ref={sectionRef}
-      className="py-16 md:py-24 px-4 bg-bg-subtle"
+      className="py-16 md:py-24 px-4 bg-bg-subtle overflow-hidden"
       aria-label="Partners and stakeholders"
     >
       <div
