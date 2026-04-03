@@ -90,6 +90,15 @@ export default function NavBar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isHome, theme]);
 
+  // ─── Lock body scroll when mobile menu is open ───
+  useEffect(() => {
+    if (!mobileOpen) return;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
+
   // ─── Focus trap + close handler for mobile menu ───
   const closeMobileMenu = useCallback(() => {
     setMobileOpen(false);
@@ -102,8 +111,8 @@ export default function NavBar() {
     const overlay = overlayRef.current;
     if (!overlay) return;
 
-    const closeButton = overlay.querySelector<HTMLElement>("[data-close-menu]");
-    closeButton?.focus();
+    const firstLink = overlay.querySelector<HTMLElement>("a[href]");
+    firstLink?.focus();
 
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") {
@@ -113,9 +122,14 @@ export default function NavBar() {
 
       if (e.key !== "Tab") return;
 
-      const focusable = overlay!.querySelectorAll<HTMLElement>(
-        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      const overlayFocusable = Array.from(
+        overlay!.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
       );
+      const focusable = hamburgerRef.current
+        ? [hamburgerRef.current, ...overlayFocusable]
+        : overlayFocusable;
       if (focusable.length === 0) return;
 
       const first = focusable[0];
@@ -150,10 +164,10 @@ export default function NavBar() {
         aria-hidden="true"
       />
 
-      {/* 3-column grid: logo left | links center | hamburger right */}
-      <div className="relative grid grid-cols-[1fr_auto_1fr] items-center px-4 md:px-8 py-3">
+      {/* Logo left | links center | hamburger right */}
+      <div className="relative flex items-center justify-between px-4 md:px-8 py-3 md:grid md:grid-cols-[1fr_auto_1fr]">
         {/* Left column — logo */}
-        <div className="justify-self-start">
+        <div className="md:justify-self-start">
           <Link
             href="/"
             className="group/logo flex items-center gap-2.5"
@@ -199,25 +213,70 @@ export default function NavBar() {
           ))}
         </div>
 
-        {/* Right column — mobile hamburger */}
-        <div className="justify-self-end md:hidden">
+        {/* Right column — mobile hamburger (z-60 to stay above the overlay) */}
+        <div className="ml-auto md:hidden relative z-60">
           <button
             ref={hamburgerRef}
-            className="text-fg group-data-[hero]:text-white transition-colors duration-300 p-2 rounded focus-visible:outline-2 focus-visible:outline-primary"
+            className={`relative transition-colors duration-300 p-3 rounded-lg focus-visible:outline-2 focus-visible:outline-primary ${
+              mobileOpen
+                ? "text-palette-white"
+                : "text-fg group-data-[hero]:text-white"
+            }`}
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-expanded={mobileOpen}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
           >
+            {/* Square backdrop behind the icon */}
+            <div
+              className="absolute inset-0 rounded-lg bg-palette-neutral-600 transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none"
+              style={{
+                opacity: mobileOpen ? 1 : 0,
+                transform: mobileOpen ? "scale(1)" : "scale(0.8)",
+              }}
+              aria-hidden="true"
+            />
             <svg
+              className="relative overflow-visible"
               width="24"
               height="24"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
+              strokeLinecap="round"
               aria-hidden="true"
             >
-              <path d="M3 12h18M3 6h18M3 18h18" />
+              {/* All 3 lines are centered at (12,12). Hamburger: spread apart vertically. Asterisk: rotate from center. */}
+              <line
+                x1="3" y1="12" x2="21" y2="12"
+                className="transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none"
+                style={{
+                  transformOrigin: "12px 12px",
+                  transform: mobileOpen
+                    ? "rotate(60deg)"
+                    : "translateY(-6px)",
+                }}
+              />
+              <line
+                x1="3" y1="12" x2="21" y2="12"
+                className="transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none"
+                style={{
+                  transformOrigin: "12px 12px",
+                  transform: mobileOpen
+                    ? "rotate(0deg)"
+                    : "translateY(0)",
+                }}
+              />
+              <line
+                x1="3" y1="12" x2="21" y2="12"
+                className="transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none"
+                style={{
+                  transformOrigin: "12px 12px",
+                  transform: mobileOpen
+                    ? "rotate(-60deg)"
+                    : "translateY(6px)",
+                }}
+              />
             </svg>
           </button>
         </div>
@@ -227,14 +286,15 @@ export default function NavBar() {
       <div
         ref={overlayRef}
         className="md:hidden fixed inset-0 z-50"
-        role="dialog"
-        aria-modal="true"
-        aria-label="Navigation menu"
+        role={mobileOpen ? "dialog" : undefined}
+        aria-modal={mobileOpen ? "true" : undefined}
+        aria-hidden={mobileOpen ? undefined : "true"}
+        aria-label={mobileOpen ? "Navigation menu" : undefined}
         style={{ pointerEvents: mobileOpen ? "auto" : "none" }}
       >
         {/* Semi-transparent backdrop — click to close */}
         <div
-          className="absolute inset-0 bg-black/40 transition-opacity duration-200"
+          className="absolute inset-0 bg-bg/80 backdrop-blur-[8px] transition-opacity duration-200"
           style={{ opacity: mobileOpen ? 1 : 0 }}
           onClick={closeMobileMenu}
           aria-hidden="true"
@@ -242,42 +302,26 @@ export default function NavBar() {
 
         {/* Sidebar panel */}
         <div
-          className="absolute top-0 right-0 h-full w-[min(75vw,280px)] bg-bg-subtle/95 backdrop-blur-[12px] border-l border-border-subtle/40 overflow-y-auto flex flex-col px-8 pt-20 gap-8"
+          className="absolute top-0 right-0 h-full w-[min(75vw,280px)] bg-surface/95 backdrop-blur-[12px] border-l border-border-subtle/40 shadow-[-8px_0_24px_rgba(0,0,0,0.08)] overflow-y-auto flex flex-col px-8 pt-20 gap-8"
           style={{
             transform: mobileOpen ? "translateX(0)" : "translateX(100%)",
             transition: "transform 300ms cubic-bezier(0.16, 1, 0.3, 1)",
           }}
         >
-          {/* Close button */}
-          <button
-            data-close-menu
-            className="absolute top-4 right-4 text-fg p-2 rounded focus-visible:outline-2 focus-visible:outline-primary"
-            onClick={closeMobileMenu}
-            aria-label="Close menu"
-          >
-            <svg
-              width="28"
-              height="28"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              aria-hidden="true"
-            >
-              <path d="M18 6L6 18M6 6l12 12" />
-            </svg>
-          </button>
-
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-fg hover:text-secondary transition-colors font-sans font-semibold text-h4"
-              onClick={closeMobileMenu}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`${isActive ? 'text-secondary' : 'text-fg'} hover:text-secondary transition-colors font-sans font-semibold text-h4`}
+                aria-current={isActive ? "page" : undefined}
+                onClick={closeMobileMenu}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </div>
       </div>
     </nav>
