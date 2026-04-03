@@ -294,7 +294,7 @@ export default function NavBar() {
       >
         {/* Semi-transparent backdrop — click to close */}
         <div
-          className="absolute inset-0 bg-bg/80 backdrop-blur-[8px] transition-opacity duration-200"
+          className="absolute inset-0 bg-black/20 backdrop-blur-[4px] transition-opacity duration-200"
           style={{ opacity: mobileOpen ? 1 : 0 }}
           onClick={closeMobileMenu}
           aria-hidden="true"
@@ -302,8 +302,9 @@ export default function NavBar() {
 
         {/* Sidebar panel */}
         <div
-          className="absolute top-0 right-0 h-full w-[min(75vw,280px)] bg-surface/95 backdrop-blur-[12px] border-l border-border-subtle/40 shadow-[-8px_0_24px_rgba(0,0,0,0.08)] overflow-y-auto flex flex-col px-8 pt-20 gap-8"
+          className="absolute top-0 right-0 h-full w-[min(75vw,280px)] bg-cover bg-center border-l border-border-subtle/40 shadow-[-8px_0_24px_rgba(0,0,0,0.08)] overflow-y-auto flex flex-col px-8 pt-20 gap-8"
           style={{
+            backgroundImage: "url(/images/bgs/topo_white_blue.png)",
             transform: mobileOpen ? "translateX(0)" : "translateX(100%)",
             transition: "transform 300ms cubic-bezier(0.16, 1, 0.3, 1)",
           }}
@@ -314,7 +315,7 @@ export default function NavBar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`${isActive ? 'text-secondary' : 'text-fg'} hover:text-secondary transition-colors font-sans font-semibold text-h4`}
+                className={`${isActive ? 'text-secondary' : 'text-fg'} hover:text-secondary transition-colors font-sans font-bold text-h3 [text-shadow:0_1px_3px_rgba(0,0,0,0.3)]`}
                 aria-current={isActive ? "page" : undefined}
                 onClick={closeMobileMenu}
               >
