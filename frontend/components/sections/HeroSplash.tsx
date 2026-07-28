@@ -4,9 +4,13 @@ import usePrefersReducedMotion from "@/hooks/usePrefersReducedMotion";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useSyncExternalStore } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const noopSubscribe = () => () => {};
+const getIsTouchDevice = () =>
+  "ontouchstart" in window || navigator.maxTouchPoints > 0;
 
 /** Fine diagonal crosshatch — pure CSS, zero computation cost */
 const TEXTURE_BG = [
@@ -20,14 +24,12 @@ export default function HeroSplash() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const chevronRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const isTouchDevice = useSyncExternalStore(
+    noopSubscribe,
+    getIsTouchDevice,
+    () => false,
+  );
   const prefersReduced = usePrefersReducedMotion();
-
-  useEffect(() => {
-    setIsTouchDevice(
-      "ontouchstart" in window || navigator.maxTouchPoints > 0,
-    );
-  }, []);
 
   // ── Cursor-following glow: pixel coords, opacity transition handles smoothing ──
   const handleMouseMove = useCallback(

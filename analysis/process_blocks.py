@@ -8,10 +8,11 @@ Normalizes schema, dissolves multi-row blocks, fixes winding order (CCW),
 and rounds coordinates to 6 decimal places (~0.11m precision).
 """
 
-import geopandas as gpd
 import json
 from pathlib import Path
-from shapely.geometry import mapping, shape, MultiPolygon, Polygon
+
+import geopandas as gpd
+from shapely.geometry import MultiPolygon, Polygon, mapping, shape
 from shapely.ops import orient
 
 DATA_DIR = Path(__file__).parent / "data" / "block_data"
@@ -64,10 +65,14 @@ def fix_winding(geom: Polygon | MultiPolygon) -> Polygon | MultiPolygon:
     return orient(geom, sign=1.0)
 
 
-def round_coords(geom: Polygon | MultiPolygon, precision: int = 6) -> Polygon | MultiPolygon:
+def round_coords(
+    geom: Polygon | MultiPolygon, precision: int = 6
+) -> Polygon | MultiPolygon:
     """Round all coordinates to the given decimal precision."""
     geojson = mapping(geom)
-    rounded = json.loads(json.dumps(geojson), parse_float=lambda x: round(float(x), precision))
+    rounded = json.loads(
+        json.dumps(geojson), parse_float=lambda x: round(float(x), precision)
+    )
     return shape(rounded)
 
 
@@ -125,7 +130,9 @@ def main() -> None:
     for feat in features:
         geom = shape(feat["geometry"])
         n = sum(len(p.exterior.coords) for p in geom.geoms)
-        print(f"  {feat['properties']['name']}: {len(geom.geoms)} polygon(s), {n} vertices, bounds={geom.bounds}")
+        print(
+            f"  {feat['properties']['name']}: {len(geom.geoms)} polygon(s), {n} vertices, bounds={geom.bounds}"
+        )
 
 
 if __name__ == "__main__":

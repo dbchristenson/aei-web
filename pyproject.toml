@@ -9,3 +9,17 @@ dependencies = [
     "geopandas>=1.1.2",
     "shapely>=2.1.2",
 ]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.16.0",
+]
+
+[tool.ruff]
+line-length = 88
+extend-exclude = ["frontend", "node_modules", ".venv"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+# E501: the formatter enforces line length; remaining hits are prose strings/comments
+ignore = ["E501"]
