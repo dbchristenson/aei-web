@@ -17,7 +17,7 @@ dev = [
 
 [tool.ruff]
 line-length = 88
-extend-exclude = ["frontend", "node_modules", ".venv"]
+extend-exclude = ["frontend", "node_modules", ".venv", "*.md"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
