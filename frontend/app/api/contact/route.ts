@@ -5,8 +5,6 @@ import { buildContactNotification } from "@/lib/email/contact-notification";
 import { buildContactConfirmation } from "@/lib/email/contact-confirmation";
 import { rateLimit } from "@/lib/rate-limit";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 const CONTACT_EMAIL_TO = process.env.CONTACT_EMAIL_TO ?? "contact@aei-1.com";
 const CONTACT_EMAIL_FROM =
   process.env.CONTACT_EMAIL_FROM ?? "AEI Website <noreply@aei-mail.com>";
@@ -77,6 +75,8 @@ export async function POST(request: NextRequest) {
     console.log("[contact] Would have sent:", notification.subject);
     return NextResponse.json({ status: "ok" });
   }
+
+  const resend = new Resend(process.env.RESEND_API_KEY);
 
   try {
     const { error } = await resend.emails.send({
