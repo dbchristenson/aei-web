@@ -1,4 +1,4 @@
-.PHONY: clean clean-pyc clean-build clean-ds clean-next clean-all
+.PHONY: clean clean-pyc clean-build clean-ds clean-next clean-all variant variant-dev variants variant-rm
 
 # Remove Python bytecode and cache
 clean-pyc:
@@ -38,3 +38,17 @@ clean: clean-pyc clean-ds clean-temp
 # Nuclear option — also removes build output
 clean-all: clean clean-build clean-next
 	@echo "Cleaned everything (excluding venvs and node_modules)."
+
+# ── Design variants (see docs/design-briefs/BASE.md) ──────────────────────
+# make variant name=bold-editorial prompt="Cinematic, dark, oversized type"
+variant:
+	scripts/variant.sh new $(name) $(if $(prompt),"$(prompt)")
+
+variant-dev:
+	scripts/variant.sh dev $(name)
+
+variants:
+	scripts/variant.sh list
+
+variant-rm:
+	scripts/variant.sh remove $(name)
